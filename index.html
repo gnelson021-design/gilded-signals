@@ -804,5 +804,30 @@ updateGildedTicker();
 setInterval(updateGildedTicker, 20000);
 </script>
 
+
+<script>
+async function updateScannerPrices() {
+  const symbols = ['NVDA','MU','BTC','AVGO','ETH','MRVL','ASML','COHR','VRT','SOL','LITE','XRP'];
+  const alpacaSyms = {'BTC':'BTC/USD','ETH':'ETH/USD','SOL':'SOL/USD'};
+  for (const sym of symbols) {
+    try {
+      const fetchSym = alpacaSyms[sym] || sym;
+      const r = await fetch('https://tradingbotguru.com/api/quote?symbol=' + fetchSym);
+      const d = await r.json();
+      if (!d.price) continue;
+      const asset = ASSETS.find(a => a.sym === sym);
+      if (asset) {
+        asset.price = d.price;
+        asset.chg = d.changePercent;
+      }
+    } catch(e) {}
+  }
+  renderAssetCards('homeScannerGrid','all');
+  renderAssetCards('allAssetsGrid','all');
+}
+updateScannerPrices();
+setInterval(updateScannerPrices, 30000);
+</script>
+
 </body>
 </html>
