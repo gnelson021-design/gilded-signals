@@ -779,10 +779,10 @@ setInterval(updateLiveTicker, 20000);
 
 <script>
 async function updateGildedTicker() {
-  const symbols = ['NVDA','AVGO','ASML','MU','MRVL','VRT','COHR'];
+  const symbols = ['NVDA','AVGO','ASML','MU','MRVL','VRT','COHR','BTC/USD','ETH/USD','SOL/USD'];
   for (const sym of symbols) {
     try {
-      const r = await fetch('https://tradingbotguru.com/api/quote?symbol=' + sym);
+      const r = await fetch('/api/quote?symbol=' + sym);
       const d = await r.json();
       if (!d.price) continue;
       const arrow = d.change >= 0 ? '▲' : '▼';
