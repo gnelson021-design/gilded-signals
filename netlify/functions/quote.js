@@ -1,337 +1,44 @@
-/**
- * SECURE MARKET QUOTE API — Netlify Serverless Function
- * ======================================================
- * Endpoint: /api/quote?symbol=NVDA
- * Endpoint: /api/quote?symbols=NVDA,AAPL,MSFT  (batch, max 10)
- *
- * SECURITY: All API credentials are stored in Netlify environment variables.
- * Keys are NEVER exposed to the browser, client-side JS, GitHub, or logs.
- *
- * This function uses Alpaca MARKET DATA endpoints ONLY.
- * Trading endpoints (orders, positions, accounts) are NEVER called.
- *
- * CORS is restricted to your known domains only.
- */
-
-const https = require("https");
-
-// ─── CONFIGURATION ───────────────────────────────────────────────────────────
-
-const CONFIG = {
-  cacheTtlMs: 20_000,          // 20-second server-side cache per symbol
-  batchMax: 10,                // Max symbols per batch request
-  timeoutMs: 8_000,            // 8-second HTTP timeout
-
-  // Domains allowed to call this API (keep this locked down)
-  allowedOrigins: [
-    "https://tradingbotguru.com",
-    "https://www.tradingbotguru.com",
-    "https://scanner.tradingbotguru.com",
-    "https://gildedsignals.com",
-    "https://www.gildedsignals.com",
-    "https://gupdates.info",
-    "https://www.gupdates.info",
-    "https://gupdates.live",
-    "https://www.gupdates.live",
-    "https://gupdates.com",
-    "https://www.gupdates.com",
-    // Allow localhost for dev testing only
-    "http://localhost:8888",
-    "http://localhost:3000",
-    "http://127.0.0.1:5500",
-  ],
-};
-
-// ─── IN-MEMORY CACHE ─────────────────────────────────────────────────────────
-// Note: Netlify function instances may be separate — this is a best-effort
-// cache that prevents burst calls within a single warm function instance.
-
-const _cache = new Map(); // { symbol -> { data, timestamp } }
-
-function cacheGet(symbol) {
-  const entry = _cache.get(symbol);
-  if (!entry) return null;
-  if (Date.now() - entry.timestamp > CONFIG.cacheTtlMs) {
-    _cache.delete(symbol);
-    return null;
-  }
-  return entry.data;
-}
-
-function cacheSet(symbol, data) {
-  _cache.set(symbol, { data, timestamp: Date.now() });
-}
-
-// ─── MARKET STATUS ───────────────────────────────────────────────────────────
-
-function getMarketStatus() {
-  const now = new Date();
-  const day = now.getUTCDay(); // 0=Sun, 6=Sat
-
-  // Weekend check
-  if (day === 0 || day === 6) return "closed";
-
-  // US Eastern Time offset (DST-aware approximation)
-  const month = now.getUTCMonth() + 1;
-  const d = now.getUTCDate();
-
-  // Rough DST: second Sunday in March → first Sunday in November
-  // This is an approximation; use a proper library for strict accuracy
-  const isDST = month > 3 && month < 11
-    || (month === 3 && d >= 8)
-    || (month === 11 && d < 7);
-  const offsetHrs = isDST ? 4 : 5;
-
-  const etHour = (now.getUTCHours() - offsetHrs + 24) % 24;
-  const etMinutes = etHour * 60 + now.getUTCMinutes();
-
-  const preOpen  = 4 * 60;          // 4:00 AM ET
-  const open     = 9 * 60 + 30;     // 9:30 AM ET
-  const close    = 16 * 60;         // 4:00 PM ET
-  const afterEnd = 20 * 60;         // 8:00 PM ET
-
-  if (etMinutes >= open && etMinutes < close)    return "open";
-  if (etMinutes >= preOpen && etMinutes < open)  return "pre-market";
-  if (etMinutes >= close && etMinutes < afterEnd) return "after-hours";
-  return "closed";
-}
-
-// ─── ALPACA MARKET DATA FETCH ─────────────────────────────────────────────────
-// Uses data.alpaca.markets (market data, READ-ONLY)
-// NEVER uses api.alpaca.markets (trading API — would expose account access)
-
-function alpacaRequest(path) {
-  const apiKey    = process.env.ALPACA_API_KEY;
-  const apiSecret = process.env.ALPACA_API_SECRET;
-
-  if (!apiKey || !apiSecret) {
-    return Promise.reject(new Error("MISSING_CREDENTIALS"));
-  }
-
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: "data.alpaca.markets",
-      port: 443,
-      path,
-      method: "GET",
-      headers: {
-        "APCA-API-KEY-ID":     apiKey,
-        "APCA-API-SECRET-KEY": apiSecret,
-        "Accept":              "application/json",
-      },
-    };
-
-    const req = https.request(options, (res) => {
-      let raw = "";
-      res.on("data", (chunk) => (raw += chunk));
-      res.on("end", () => {
-        if (res.statusCode === 404) {
-          return reject(new Error("INVALID_SYMBOL"));
-        }
-        if (res.statusCode === 403 || res.statusCode === 401) {
-          return reject(new Error("AUTH_ERROR"));
-        }
-        if (res.statusCode !== 200) {
-          return reject(new Error(`ALPACA_${res.statusCode}`));
-        }
-        try {
-          resolve(JSON.parse(raw));
-        } catch {
-          reject(new Error("PARSE_ERROR"));
-        }
-      });
-    });
-
-    req.setTimeout(CONFIG.timeoutMs, () => {
-      req.destroy();
-      reject(new Error("TIMEOUT"));
-    });
-    req.on("error", reject);
-    req.end();
-  });
-}
-
-// ─── QUOTE BUILDER ───────────────────────────────────────────────────────────
-
-async function buildQuote(symbol) {
-  // Check cache first
-  const cached = cacheGet(symbol);
-  if (cached) return { ...cached, _cached: true };
-
-  // Fetch snapshot — contains latestTrade, latestQuote, dailyBar, prevDailyBar
-  // This is a MARKET DATA endpoint — no trading access, no account info
-  const snapshot = await alpacaRequest(
-    `/v2/stocks/${encodeURIComponent(symbol)}/snapshot`
-  );
-
-  // Extract price from latest trade, fall back to ask quote
-  const latestPrice =
-    snapshot.latestTrade?.p   ??
-    snapshot.latestQuote?.ap  ??
-    snapshot.dailyBar?.c      ??
-    null;
-
-  if (latestPrice === null) {
-    throw new Error("NO_PRICE_DATA");
-  }
-
-  // Previous close for change calculation
-  const prevClose =
-    snapshot.prevDailyBar?.c ??
-    snapshot.dailyBar?.o     ??
-    latestPrice;
-
-  const change = latestPrice - prevClose;
-  const changePercent = prevClose !== 0 ? (change / prevClose) * 100 : 0;
-
-  // Daily high/low from bar data
-  const dayHigh = snapshot.dailyBar?.h ?? null;
-  const dayLow  = snapshot.dailyBar?.l ?? null;
-  const volume  = snapshot.dailyBar?.v ?? null;
-
-  const result = {
-    symbol:         symbol.toUpperCase(),
-    price:          round(latestPrice, 2),
-    change:         round(change, 2),
-    changePercent:  round(changePercent, 4),
-    previousClose:  round(prevClose, 2),
-    dayHigh:        dayHigh !== null ? round(dayHigh, 2) : null,
-    dayLow:         dayLow  !== null ? round(dayLow,  2) : null,
-    volume:         volume  ?? null,
-    marketStatus:   getMarketStatus(),
-    lastUpdated:    new Date().toISOString(),
-    _cached:        false,
-  };
-
-  cacheSet(symbol, result);
-  return result;
-}
-
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-
-function round(n, decimals) {
-  const factor = 10 ** decimals;
-  return Math.round(n * factor) / factor;
-}
-
-function validateSymbol(s) {
-  if (!s || typeof s !== "string") return false;
-  const trimmed = s.trim().toUpperCase();
-  // Standard US equity tickers: 1-5 letters, optionally with . for classes (BRK.A)
-  return /^[A-Z]{1,5}(\.[A-Z]{1,2})?$/.test(trimmed) ? trimmed : false;
-}
-
-function errorResponse(statusCode, message, headers) {
-  return {
-    statusCode,
-    headers,
-    body: JSON.stringify({ error: message }),
-  };
-}
-
-// ─── HANDLER ─────────────────────────────────────────────────────────────────
-
-exports.handler = async (event) => {
-  const origin      = event.headers?.origin || event.headers?.Origin || "";
-  const corsOrigin  = CONFIG.allowedOrigins.includes(origin)
-    ? origin
-    : CONFIG.allowedOrigins[0];
-
-  const baseHeaders = {
-    "Access-Control-Allow-Origin":  corsOrigin,
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Max-Age":       "86400",
-    "Content-Type":                 "application/json",
-    "X-Content-Type-Options":       "nosniff",
-  };
-
-  // Preflight
-  if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 204, headers: baseHeaders, body: "" };
-  }
-
-  if (event.httpMethod !== "GET") {
-    return errorResponse(405, "Method not allowed", baseHeaders);
-  }
-
-  const params = event.queryStringParameters || {};
-
-  // ── BATCH MODE: ?symbols=NVDA,AAPL,MSFT ──────────────────────────────────
-  if (params.symbols) {
-    const rawSymbols = params.symbols.split(",").slice(0, CONFIG.batchMax);
-    const symbols = rawSymbols.map(validateSymbol).filter(Boolean);
-
-    if (symbols.length === 0) {
-      return errorResponse(400, "No valid symbols provided.", baseHeaders);
+'use strict';
+const FINNHUB_KEY=process.env.FINNHUB_API_KEY;
+const NAMES={NVDA:'NVIDIA Corp',AAPL:'Apple Inc',MSFT:'Microsoft Corp',AMZN:'Amazon.com',GOOGL:'Alphabet Inc',META:'Meta Platforms',TSLA:'Tesla Inc',AMD:'AMD Inc',AVGO:'Broadcom Inc',PLTR:'Palantir',ASML:'ASML Holding',MU:'Micron Technology',MRVL:'Marvell Technology',VRT:'Vertiv Holdings',COHR:'Coherent Corp',PANW:'Palo Alto Networks',JPM:'JPMorgan Chase',GLD:'SPDR Gold Trust',QQQ:'Invesco QQQ Trust',SPY:'S&P 500 ETF','BTC/USD':'Bitcoin','ETH/USD':'Ethereum','SOL/USD':'Solana','XRP/USD':'XRP','DOGE/USD':'Dogecoin','BNB/USD':'BNB'};
+const cache=new Map(),TTL=30000,CORS={'Access-Control-Allow-Origin':'*','Content-Type':'application/json'};
+function isCrypto(s){return s.includes('/');}
+function cryptoSym(s){return'BINANCE:'+s.replace('/USD','')+'USDT';}
+function calcRSI(c,p=14){if(c.length<p+1)return null;let g=0,l=0;for(let i=1;i<=p;i++){const d=c[i]-c[i-1];if(d>0)g+=d;else l-=d;}let ag=g/p,al=l/p;for(let i=p+1;i<c.length;i++){const d=c[i]-c[i-1];ag=(ag*(p-1)+(d>0?d:0))/p;al=(al*(p-1)+(d<0?-d:0))/p;}if(al===0)return 100;return Math.round((100-100/(1+ag/al))*10)/10;}
+function calcEMA(c,p=20){if(c.length<p)return null;const k=2/(p+1);let e=c.slice(0,p).reduce((a,b)=>a+b)/p;for(let i=p;i<c.length;i++)e=c[i]*k+e*(1-k);return Math.round(e*100)/100;}
+function r2(v){return v!=null?Math.round(v*100)/100:null;}
+exports.handler=async(event)=>{
+  if(event.httpMethod==='OPTIONS')return{statusCode:204,headers:CORS,body:''};
+  if(!FINNHUB_KEY)return{statusCode:503,headers:CORS,body:JSON.stringify({error:'FINNHUB_API_KEY not set in Netlify environment variables.'})};
+  const sym=(event.queryStringParameters?.symbol||'').toUpperCase().trim();
+  if(!sym)return{statusCode:400,headers:CORS,body:JSON.stringify({error:'symbol required'})};
+  const now=Date.now(),cached=cache.get(sym);
+  if(cached&&now-cached.ts<TTL)return{statusCode:200,headers:CORS,body:JSON.stringify(cached.data)};
+  const crypto=isCrypto(sym);
+  try{
+    let price,change,changePercent,high,low,open,previousClose,volume,rsi=null,ema20=null,emaStatus=null;
+    if(crypto){
+      const res=await fetch('https://finnhub.io/api/v1/crypto/candle?symbol='+cryptoSym(sym)+'&resolution=D&count=30&token='+FINNHUB_KEY);
+      const c=await res.json();
+      if(!c.c?.length)throw new Error('No data for '+sym+'. Use format: BTC/USD');
+      const closes=c.c;
+      price=closes[closes.length-1];previousClose=closes[closes.length-2]||price;
+      change=price-previousClose;changePercent=(change/previousClose)*100;
+      high=c.h?.[c.h.length-1]||null;low=c.l?.[c.l.length-1]||null;open=c.o?.[c.o.length-1]||null;volume=c.v?.[c.v.length-1]||null;
+      if(closes.length>=15){rsi=calcRSI(closes);ema20=calcEMA(closes);if(ema20)emaStatus=price>ema20?'above':'below';}
+    }else{
+      const[qRes,cRes]=await Promise.all([fetch('https://finnhub.io/api/v1/quote?symbol='+sym+'&token='+FINNHUB_KEY),fetch('https://finnhub.io/api/v1/stock/candle?symbol='+sym+'&resolution=D&count=30&token='+FINNHUB_KEY)]);
+      const[q,c]=await Promise.all([qRes.json(),cRes.json()]);
+      if(!q.c||q.c===0)throw new Error('"'+sym+'" not found. Check the ticker.');
+      price=q.c;previousClose=q.pc;change=q.d;changePercent=q.dp;high=q.h;low=q.l;open=q.o;
+      if(c.s!=='no_data'&&c.c?.length>=15){rsi=calcRSI(c.c);ema20=calcEMA(c.c);if(ema20)emaStatus=price>ema20?'above':'below';volume=c.v?.[c.v.length-1]||null;}
     }
-
-    const results = await Promise.allSettled(symbols.map(buildQuote));
-
-    const quotes = {};
-    results.forEach((r, i) => {
-      const sym = symbols[i];
-      if (r.status === "fulfilled") {
-        quotes[sym] = r.value;
-      } else {
-        quotes[sym] = { symbol: sym, error: mapError(r.reason) };
-      }
-    });
-
-    return {
-      statusCode: 200,
-      headers: { ...baseHeaders, "Cache-Control": "public, max-age=20" },
-      body: JSON.stringify({ quotes, marketStatus: getMarketStatus() }),
-    };
-  }
-
-  // ── SINGLE MODE: ?symbol=NVDA ─────────────────────────────────────────────
-  const rawSymbol = params.symbol || params.s || "";
-  const symbol    = validateSymbol(rawSymbol);
-
-  if (!symbol) {
-    return errorResponse(
-      400,
-      "Invalid symbol. Use 1–5 uppercase letters (e.g. NVDA, BRK.A).",
-      baseHeaders
-    );
-  }
-
-  try {
-    const quote = await buildQuote(symbol);
-    const isCached = quote._cached;
-    delete quote._cached;
-
-    return {
-      statusCode: 200,
-      headers: {
-        ...baseHeaders,
-        "Cache-Control": "public, max-age=20",
-        "X-Cache":       isCached ? "HIT" : "MISS",
-      },
-      body: JSON.stringify(quote),
-    };
-  } catch (err) {
-    const { status, message } = classifyError(err);
-    return errorResponse(status, message, baseHeaders);
-  }
+    let signal='Neutral',score=50,risk='Moderate';
+    if(rsi!==null){if(rsi>70){signal='Watch';score=62;risk='Elevated';}else if(rsi>=55&&emaStatus==='above'){signal='Bullish';score=78;}else if(rsi<30){signal='Watch';score=35;risk='Elevated';}else if(rsi<45||emaStatus==='below'){signal='Neutral';score=42;}else{signal='Watch';score=54;}}
+    else{if(changePercent>3){signal='Bullish';score=65;}else if(changePercent<-3){signal='Neutral';score=40;}}
+    if(Math.abs(changePercent||0)>6)risk='Elevated';
+    const result={symbol:sym,name:NAMES[sym]||sym,type:crypto?'crypto':'stock',price:r2(price),change:r2(change),changePercent:r2(changePercent),volume:volume?Math.round(volume):null,high:r2(high),low:r2(low),open:r2(open),previousClose:r2(previousClose),rsi,ema20,emaStatus,signal,signalScore:score,risk,updatedAt:new Date().toISOString(),source:'finnhub'};
+    cache.set(sym,{data:result,ts:now});
+    return{statusCode:200,headers:CORS,body:JSON.stringify(result)};
+  }catch(err){return{statusCode:200,headers:CORS,body:JSON.stringify({error:err.message,symbol:sym})};}
 };
-
-// ─── ERROR CLASSIFICATION ─────────────────────────────────────────────────────
-
-function mapError(err) {
-  const { message } = classifyError(err);
-  return message;
-}
-
-function classifyError(err) {
-  const msg = err?.message || "UNKNOWN";
-  if (msg === "INVALID_SYMBOL")    return { status: 404, message: "Symbol not found. Check the ticker and try again." };
-  if (msg === "MISSING_CREDENTIALS") return { status: 503, message: "Market data service is not configured." };
-  if (msg === "AUTH_ERROR")        return { status: 503, message: "Market data credentials are invalid." };
-  if (msg === "TIMEOUT")           return { status: 504, message: "Market data request timed out. Try again." };
-  if (msg === "NO_PRICE_DATA")     return { status: 404, message: "No price data available for this symbol." };
-  if (msg.startsWith("ALPACA_"))   return { status: 502, message: "Market data provider returned an error." };
-  console.error("[quote] Unhandled error:", msg);
-  return { status: 502, message: "Failed to fetch market data. Please try again." };
-}
