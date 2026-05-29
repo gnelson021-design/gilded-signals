@@ -232,6 +232,49 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 @media(max-width:600px){
   .everything-grid,.news-grid,.pricing-cards{grid-template-columns:1fr;}
 }
+
+/* ===== MARKET COMPARE TOOL ===== */
+.gscmp-wrap{max-width:920px;}
+.gscmp-picker{background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:1.75rem;margin-bottom:1.5rem;}
+.gscmp-picker h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:0.3rem;}
+.gscmp-picker p.gscmp-sub{font-size:0.78rem;color:var(--text-secondary);margin-bottom:1.25rem;}
+.gscmp-search{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.25rem;}
+.gscmp-search .ticker-input-wrap{flex:1;min-width:160px;}
+.gscmp-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem;}
+.gscmp-chip{background:var(--charcoal-3);border:1px solid var(--charcoal-5);color:var(--text-secondary);padding:7px 14px;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;border-radius:3px;cursor:pointer;transition:all 0.18s;user-select:none;}
+.gscmp-chip:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.06);}
+.gscmp-chip.gscmp-chip-on{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.12);}
+.gscmp-slots{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;}
+.gscmp-slot{background:var(--charcoal-3);border:1px dashed var(--charcoal-5);border-radius:5px;padding:1.1rem 1.25rem;min-height:74px;display:flex;flex-direction:column;justify-content:center;transition:border-color 0.2s;}
+.gscmp-slot.gscmp-filled{border-style:solid;border-color:var(--border-hover);}
+.gscmp-slot-label{font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
+.gscmp-slot-empty{font-size:0.82rem;color:var(--text-muted);}
+.gscmp-slot-filled-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.gscmp-slot-sym{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--text-primary);line-height:1;}
+.gscmp-slot-name{font-size:0.62rem;color:var(--text-muted);margin-top:3px;}
+.gscmp-x{background:transparent;border:1px solid var(--charcoal-5);color:var(--text-muted);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:0.72rem;line-height:1;flex-shrink:0;transition:all 0.18s;}
+.gscmp-x:hover{border-color:var(--red);color:var(--red);}
+.gscmp-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.gscmp-msg{font-size:0.7rem;color:var(--gold);letter-spacing:0.04em;min-height:1em;margin-top:0.75rem;}
+.gscmp-msg.gscmp-err{color:var(--red);}
+.btn-scan:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-scan:disabled:hover{background:var(--gold);}
+.gscmp-loading{text-align:center;color:var(--text-muted);font-size:0.8rem;padding:2rem 0;display:none;}
+.gscmp-loading.gscmp-visible{display:block;}
+.gscmp-results{display:none;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.75rem;}
+.gscmp-results.gscmp-visible{display:grid;}
+.gscmp-card{background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:1.5rem;}
+.gscmp-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.1rem;}
+.gscmp-card-sym{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:400;line-height:1;}
+.gscmp-card-name{font-size:0.62rem;color:var(--text-muted);margin-top:3px;}
+.gscmp-card-price{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;text-align:right;line-height:1;}
+.gscmp-card-chg{font-size:0.78rem;text-align:right;margin-top:3px;}
+.gscmp-rows{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:1rem;}
+.gscmp-row{background:var(--charcoal-2);display:flex;justify-content:space-between;padding:0.7rem 0.95rem;}
+.gscmp-row-label{font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);}
+.gscmp-row-val{font-size:0.82rem;color:var(--text-primary);}
+.gscmp-card-foot{display:flex;align-items:center;justify-content:space-between;}
+@media(max-width:600px){.gscmp-slots{grid-template-columns:1fr;}.gscmp-results{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -443,68 +486,56 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   </div>
 </div>
 
-<!-- SCANNER -->
+<!-- SCANNER (COMPARE TOOL) -->
 <div id="page-scanner" class="page">
   <div class="section-inner scanner-page">
-    <div class="section-label">Scanner Preview</div>
-    <h2 class="section-title">Market Scanner</h2>
-    <p class="section-desc" style="margin-bottom:0.5rem;">Search any ticker for educational signal data, momentum, RSI, and technical indicators.</p><p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2rem;line-height:1.6;max-width:680px;">Scanner labels are generated from technical indicators and sample market data. They are for <strong style="color:var(--text-secondary);">educational research only</strong> and are not buy/sell recommendations.</p>
-    <div class="scanner-search-box">
-      <h3>Search a Ticker</h3>
-      <p>Enter a symbol to pull signal data, momentum score, and risk level.</p>
-      <div class="search-row">
-        <div class="ticker-input-wrap">
-          <label>Primary Symbol</label>
-          <input class="ticker-input" id="ticker1" type="text" placeholder="e.g. NVDA, BTC, AAPL" maxlength="6"/>
+    <div class="section-label">Compare Tool</div>
+    <h2 class="section-title">Market <em>Compare</em></h2>
+    <p class="section-desc" style="margin-bottom:0.5rem;">Pick two assets and compare their live price, momentum, RSI, and signal side by side.</p>
+    <p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2rem;line-height:1.6;max-width:680px;">Signals are generated from live technical indicators and are for <strong style="color:var(--text-secondary);">educational research only</strong> &mdash; not buy/sell recommendations.</p>
+
+    <div class="gscmp-wrap">
+      <!-- Picker: search + clickable chips -->
+      <div class="gscmp-picker">
+        <h3>Choose two to compare</h3>
+        <p class="gscmp-sub">Tap a symbol below (or search one) to add it. Your first pick fills Stock&nbsp;1, the second fills Stock&nbsp;2.</p>
+
+        <div class="gscmp-search">
+          <div class="ticker-input-wrap">
+            <label>Search a symbol</label>
+            <input class="ticker-input" id="gscmpSearch" type="text" placeholder="e.g. NVDA, AAPL, BTC" maxlength="8"/>
+          </div>
+          <button class="btn-compare" onclick="gscmpAddFromSearch()">+ Add</button>
         </div>
-        <div class="ticker-input-wrap" id="compareWrap" style="display:none;">
-          <label>Compare Symbol</label>
-          <input class="ticker-input" id="ticker2" type="text" placeholder="e.g. AMD" maxlength="6"/>
+
+        <div class="gscmp-chips" id="gscmpChips"></div>
+
+        <!-- The two comparison slots -->
+        <div class="gscmp-slots">
+          <div class="gscmp-slot" id="gscmpSlot1">
+            <div class="gscmp-slot-label">Stock 1</div>
+            <div id="gscmpSlot1Body"><div class="gscmp-slot-empty">Nothing selected</div></div>
+          </div>
+          <div class="gscmp-slot" id="gscmpSlot2">
+            <div class="gscmp-slot-label">Stock 2</div>
+            <div id="gscmpSlot2Body"><div class="gscmp-slot-empty">Nothing selected</div></div>
+          </div>
         </div>
-        <button class="btn-compare" id="compareBtn" onclick="toggleCompare()">+ Compare</button>
-        <button class="btn-scan" onclick="runScan()">Scan ▶</button>
-      </div>
-      <div class="scan-counter">Free scans remaining: <span id="scanCount">5</span> of 5 &nbsp;·&nbsp; <a onclick="showPage('pricing')" style="color:var(--gold);text-decoration:none;font-size:0.62rem;cursor:pointer;">Unlock unlimited →</a></div>
-    </div>
-    <div class="scan-results" id="scanResults">
-      <div class="result-header">
-        <div><div class="result-sym" id="resSym">—</div><div class="result-name" id="resName">—</div></div>
-        <div><div class="result-price" id="resPrice">—</div><div class="result-chg" id="resChg">—</div></div>
-      </div>
-      <div class="result-grid" id="resMetrics"></div>
-      <div class="signal-box">
-        <div class="signal-score">
-          <div class="signal-score-num" id="resSignalNum">—</div>
-          <div class="signal-score-label">Signal Strength</div>
-          <div style="margin-top:1rem;"><span id="resSignalBadge" class="badge">—</span></div>
-          <div style="margin-top:0.5rem;font-size:0.65rem;color:var(--text-muted);">Risk Level: <span id="resRisk" style="color:var(--text-secondary);">—</span></div>
+
+        <div class="gscmp-actions">
+          <button class="btn-scan" id="gscmpCompareBtn" onclick="gscmpRun()" disabled>Compare &#9654;</button>
+          <button class="btn-compare" onclick="gscmpClearAll()">Clear</button>
         </div>
-        <div class="signal-bars" id="resSignalBars"></div>
+        <div class="gscmp-msg" id="gscmpMsg"></div>
       </div>
-    </div>
-    <div class="paywall-overlay" id="paywallBox" style="display:none;">
-      <div style="font-size:2rem;margin-bottom:1rem;">🔒</div>
-      <h3>You've Used Your 5 Free Scans</h3>
-      <p>Unlock unlimited scanner searches, stock comparisons, and watchlist signals with Gilded Scanner Access.</p>
-      <button class="btn-primary" onclick="showPage('pricing')">Unlock Unlimited Access</button>
-      <div class="plan-note" style="font-size:0.63rem;color:var(--text-muted);text-align:center;margin-top:1rem;">$9/month · Cancel anytime</div>
-    </div>
-    <div style="margin-top:3rem;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
-        <div><div class="section-label">All Assets</div><p style="font-size:0.8rem;color:var(--text-secondary);">Tracked signals across AI infrastructure and crypto.</p></div>
-        <div style="display:flex;gap:8px;" id="assetFilters">
-          <button class="filter-btn active" onclick="filterAssets('all',this)">All</button>
-          <button class="filter-btn" onclick="filterAssets('stock',this)">Stocks</button>
-          <button class="filter-btn" onclick="filterAssets('crypto',this)">Crypto</button>
-          <button class="filter-btn" onclick="filterAssets('buy',this)">Bullish Signals</button>
-        </div>
-      </div>
-      <div class="scanner-all-grid" id="allAssetsGrid"></div>
+
+      <!-- Loading + live results -->
+      <div class="gscmp-loading" id="gscmpLoading">Pulling live data&hellip;</div>
+      <div class="gscmp-results" id="gscmpResults"></div>
     </div>
   </div>
 </div>
 
-<!-- PRICING -->
 <div id="page-pricing" class="page">
   <div class="section-inner pricing-page">
     <div class="pricing-header">
@@ -673,86 +704,176 @@ function filterNews(cat,btn,gridId){
   btn.classList.add('active');
   renderNews(gridId,cat);
 }
-function toggleCompare(){
-  compareMode=!compareMode;
-  document.getElementById('compareWrap').style.display=compareMode?'block':'none';
-  document.getElementById('compareBtn').textContent=compareMode?'− Remove':'+ Compare';
+/* ===== MARKET COMPARE TOOL (live) ===== */
+/* gscmpSlots is the ONE source of truth: [Stock 1, Stock 2]. */
+const GSCMP_API = '/api/quote?symbol=';                 // live endpoint (quote.js)
+const GSCMP_CRYPTO = ['BTC','ETH','SOL','XRP','DOGE','BNB','ADA','AVAX','LTC']; // bare ticker -> X/USD
+const GSCMP_NAMES = {NVDA:'NVIDIA Corp',AAPL:'Apple Inc',MSFT:'Microsoft Corp',TSLA:'Tesla Inc',AMD:'AMD Inc',AVGO:'Broadcom Inc',PLTR:'Palantir',ASML:'ASML Holding',MU:'Micron Technology',MRVL:'Marvell Technology',VRT:'Vertiv Holdings',COHR:'Coherent Corp',PANW:'Palo Alto Networks',JPM:'JPMorgan Chase',GLD:'SPDR Gold Trust',QQQ:'Invesco QQQ','BTC/USD':'Bitcoin','ETH/USD':'Ethereum','SOL/USD':'Solana','XRP/USD':'XRP'};
+const GSCMP_CHIPS = ['NVDA','AAPL','MSFT','AMD','AVGO','MU','MRVL','VRT','COHR','ASML','PLTR','TSLA','BTC','ETH','SOL'];
+
+let gscmpSlots = [null, null];
+
+/* Normalize typed/clicked symbol to what quote.js expects (crypto -> X/USD). */
+function gscmpNormalize(raw){
+  const s = (raw||'').trim().toUpperCase();
+  if(!s) return null;
+  if(s.includes('/')) return s;
+  if(GSCMP_CRYPTO.includes(s)) return s + '/USD';
+  return s;
 }
-function runScan(){
-  if(scansLeft<=0){
-    document.getElementById('scanResults').classList.remove('visible');
-    document.getElementById('paywallBox').style.display='block';
+
+/* Small status / error line. */
+function gscmpMsg(text, isError){
+  const el = document.getElementById('gscmpMsg');
+  if(!el) return;
+  el.textContent = text || '';
+  el.classList.toggle('gscmp-err', !!isError);
+}
+
+/* Add a symbol into the first open slot (Stock 1, then Stock 2). */
+function gscmpSelect(raw){
+  const apiSymbol = gscmpNormalize(raw);
+  if(!apiSymbol) return;
+  if(gscmpSlots.some(s => s && s.apiSymbol === apiSymbol)){ gscmpMsg('That symbol is already selected.'); return; }
+  const entry = {symbol: apiSymbol.replace('/USD',''), apiSymbol, name: GSCMP_NAMES[apiSymbol] || apiSymbol.replace('/USD','')};
+  if(!gscmpSlots[0]){ gscmpSlots[0] = entry; }
+  else if(!gscmpSlots[1]){ gscmpSlots[1] = entry; }
+  else { gscmpMsg('Both comparison slots are filled. Clear one to choose another.'); return; }
+  gscmpMsg('');
+  gscmpRender();
+}
+
+/* Add from the search input. */
+function gscmpAddFromSearch(){
+  const inp = document.getElementById('gscmpSearch');
+  if(!inp) return;
+  gscmpSelect(inp.value);
+  inp.value = '';
+}
+
+/* Clear a single slot (the X button). */
+function gscmpClearSlot(i){
+  gscmpSlots[i] = null;
+  gscmpMsg('');
+  gscmpRender();
+}
+
+/* Clear EVERYTHING: slots, results, error, loading. */
+function gscmpClearAll(){
+  gscmpSlots = [null, null];
+  gscmpMsg('');
+  const res = document.getElementById('gscmpResults');
+  if(res){ res.classList.remove('gscmp-visible'); res.innerHTML = ''; }
+  const ld = document.getElementById('gscmpLoading');
+  if(ld) ld.classList.remove('gscmp-visible');
+  gscmpRender();
+}
+
+/* Render slots, chip highlights, and Compare button enabled-state. */
+function gscmpRender(){
+  for(let i=0;i<2;i++){
+    const slot = document.getElementById('gscmpSlot'+(i+1));
+    const body = document.getElementById('gscmpSlot'+(i+1)+'Body');
+    if(!slot || !body) continue;
+    const data = gscmpSlots[i];
+    if(data){
+      slot.classList.add('gscmp-filled');
+      body.innerHTML = '<div class="gscmp-slot-filled-row"><div><div class="gscmp-slot-sym">'+data.symbol+'</div><div class="gscmp-slot-name">'+data.name+'</div></div><button class="gscmp-x" title="Remove" onclick="gscmpClearSlot('+i+')">&#10005;</button></div>';
+    } else {
+      slot.classList.remove('gscmp-filled');
+      body.innerHTML = '<div class="gscmp-slot-empty">Nothing selected</div>';
+    }
+  }
+  const chosen = gscmpSlots.filter(Boolean).map(s=>s.apiSymbol);
+  document.querySelectorAll('.gscmp-chip').forEach(c=>{
+    c.classList.toggle('gscmp-chip-on', chosen.includes(gscmpNormalize(c.dataset.sym)));
+  });
+  const btn = document.getElementById('gscmpCompareBtn');
+  if(btn) btn.disabled = !(gscmpSlots[0] && gscmpSlots[1]);
+}
+
+/* Fetch one live quote -> {ok,data} or {ok:false,error}. */
+async function gscmpFetch(apiSymbol){
+  try{
+    const r = await fetch(GSCMP_API + encodeURIComponent(apiSymbol));
+    const d = await r.json();
+    if(!d || d.error || d.price == null) return {ok:false, error:(d && d.error) || 'No data'};
+    return {ok:true, data:d};
+  }catch(e){
+    return {ok:false, error:'Network error'};
+  }
+}
+
+/* Run the comparison: fetch both live in parallel, render or show clean error. */
+async function gscmpRun(){
+  if(!(gscmpSlots[0] && gscmpSlots[1])) return;
+  const results = document.getElementById('gscmpResults');
+  const loading = document.getElementById('gscmpLoading');
+  gscmpMsg('');
+  if(results){ results.classList.remove('gscmp-visible'); results.innerHTML = ''; }
+  if(loading) loading.classList.add('gscmp-visible');
+
+  const [a,b] = await Promise.all([
+    gscmpFetch(gscmpSlots[0].apiSymbol),
+    gscmpFetch(gscmpSlots[1].apiSymbol)
+  ]);
+  if(loading) loading.classList.remove('gscmp-visible');
+
+  if(!a.ok || !b.ok){
+    const bad = !a.ok ? gscmpSlots[0].symbol : gscmpSlots[1].symbol;
+    gscmpMsg('Couldn\u2019t load live data for ' + bad + '. Please try again in a moment.', true);
     return;
   }
-  const sym=document.getElementById('ticker1').value.trim().toUpperCase();
-  if(!sym){alert('Enter a ticker symbol.');return;}
-  scansLeft--;
-  document.getElementById('scanCount').textContent=scansLeft;
-  document.getElementById('navScanCount').textContent=scansLeft;
-  const known=ASSETS.find(a=>a.sym===sym);
-  const price=known?known.price:(Math.random()*400+50);
-  const chg=known?known.chg:+(Math.random()*6-3).toFixed(2);
-  const rsi=known?known.rsi:+(Math.random()*40+30).toFixed(1);
-  const vol=known?known.vol:Math.round(Math.random()*150+50)+'%';
-  const ema=rsi>50?'Above EMA':'Below EMA';
-  const signalStr=Math.min(Math.round(rsi*1.4),99);
-  const signal=rsi>58?'Bullish':rsi<45?'Neutral':'Watch';
-  const risk=rsi>65?'Elevated':rsi<45?'Elevated':'Moderate';
-  const mom=known?known.mom:(rsi>58?'Strong':'Moderate');
-  const cap=known?known.cap:'$—';
-  const name=known?known.name:sym;
-  document.getElementById('resSym').textContent=sym;
-  document.getElementById('resName').textContent=name;
-  document.getElementById('resPrice').textContent=fmtPrice(price);
-  document.getElementById('resChg').innerHTML=`<span class="${chg>=0?'up':'dn'}">${chg>=0?'▲':'▼'} ${Math.abs(chg)}%</span>`;
-  document.getElementById('resMetrics').innerHTML=[
-    ['Price',fmtPrice(price),'Current'],
-    ['Daily Change',(chg>=0?'+':'')+chg+'%','Today'],
-    ['RSI (14)',rsi,rsi>70?'Overbought':rsi<30?'Oversold':'Neutral'],
-    ['Volume',vol,'vs Avg'],
-    ['EMA Status',ema.split(' ')[0],ema],
-    ['Momentum',mom,''],
-    ['Market Cap',cap,''],
-    ['Analyst Sentiment','—','API Pending'],
-    ['News Sentiment','—','API Pending'],
-  ].map(([l,v,s])=>`<div class="result-metric"><div class="result-metric-label">${l}</div><div class="result-metric-val">${v}</div><div class="result-metric-sub">${s}</div></div>`).join('');
-  const badgeCls=signal==='Bullish'?'badge-bullish':signal==='Watch'?'badge-watch':'badge-neutral';
-  document.getElementById('resSignalNum').textContent=signalStr+'/100';
-  document.getElementById('resSignalBadge').className=`badge ${badgeCls}`;
-  const sigLabel=signal==='Bullish'?'Bullish':signal==='Watch'?'Watch':'Neutral';
-  document.getElementById('resSignalBadge').textContent=sigLabel;
-  document.getElementById('resRisk').textContent=risk;
-  document.getElementById('resSignalBars').innerHTML=[
-    ['Volume',Math.min(parseFloat(vol),200)/2],
-    ['RSI Score',rsi],
-    ['EMA Alignment',rsi>50?75:25],
-    ['Momentum',mom==='Strong'?80:mom==='Moderate'?50:20],
-  ].map(([l,v])=>`<div class="signal-bar-row"><div class="signal-bar-label">${l}</div><div class="signal-bar-track"><div class="signal-bar-fill" style="width:${Math.min(v,100)}%"></div></div></div>`).join('');
-  document.getElementById('scanResults').classList.add('visible');
-  if(scansLeft<=0)setTimeout(()=>{document.getElementById('paywallBox').style.display='block';},200);
+  if(results){ results.innerHTML = gscmpCard(a.data) + gscmpCard(b.data); results.classList.add('gscmp-visible'); }
 }
-function filterAssets(type,btn){
-  document.querySelectorAll('#assetFilters .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderAssetCards('allAssetsGrid',type);
+
+/* Build one comparison card from a live quote (quote.js shape). No fabricated values. */
+function gscmpCard(d){
+  const up = (d.change || 0) >= 0;
+  const chg = (d.changePercent == null) ? '\u2014' : (up?'\u25B2':'\u25BC') + ' ' + Math.abs(d.changePercent).toFixed(2) + '%';
+  const price = (d.price >= 1000) ? '$' + d.price.toLocaleString('en-US',{maximumFractionDigits:0}) : '$' + Number(d.price).toFixed(2);
+  const badgeCls = d.signal === 'Bullish' ? 'badge-bullish' : d.signal === 'Watch' ? 'badge-watch' : 'badge-neutral';
+  const ema = d.emaStatus ? (d.emaStatus.charAt(0).toUpperCase() + d.emaStatus.slice(1)) : '\u2014';
+  const rows = [
+    ['RSI (14)', d.rsi != null ? d.rsi : '\u2014'],
+    ['EMA Status', ema],
+    ['Signal Score', d.signalScore != null ? d.signalScore + '/100' : '\u2014'],
+    ['Day High', d.high != null ? '$' + Number(d.high).toFixed(2) : '\u2014'],
+    ['Day Low', d.low != null ? '$' + Number(d.low).toFixed(2) : '\u2014'],
+    ['Risk', d.risk || '\u2014']
+  ];
+  return '<div class="gscmp-card">'
+    + '<div class="gscmp-card-head"><div><div class="gscmp-card-sym">' + (d.symbol||'').replace('/USD','') + '</div><div class="gscmp-card-name">' + (d.name||'') + '</div></div>'
+    + '<div><div class="gscmp-card-price">' + price + '</div><div class="gscmp-card-chg ' + (up?'up':'dn') + '">' + chg + '</div></div></div>'
+    + '<div class="gscmp-rows">' + rows.map(r=>'<div class="gscmp-row"><span class="gscmp-row-label">'+r[0]+'</span><span class="gscmp-row-val">'+r[1]+'</span></div>').join('') + '</div>'
+    + '<div class="gscmp-card-foot"><span class="badge ' + badgeCls + '">' + (d.signal||'Neutral') + '</span><span style="font-size:0.57rem;color:var(--text-muted);">Live</span></div>'
+    + '</div>';
+}
+
+/* Build clickable chips, wire Enter-to-add, initial render. */
+function gscmpInit(){
+  const chipWrap = document.getElementById('gscmpChips');
+  if(chipWrap){
+    chipWrap.innerHTML = GSCMP_CHIPS.map(s=>'<button class="gscmp-chip" data-sym="'+s+'" onclick="gscmpSelect(\''+s+'\')">'+s+'</button>').join('');
+  }
+  const inp = document.getElementById('gscmpSearch');
+  if(inp) inp.addEventListener('keydown', e=>{ if(e.key === 'Enter') gscmpAddFromSearch(); });
+  gscmpRender();
 }
 
 // INIT
 renderAssetCards('homeScannerGrid','all');
-renderAssetCards('allAssetsGrid','all');
 renderNews('newsGrid','all');
 renderNews('aiGrid','ai');
 renderNews('worldGrid','world');
-document.getElementById('ticker1').addEventListener('keydown',e=>{if(e.key==='Enter')runScan();});
+gscmpInit();
 
-// demo ticker movement
+// Home-page preview grid demo movement (home page only - unchanged feature)
 setInterval(()=>{
   ASSETS.forEach(a=>{a.price=a.price*(1+(Math.random()-0.5)*0.0015);a.chg=+(a.chg+(Math.random()-0.5)*0.06).toFixed(2);});
   renderAssetCards('homeScannerGrid','all');
-  const af=document.querySelector('#assetFilters .filter-btn.active');
-  const m={'All':'all','Stocks':'stock','Crypto':'crypto','Bullish Signals':'buy'};
-  renderAssetCards('allAssetsGrid',m[af?.textContent]||'all');
 },6000);
+
 
 async function updateLiveTicker() {
   const items = document.querySelectorAll('.ticker-item');
