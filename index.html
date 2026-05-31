@@ -674,7 +674,7 @@ async function gsLoadTab(tab){
     const chgArrow=chg>=0?'▲':'▼';
     const sigClass=(d.signal||'neutral').toLowerCase();
     const fmt=v=>v!=null?('$'+Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})):'—';
-    return `<div class="gs-card">
+    return `<div class="gs-card" onclick="gscmpSelectFromGrid('${d.symbol}')" style="cursor:pointer">
       <div class="gs-card-top">
         <div><div class="gs-card-sym">${d.symbol.replace('/USD','')}</div><div class="gs-card-name">${d.name||''}</div></div>
         <div><div class="gs-card-price">${fmt(d.price)}</div><div class="gs-card-chg ${chgClass}">${chgArrow} ${Math.abs(chg).toFixed(2)}%</div></div>
@@ -690,6 +690,16 @@ async function gsLoadTab(tab){
       <div class="gs-card-signal ${sigClass}">${d.signal||'Neutral'}</div>
     </div>`;
   }).join('');
+}
+function gscmpSelectFromGrid(sym){
+  const s1=document.getElementById('gscmpSlot1Body');
+  const s2=document.getElementById('gscmpSlot2Body');
+  const apiSym=sym.includes('/')?sym:sym;
+  if(s1.querySelector('.gscmp-slot-empty')){gscmpSelect(apiSym);}
+  else if(s2.querySelector('.gscmp-slot-empty')){gscmpSelect(apiSym);}
+  else{gscmpClearAll();gscmpSelect(apiSym);}
+  document.getElementById('page-scanner').scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 function gsSetTab(tab){
   document.querySelectorAll('.gs-tab').forEach(b=>b.classList.remove('active'));
