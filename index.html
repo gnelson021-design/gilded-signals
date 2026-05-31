@@ -235,6 +235,29 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 
 /* ===== MARKET COMPARE TOOL ===== */
 .gscmp-wrap{max-width:920px;}
+.gs-scanner-tabs{display:flex;gap:8px;margin-bottom:2rem;}
+.gs-tab{background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:8px 24px;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.gs-tab.active{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.08);}
+.gs-tab:hover{border-color:var(--gold);color:var(--gold);}
+.gs-scanner-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:3rem;}
+.gs-card{background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:1.25rem;position:relative;transition:border-color 0.2s;}
+.gs-card:hover{border-color:var(--gold);}
+.gs-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;}
+.gs-card-sym{font-size:1.1rem;font-weight:700;color:var(--text-primary);font-family:'Cormorant Garamond',serif;}
+.gs-card-name{font-size:0.6rem;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
+.gs-card-price{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text-primary);text-align:right;}
+.gs-card-chg{font-size:0.7rem;text-align:right;margin-top:2px;}
+.gs-card-chg.up{color:var(--green);}
+.gs-card-chg.dn{color:var(--red);}
+.gs-card-metrics{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);}
+.gs-metric{display:flex;flex-direction:column;}
+.gs-metric-label{font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);}
+.gs-metric-val{font-size:0.78rem;color:var(--text-secondary);font-weight:500;}
+.gs-card-signal{margin-top:0.75rem;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:2px;display:inline-block;}
+.gs-card-signal.bullish{background:rgba(0,200,100,0.12);color:#00c864;}
+.gs-card-signal.neutral{background:rgba(212,175,55,0.1);color:var(--gold);}
+.gs-card-signal.watch{background:rgba(255,165,0,0.1);color:orange;}
+.gs-card-loading{text-align:center;color:var(--text-muted);padding:3rem;font-size:0.8rem;letter-spacing:0.1em;}
 .gscmp-picker{background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:1.75rem;margin-bottom:1.5rem;}
 .gscmp-picker h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:0.3rem;}
 .gscmp-picker p.gscmp-sub{font-size:0.78rem;color:var(--text-secondary);margin-bottom:1.25rem;}
@@ -489,7 +512,17 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 <!-- SCANNER (COMPARE TOOL) -->
 <div id="page-scanner" class="page">
   <div class="section-inner scanner-page">
-    <div class="section-label">Compare Tool</div>
+    <div class="section-label">Live Market Scanner</div>
+    <h2 class="section-title">Market <em>Intelligence</em></h2>
+    <p class="section-desc">Real-time prices, RSI, EMA, and signal strength across stocks and crypto.</p>
+
+    <div class="gs-scanner-tabs" id="gsScannerTabs">
+      <button class="gs-tab active" onclick="gsSetTab('stocks')">Stocks</button>
+      <button class="gs-tab" onclick="gsSetTab('tech')">Tech</button>
+      <button class="gs-tab" onclick="gsSetTab('crypto')">Crypto</button>
+    </div>
+    <div class="gs-scanner-grid" id="gsScannerGrid"></div>
+    <div class="section-label" style="margin-top:3rem">Compare Tool</div>
     <h2 class="section-title">Market <em>Compare</em></h2>
     <p class="section-desc" style="margin-bottom:0.5rem;">Pick two assets and compare their live price, momentum, RSI, and signal side by side.</p>
     <p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2rem;line-height:1.6;max-width:680px;">Signals are generated from live technical indicators and are for <strong style="color:var(--text-secondary);">educational research only</strong> &mdash; not buy/sell recommendations.</p>
@@ -620,6 +653,47 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 </footer>
 
 <script>
+// === LIVE SCANNER ===
+const GS_TABS={
+  stocks:['SPY','QQQ','TSLA','AMZN','MSFT','JPM','GLD','BAC','DIS'],
+  tech:['NVDA','AMD','AVGO','ASML','MU','MRVL','VRT','COHR','PLTR','PANW'],
+  crypto:['BTC/USD','ETH/USD','SOL/USD','XRP/USD']
+};
+let gsCurrentTab='stocks';
+async function gsLoadTab(tab){
+  gsCurrentTab=tab;
+  const grid=document.getElementById('gsScannerGrid');
+  grid.innerHTML='<div class="gs-card-loading">Pulling live data…</div>';
+  const syms=GS_TABS[tab];
+  const results=await Promise.all(syms.map(s=>fetch('/api/quote?symbol='+encodeURIComponent(s)).then(r=>r.json()).catch(()=>({symbol:s,error:true}))));
+  grid.innerHTML=results.map(d=>{
+    const chg=d.changePercent||0;
+    const chgClass=chg>=0?'up':'dn';
+    const chgArrow=chg>=0?'▲':'▼';
+    const sigClass=(d.signal||'neutral').toLowerCase();
+    const fmt=v=>v!=null?('$'+Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})):'—';
+    return `<div class="gs-card">
+      <div class="gs-card-top">
+        <div><div class="gs-card-sym">${d.symbol.replace('/USD','')}</div><div class="gs-card-name">${d.name||''}</div></div>
+        <div><div class="gs-card-price">${fmt(d.price)}</div><div class="gs-card-chg ${chgClass}">${chgArrow} ${Math.abs(chg).toFixed(2)}%</div></div>
+      </div>
+      <div class="gs-card-metrics">
+        <div class="gs-metric"><span class="gs-metric-label">RSI (14)</span><span class="gs-metric-val">${d.rsi!=null?d.rsi:'—'}</span></div>
+        <div class="gs-metric"><span class="gs-metric-label">EMA Status</span><span class="gs-metric-val">${d.emaStatus||'—'}</span></div>
+        <div class="gs-metric"><span class="gs-metric-label">Day High</span><span class="gs-metric-val">${fmt(d.high)}</span></div>
+        <div class="gs-metric"><span class="gs-metric-label">Day Low</span><span class="gs-metric-val">${fmt(d.low)}</span></div>
+        <div class="gs-metric"><span class="gs-metric-label">Volume</span><span class="gs-metric-val">${d.volume?Number(d.volume).toLocaleString():'—'}</span></div>
+        <div class="gs-metric"><span class="gs-metric-label">Signal Score</span><span class="gs-metric-val">${d.signalScore||'—'}/100</span></div>
+      </div>
+      <div class="gs-card-signal ${sigClass}">${d.signal||'Neutral'}</div>
+    </div>`;
+  }).join('');
+}
+function gsSetTab(tab){
+  document.querySelectorAll('.gs-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.gs-tab').forEach(b=>{if(b.textContent.toLowerCase()===tab)b.classList.add('active');});
+  gsLoadTab(tab);
+}
 const ASSETS=[
   {sym:'NVDA',name:'NVIDIA Corp',price:875.20,chg:2.4,rsi:61.2,vol:'148%',ema:'Above',signal:'Bullish',type:'stock',cap:'$2.15T',mom:'Strong'},
   {sym:'MU',name:'Micron Technology',price:128.30,chg:3.1,rsi:58.7,vol:'132%',ema:'Above',signal:'Bullish',type:'stock',cap:'$142B',mom:'Strong'},
@@ -653,6 +727,7 @@ let scansLeft=5;
 let compareMode=false;
 
 function showPage(id){
+  if(id==='scanner')gsLoadTab(gsCurrentTab);
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
