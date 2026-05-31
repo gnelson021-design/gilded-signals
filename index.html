@@ -472,7 +472,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
     <p class="section-desc" style="margin-bottom:1.25rem;">Curated summaries with links to original sources. We do not republish full articles — click "Read Source" to view each story directly at the publisher.</p>
     <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
       <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
+      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Live news &mdash; source-linked headlines from Finnhub, auto-refreshed every 10 minutes.</span>
     </div>
     <div class="news-tabs">
       <button class="news-tab active" onclick="filterNews('all',this,'newsGrid')">All</button>
@@ -494,7 +494,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
     <h2 class="section-title">AI &amp; Infrastructure</h2>
     <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
       <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
+      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Live news &mdash; source-linked headlines from Finnhub, auto-refreshed every 10 minutes.</span>
     </div>
     <p class="section-desc" style="margin-bottom:2.5rem;">Curated summaries with links to original sources, covering the semiconductor and AI compute stack — NVDA, ASML, AVGO, COHR, and the supply chain powering the AI era.</p>
     <div class="news-grid" id="aiGrid"></div>
@@ -509,7 +509,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
     <p class="section-desc" style="margin-bottom:1.25rem;">Geopolitical and macro developments filtered for market relevance.</p>
     <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
       <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
+      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Live news &mdash; source-linked headlines from Finnhub, auto-refreshed every 10 minutes.</span>
     </div>
     <div class="news-grid" id="worldGrid"></div>
   </div>
@@ -727,16 +727,21 @@ const ASSETS=[
   {sym:'XRP',name:'Ripple',price:2.14,chg:-1.2,rsi:42.3,vol:'65%',ema:'Below',signal:'Neutral',type:'crypto',cap:'$123B',mom:'Weak'},
 ];
 const NEWS_CACHE={};
-async function loadNews(cat,containerId){
+let newsActiveCat='market';
+async function loadNews(cat,containerId,force){
   const el=document.getElementById(containerId);if(!el)return;
-  if(NEWS_CACHE[cat]){renderNewsData(el,NEWS_CACHE[cat]);return;}
-  el.innerHTML='<div style="padding:2rem;color:var(--text-muted);text-align:center;letter-spacing:0.1em;font-size:0.8rem;">Loading live news…</div>';
+  if(!force && NEWS_CACHE[cat]){renderNewsData(el,NEWS_CACHE[cat]);return;}
+  el.innerHTML='<div style="padding:2rem;color:var(--text-muted);text-align:center;letter-spacing:0.1em;font-size:0.8rem;">Loading live news\u2026</div>';
   try{
     const r=await fetch('/api/news?cat='+cat);
     const data=await r.json();
+    if(!Array.isArray(data)||!data.length){
+      el.innerHTML='<div style="padding:2rem;color:var(--text-muted);text-align:center;font-size:0.8rem;">'+((data&&data.error)?'Live news is temporarily unavailable \u2014 it will refresh automatically.':'No stories right now \u2014 check back shortly.')+'</div>';
+      return;
+    }
     NEWS_CACHE[cat]=data;
     renderNewsData(el,data);
-  }catch(e){el.innerHTML='<div style="padding:2rem;color:var(--text-muted)">Failed to load news</div>';}
+  }catch(e){el.innerHTML='<div style="padding:2rem;color:var(--text-muted);text-align:center;font-size:0.8rem;">Couldn\u2019t load news right now \u2014 it will retry automatically.</div>';}
 }
 function renderNewsData(el,data){
   const now=Date.now();
@@ -811,6 +816,7 @@ function renderNews(containerId,filter){
 function filterNews(cat,btn,gridId){
   btn.closest('.news-tabs').querySelectorAll('.news-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  if(gridId==='newsGrid') newsActiveCat=cat;
   loadNews(cat,gridId);
 }
 function filterNews_disabled(cat,btn,gridId){
@@ -1026,6 +1032,16 @@ loadNews('market','newsGrid');
 loadNews('ai','aiGrid');
 loadNews('world','worldGrid');
 gscmpInit();
+
+// Auto-refresh live news every 10 minutes (force-bypass the client cache).
+setInterval(function(){
+  try{
+    delete NEWS_CACHE['market']; delete NEWS_CACHE['ai']; delete NEWS_CACHE['world']; delete NEWS_CACHE[newsActiveCat];
+    loadNews(newsActiveCat,'newsGrid',true);
+    loadNews('ai','aiGrid',true);
+    loadNews('world','worldGrid',true);
+  }catch(e){}
+}, 600000);
 
 // Home-page preview grid demo movement (home page only - unchanged feature)
 setInterval(()=>{
