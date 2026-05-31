@@ -297,6 +297,12 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 .gscmp-row-label{font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);}
 .gscmp-row-val{font-size:0.82rem;color:var(--text-primary);}
 .gscmp-card-foot{display:flex;align-items:center;justify-content:space-between;}
+.gscmp-summary{grid-column:1/-1;background:var(--charcoal-2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:6px;padding:1.4rem 1.6rem;margin-top:0.25rem;}
+.gscmp-summary-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);margin-bottom:0.5rem;}
+.gscmp-summary p{font-size:0.86rem;color:var(--text-secondary);line-height:1.6;margin:0 0 0.6rem;}
+.gscmp-summary-note{font-size:0.62rem!important;color:var(--text-muted)!important;font-style:italic;margin-top:0.8rem!important;}
+.gscmp-why{margin:0.4rem 0 0.6rem;padding-left:1.1rem;}
+.gscmp-why li{font-size:0.74rem;color:var(--text-secondary);line-height:1.7;margin-bottom:0.2rem;}
 @media(max-width:600px){.gscmp-slots{grid-template-columns:1fr;}.gscmp-results{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -931,30 +937,76 @@ async function gscmpRun(){
     gscmpMsg('Couldn\u2019t load live data for ' + bad + '. Please try again in a moment.', true);
     return;
   }
-  if(results){ results.innerHTML = gscmpCard(a.data) + gscmpCard(b.data); results.classList.add('gscmp-visible'); }
+  if(results){ results.innerHTML = gscmpCard(a.data) + gscmpCard(b.data) + gscmpSummary(a.data, b.data); results.classList.add('gscmp-visible'); }
 }
 
 /* Build one comparison card from a live quote (quote.js shape). No fabricated values. */
+function gscmpMoney(v){ return v==null?'\u2014':(Number(v)>=1000?'$'+Number(v).toLocaleString('en-US',{maximumFractionDigits:0}):'$'+Number(v).toFixed(2)); }
+function gscmpPctTxt(v){ if(v==null) return '\u2014'; return (v>=0?'+':'')+Number(v).toFixed(2)+'%'; }
+function gscmpRisk(d){
+  if(d.rsi14==null) return '\u2014';
+  if(d.rsi14>=75||d.rsi14<=25) return 'High';
+  if(d.rsi14>=68||d.rsi14<=32) return 'Elevated';
+  if(d.rvol!=null&&d.rvol>=2.5) return 'Elevated';
+  return 'Moderate';
+}
+function gscmpBadge(d){
+  var s=d.gildedScore, label=d.gildedBadge||'Neutral';
+  if(s==null) return '<span class="badge badge-neutral">Neutral</span>';
+  if(s>=60) return '<span class="badge badge-bullish">'+label+'</span>';
+  if(s>=40) return '<span class="badge badge-neutral">'+label+'</span>';
+  return '<span class="badge" style="background:rgba(214,80,80,0.14);color:#e06a6a;border:1px solid rgba(214,80,80,0.28);">'+label+'</span>';
+}
 function gscmpCard(d){
-  const up = (d.change || 0) >= 0;
-  const chg = (d.changePercent == null) ? '\u2014' : (up?'\u25B2':'\u25BC') + ' ' + Math.abs(d.changePercent).toFixed(2) + '%';
-  const price = (d.price >= 1000) ? '$' + d.price.toLocaleString('en-US',{maximumFractionDigits:0}) : '$' + Number(d.price).toFixed(2);
-  const badgeCls = d.signal === 'Bullish' ? 'badge-bullish' : d.signal === 'Watch' ? 'badge-watch' : 'badge-neutral';
-  const ema = d.emaStatus ? (d.emaStatus.charAt(0).toUpperCase() + d.emaStatus.slice(1)) : '\u2014';
-  const rows = [
-    ['RSI (14)', d.rsi != null ? d.rsi : '\u2014'],
-    ['EMA Status', ema],
-    ['Signal Score', d.signalScore != null ? d.signalScore + '/100' : '\u2014'],
-    ['Day High', d.high != null ? '$' + Number(d.high).toFixed(2) : '\u2014'],
-    ['Day Low', d.low != null ? '$' + Number(d.low).toFixed(2) : '\u2014'],
-    ['Risk', d.risk || '\u2014']
+  var up=(d.change||0)>=0;
+  var chg=(d.changePercent==null)?'\u2014':(up?'\u25B2':'\u25BC')+' '+Math.abs(d.changePercent).toFixed(2)+'%';
+  var price=gscmpMoney(d.price);
+  var ema=d.emaStatus?(d.emaStatus.charAt(0).toUpperCase()+d.emaStatus.slice(1)):'\u2014';
+  var macd=(d.macdHist==null)?'\u2014':(d.macdHist>0?'Bullish':'Bearish');
+  var rvol=(d.rvol==null)?'\u2014':Number(d.rvol).toFixed(2)+'x';
+  var dayRange=(d.low!=null&&d.high!=null)?gscmpMoney(d.low)+' \u2013 '+gscmpMoney(d.high):'\u2014';
+  var wkRange=(d.week52Low!=null&&d.week52High!=null)?gscmpMoney(d.week52Low)+' \u2013 '+gscmpMoney(d.week52High):'\u2014';
+  var rows=[
+    ['Gilded Score', d.gildedScore!=null? d.gildedScore+'/100':'\u2014'],
+    ['RSI (14)', d.rsi14!=null? d.rsi14:'\u2014'],
+    ['Trend (vs EMA50)', ema],
+    ['MACD Momentum', macd],
+    ['Rel. Volume', rvol],
+    ['Day Range', dayRange],
+    ['52-Wk Range', wkRange],
+    ['Support', gscmpMoney(d.support)],
+    ['Resistance', gscmpMoney(d.resistance)],
+    ['1-Week', gscmpPctTxt(d.weekChange)],
+    ['1-Month', gscmpPctTxt(d.monthChange)],
+    ['YTD', gscmpPctTxt(d.ytdChange)],
+    ['Risk', gscmpRisk(d)]
   ];
+  if(d.analystRating) rows.push(['Analyst View', d.analystRating]);
+  if(d.peRatio!=null) rows.push(['P/E Ratio', Number(d.peRatio).toFixed(1)]);
+  if(d.sector) rows.push(['Sector', d.sector]);
   return '<div class="gscmp-card">'
     + '<div class="gscmp-card-head"><div><div class="gscmp-card-sym">' + (d.symbol||'').replace('/USD','') + '</div><div class="gscmp-card-name">' + (d.name||'') + '</div></div>'
     + '<div><div class="gscmp-card-price">' + price + '</div><div class="gscmp-card-chg ' + (up?'up':'dn') + '">' + chg + '</div></div></div>'
-    + '<div class="gscmp-rows">' + rows.map(r=>'<div class="gscmp-row"><span class="gscmp-row-label">'+r[0]+'</span><span class="gscmp-row-val">'+r[1]+'</span></div>').join('') + '</div>'
-    + '<div class="gscmp-card-foot"><span class="badge ' + badgeCls + '">' + (d.signal||'Neutral') + '</span><span style="font-size:0.57rem;color:var(--text-muted);">Live</span></div>'
+    + '<div class="gscmp-rows">' + rows.map(function(r){return '<div class="gscmp-row"><span class="gscmp-row-label">'+r[0]+'</span><span class="gscmp-row-val">'+r[1]+'</span></div>';}).join('') + '</div>'
+    + '<div class="gscmp-card-foot">' + gscmpBadge(d) + '<span style="font-size:0.57rem;color:var(--text-muted);">Live</span></div>'
     + '</div>';
+}
+function gscmpSummary(a,b){
+  var na=(a.symbol||'').replace('/USD',''), nb=(b.symbol||'').replace('/USD','');
+  var sa=a.gildedScore, sb=b.gildedScore, verdict;
+  if(sa==null||sb==null){
+    verdict='There isn\u2019t enough live signal data to score one above the other right now.';
+  } else if(sa===sb){
+    verdict='<strong>'+na+'</strong> and <strong>'+nb+'</strong> are evenly matched at '+sa+'/100 on the Gilded Score.';
+  } else {
+    var win=sa>sb?na:nb, lose=sa>sb?nb:na, hi=Math.max(sa,sb), lo=Math.min(sa,sb);
+    verdict='<strong>'+win+'</strong> has the stronger setup right now \u2014 '+hi+'/100 vs '+lo+'/100 for '+lose+' on the Gilded Score.';
+  }
+  var winData=(sa>=sb?a:b);
+  var reasons=(winData.gildedReasons||[]).slice(0,3);
+  var why=reasons.length?'<ul class="gscmp-why">'+reasons.map(function(r){return '<li>'+r+'</li>';}).join('')+'</ul>':'';
+  return '<div class="gscmp-summary"><div class="gscmp-summary-title">Which looks stronger?</div><p>'+verdict+'</p>'+why
+    +'<p class="gscmp-summary-note">Educational comparison generated from live technical signals \u2014 not a buy or sell recommendation. Always do your own research.</p></div>';
 }
 
 /* Build clickable chips, wire Enter-to-add, initial render. */
