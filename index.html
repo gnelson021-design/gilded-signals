@@ -751,14 +751,14 @@ const CAT_CLASS={market:'cat-market',ai:'cat-ai',world:'cat-world',crypto:'cat-c
 let scansLeft=5;
 let compareMode=false;
 
-function showPage(id){
+window.showPage=function showPage(id){
   if(id==='scanner')gsLoadTab(gsCurrentTab);
   if(id==='news')loadNews('market','newsGrid');
   if(id==='ai')loadNews('ai','aiGrid');
   if(id==='world')loadNews('world','worldGrid');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
+  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
   const el=document.getElementById('nav-'+id);
   if(el)el.classList.add('active');
   window.scrollTo(0,0);
