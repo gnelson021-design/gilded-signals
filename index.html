@@ -512,17 +512,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 <!-- SCANNER (COMPARE TOOL) -->
 <div id="page-scanner" class="page">
   <div class="section-inner scanner-page">
-    <div class="section-label">Live Market Scanner</div>
-    <h2 class="section-title">Market <em>Intelligence</em></h2>
-    <p class="section-desc">Real-time prices, RSI, EMA, and signal strength across stocks and crypto.</p>
-
-    <div class="gs-scanner-tabs" id="gsScannerTabs">
-      <button class="gs-tab active" onclick="gsSetTab('stocks')">Stocks</button>
-      <button class="gs-tab" onclick="gsSetTab('tech')">Tech</button>
-      <button class="gs-tab" onclick="gsSetTab('crypto')">Crypto</button>
-    </div>
-    <div class="gs-scanner-grid" id="gsScannerGrid"></div>
-    <div class="section-label" style="margin-top:3rem">Compare Tool</div>
+    <div class="section-label">Compare Tool</div>
     <h2 class="section-title">Market <em>Compare</em></h2>
     <p class="section-desc" style="margin-bottom:0.5rem;">Pick two assets and compare their live price, momentum, RSI, and signal side by side.</p>
     <p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2rem;line-height:1.6;max-width:680px;">Signals are generated from live technical indicators and are for <strong style="color:var(--text-secondary);">educational research only</strong> &mdash; not buy/sell recommendations.</p>
@@ -566,6 +556,18 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
       <div class="gscmp-loading" id="gscmpLoading">Pulling live data&hellip;</div>
       <div class="gscmp-results" id="gscmpResults"></div>
     </div>
+  </div>
+
+  <div class="section-inner scanner-page" style="padding-top:0">
+    <div class="section-label" style="margin-top:0">Live Market Scanner</div>
+    <h2 class="section-title">Market <em>Intelligence</em></h2>
+    <p class="section-desc" style="margin-bottom:1.5rem">Real-time prices, RSI, EMA, and signal strength. Click any card for full detail.</p>
+    <div class="gs-scanner-tabs" id="gsScannerTabs">
+      <button class="gs-tab active" onclick="gsSetTab('stocks')">Stocks</button>
+      <button class="gs-tab" onclick="gsSetTab('tech')">Tech</button>
+      <button class="gs-tab" onclick="gsSetTab('crypto')">Crypto</button>
+    </div>
+    <div class="gs-scanner-grid" id="gsScannerGrid"><div class="gs-card-loading">Loading live data&hellip;</div></div>
   </div>
 </div>
 
