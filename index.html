@@ -452,7 +452,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
       <p style="font-size:0.65rem;color:var(--text-muted);margin:-0.5rem auto 1.5rem;max-width:420px;text-align:center;line-height:1.6;">Weekly market intelligence. No spam. No copied articles. Source-linked once live feeds are connected.</p>
       <div style="display:flex;max-width:420px;margin:0 auto;">
         <input type="email" placeholder="your@email.com" style="flex:1;background:var(--charcoal-3);border:1px solid var(--charcoal-5);border-right:none;color:var(--text-primary);padding:13px 18px;font-family:'DM Sans',sans-serif;font-size:0.85rem;border-radius:3px 0 0 3px;outline:none;"/>
-        <button class="btn-primary" style="border-radius:0 3px 3px 0;white-space:nowrap;">Subscribe</button>
+        <button class="btn-primary" style="border-radius:0 3px 3px 0;white-space:nowrap;" onclick="showPage('pricing')">Subscribe</button>
       </div>
     </div>
   </section>
@@ -645,8 +645,8 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   <div class="footer-inner">
     <div class="footer-brand"><div class="brand">Gilded Signals</div><p>Market intelligence for disciplined investors. Real signals, no noise.</p></div>
     <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showPage('news')">Market News</a></li><li><a onclick="showPage('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
-    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Newsletter</a></li><li><a href="#">Contact</a></li></ul></div>
-    <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Disclaimer</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('newsletter')">Newsletter</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Legal</h4><ul><li><a onclick="showPage('terms')">Terms of Service</a></li><li><a onclick="showPage('privacy')">Privacy Policy</a></li><li><a onclick="showPage('disclaimer')">Disclaimer</a></li></ul></div>
   </div>
   <div class="footer-bottom">
     <p>© 2026 Gilded Signals. All rights reserved.</p>
@@ -1033,6 +1033,97 @@ async function updateGildedTicker() {
 updateGildedTicker();
 setInterval(updateGildedTicker, 20000);
 </script>
+
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page">
+  <div class="section-inner" style="max-width:760px;margin:0 auto;padding:3rem 2rem;">
+    <div class="section-label">Our Story</div>
+    <h2 class="section-title">About <em>Gilded Signals</em></h2>
+    <p class="section-desc" style="margin-bottom:2rem">Premium market intelligence built for disciplined investors.</p>
+    <div style="color:var(--text-secondary);line-height:1.9;font-size:0.95rem;">
+      <p style="margin-bottom:1.25rem">Gilded Signals is a premium market intelligence platform built to make stock market, crypto, AI infrastructure, and world news easier to understand. The goal is to help everyday investors cut through noise, track live market data, compare stocks, follow important trends, and feel more confident learning about the market.</p>
+      <p style="margin-bottom:1.25rem">We believe that access to institutional-grade data and clear, actionable intelligence should not be reserved for Wall Street insiders. Gilded Signals bridges that gap — delivering real-time price data, technical indicators, signal ratings, and curated news in a platform designed for clarity and precision.</p>
+      <p style="margin-bottom:1.25rem">Our scanner pulls live data from trusted market sources, calculates RSI, EMA, MACD, relative volume, and proprietary Gilded Signal Ratings, and presents everything in a clean, professional interface built for serious investors who value their time.</p>
+      <p style="margin-bottom:1.25rem">Whether you are tracking AI infrastructure stocks like NVDA, ASML, and AVGO, monitoring crypto markets, or staying current on global macro events, Gilded Signals is your daily edge.</p>
+      <p style="color:var(--gold);font-style:italic;">Real signals. No noise. No hype.</p>
+    </div>
+    <button class="btn-primary" style="margin-top:2rem" onclick="showPage('scanner')">Try the Scanner</button>
+  </div>
+</div>
+
+<div id="page-newsletter" class="page">
+  <div class="section-inner" style="max-width:600px;margin:0 auto;padding:3rem 2rem;text-align:center;">
+    <div class="section-label">Stay Informed</div>
+    <h2 class="section-title">The Gilded <em>Brief</em></h2>
+    <p class="section-desc" style="margin-bottom:2rem">Weekly market intelligence covering what mattered, what is next, and the themes worth watching. No spam. No noise. Just signal.</p>
+    <div style="background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:2rem;">
+      <script async data-uid="9477301" src="https://gildedsignals.kit.com/9477301/index.js"></script>
+      <p style="color:var(--text-muted);font-size:0.75rem;margin-top:1rem;">Join disciplined investors who read the Gilded Brief every week.</p>
+    </div>
+  </div>
+</div>
+
+<div id="page-contact" class="page">
+  <div class="section-inner" style="max-width:600px;margin:0 auto;padding:3rem 2rem;text-align:center;">
+    <div class="section-label">Get In Touch</div>
+    <h2 class="section-title">Contact <em>Us</em></h2>
+    <p class="section-desc" style="margin-bottom:2rem">Questions, feedback, or partnership inquiries — we would love to hear from you.</p>
+    <div style="background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:2rem;text-align:left;">
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">For general inquiries and support:</p>
+      <a href="mailto:intel@gildedsignals.com" style="color:var(--gold);font-size:1.1rem;letter-spacing:0.05em;">intel@gildedsignals.com</a>
+      <p style="color:var(--text-muted);font-size:0.8rem;margin-top:1.5rem;">We typically respond within 24 hours on business days.</p>
+    </div>
+  </div>
+</div>
+
+<div id="page-terms" class="page">
+  <div class="section-inner" style="max-width:760px;margin:0 auto;padding:3rem 2rem;">
+    <div class="section-label">Legal</div>
+    <h2 class="section-title">Terms of <em>Service</em></h2>
+    <p style="color:var(--text-muted);font-size:0.78rem;margin-bottom:2rem;">Last updated: June 2026</p>
+    <div style="color:var(--text-secondary);line-height:1.9;font-size:0.9rem;">
+      <p style="margin-bottom:1.25rem">By accessing or using Gilded Signals, you agree to be bound by these Terms of Service. If you do not agree, please do not use the platform.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Use of Service.</strong> Gilded Signals provides market data, news aggregation, and analytical tools for informational and educational purposes only. You may not use the platform for any unlawful purpose or in any way that could damage or impair the service.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Intellectual Property.</strong> All content, branding, and platform design are the property of Gilded Signals. You may not reproduce or redistribute any part of the platform without written permission.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Disclaimer of Warranties.</strong> The platform is provided on an as-is basis. We make no warranties regarding accuracy, completeness, or fitness for any particular purpose.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Limitation of Liability.</strong> Gilded Signals shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Changes.</strong> We reserve the right to modify these terms at any time. Continued use of the platform constitutes acceptance of the updated terms.</p>
+      <p>For questions, contact <a href="mailto:intel@gildedsignals.com" style="color:var(--gold)">intel@gildedsignals.com</a>.</p>
+    </div>
+  </div>
+</div>
+
+<div id="page-privacy" class="page">
+  <div class="section-inner" style="max-width:760px;margin:0 auto;padding:3rem 2rem;">
+    <div class="section-label">Legal</div>
+    <h2 class="section-title">Privacy <em>Policy</em></h2>
+    <p style="color:var(--text-muted);font-size:0.78rem;margin-bottom:2rem;">Last updated: June 2026</p>
+    <div style="color:var(--text-secondary);line-height:1.9;font-size:0.9rem;">
+      <p style="margin-bottom:1.25rem">Gilded Signals respects your privacy. This policy explains what information we collect and how we use it.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Information We Collect.</strong> We may collect your email address if you subscribe to our newsletter. We do not sell or share your personal information with third parties.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Usage Data.</strong> We may collect anonymous usage data to improve the platform, including pages visited and features used.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Cookies.</strong> We use minimal cookies necessary for the platform to function. We do not use advertising cookies or third-party tracking.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Third-Party Services.</strong> We use Alpaca Markets, Finnhub, and CoinGecko for market data. These services have their own privacy policies.</p>
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Your Rights.</strong> You may request deletion of your data at any time by contacting us.</p>
+      <p>For questions, contact <a href="mailto:intel@gildedsignals.com" style="color:var(--gold)">intel@gildedsignals.com</a>.</p>
+    </div>
+  </div>
+</div>
+
+<div id="page-disclaimer" class="page">
+  <div class="section-inner" style="max-width:760px;margin:0 auto;padding:3rem 2rem;">
+    <div class="section-label">Legal</div>
+    <h2 class="section-title">Investment <em>Disclaimer</em></h2>
+    <p style="color:var(--text-muted);font-size:0.78rem;margin-bottom:2rem;">Last updated: June 2026</p>
+    <div style="color:var(--text-secondary);line-height:1.9;font-size:0.9rem;">
+      <p style="margin-bottom:1.25rem"><strong style="color:var(--gold)">Gilded Signals is not a financial advisor and does not provide investment advice.</strong></p>
+      <p style="margin-bottom:1.25rem">All content on this platform — including market data, signal ratings, news summaries, technical indicators, and commentary — is provided for informational and educational purposes only. Nothing on Gilded Signals constitutes a recommendation to buy, sell, or hold any security, cryptocurrency, or other financial instrument.</p>
+      <p style="margin-bottom:1.25rem">Investing and trading involve significant risk, including the possible loss of principal. Past performance is not indicative of future results. Always conduct your own due diligence and consult a qualified financial professional before making any investment decisions.</p>
+      <p style="margin-bottom:1.25rem">Market data displayed on this platform is sourced from third-party providers and may be delayed or subject to inaccuracies. Gilded Signals makes no warranty regarding the accuracy or completeness of any data displayed.</p>
+      <p>By using Gilded Signals, you acknowledge and agree that you are solely responsible for any investment decisions you make.</p>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
