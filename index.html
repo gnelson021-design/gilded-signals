@@ -720,26 +720,42 @@ const ASSETS=[
   {sym:'LITE',name:'Lumentum Holdings',price:74.30,chg:1.1,rsi:51.6,vol:'91%',ema:'Above',signal:'Watch',type:'stock',cap:'$5.2B',mom:'Moderate'},
   {sym:'XRP',name:'Ripple',price:2.14,chg:-1.2,rsi:42.3,vol:'65%',ema:'Below',signal:'Neutral',type:'crypto',cap:'$123B',mom:'Weak'},
 ];
-const NEWS=[
-  {source:'Reuters',headline:'Fed Officials Signal Patience on Rate Cuts Amid Sticky Inflation',summary:'Federal Reserve members reiterated a data-dependent stance, suggesting interest rate reductions remain unlikely before late 2026 given persistent core inflation above the 2% target.',time:'2h ago',cat:'econ',catLabel:'Economy',url:'https://reuters.com'},
-  {source:'Bloomberg',headline:'NVIDIA Q1 Revenue Beats Estimates, Data Center Demand Accelerates',summary:'NVIDIA reported quarterly revenue surpassing Wall Street projections, driven by record data center sales. Management cited sustained demand from hyperscalers building AI infrastructure.',time:'3h ago',cat:'ai',catLabel:'AI & Infra',url:'https://bloomberg.com'},
-  {source:'WSJ',headline:'Micron Technology Sees Strong DRAM Demand From AI Server Buildout',summary:'Micron forecasts continued upside in high-bandwidth memory shipments as AI server manufacturers increase chip orders. The company is expanding production capacity at its Taiwan facility.',time:'4h ago',cat:'ai',catLabel:'AI & Infra',url:'https://wsj.com'},
-  {source:'Financial Times',headline:'Bitcoin Surpasses $96K as Institutional Accumulation Continues',summary:'Bitcoin extended its rally as on-chain data showed significant accumulation by institutional wallets. ETF inflow data confirmed continued demand from registered investment advisors.',time:'5h ago',cat:'crypto',catLabel:'Crypto',url:'https://ft.com'},
-  {source:'CNBC',headline:'S&P 500 Notches Fifth Consecutive Weekly Gain on AI Optimism',summary:'U.S. equity markets closed the week higher, with the S&P 500 posting its fifth straight weekly advance. Technology and semiconductor sectors led gains.',time:'6h ago',cat:'market',catLabel:'Market',url:'https://cnbc.com'},
-  {source:'Reuters',headline:'ASML Warns of Export Control Uncertainty Affecting 2026 Outlook',summary:'ASML flagged uncertainty related to Dutch government export restrictions on EUV lithography equipment, potentially impacting shipment schedules to certain Asian customers.',time:'7h ago',cat:'ai',catLabel:'AI & Infra',url:'https://reuters.com'},
-  {source:'Bloomberg',headline:'China Trade Tensions Re-Emerge as Treasury Reviews Tariff Framework',summary:'The U.S. Treasury Department is reviewing the tariff structure on Chinese technology imports, with officials signaling potential changes that could affect semiconductor supply chains.',time:'8h ago',cat:'world',catLabel:'World',url:'https://bloomberg.com'},
-  {source:"Barron's",headline:'Broadcom Q2 Earnings Preview: AI Networking Demand in Focus',summary:"Analysts expect Broadcom to report strong custom AI chip and networking revenue when it reports next month. The company's hyperscaler partnerships are seen as a key growth driver.",time:'9h ago',cat:'earnings',catLabel:'Earnings',url:'https://barrons.com'},
-  {source:'CoinDesk',headline:'Ethereum Upgrade Roadmap Points to Improved Transaction Throughput',summary:'Ethereum core developers published an updated scaling roadmap, outlining near-term improvements expected to reduce gas fees and increase transaction capacity.',time:'10h ago',cat:'crypto',catLabel:'Crypto',url:'https://coindesk.com'},
-  {source:'WSJ',headline:'Japan GDP Expansion Exceeds Forecast, Yen Holds Steady',summary:"Japan's economy expanded at a faster-than-expected pace, supported by exports and domestic consumption. The yen held steady against the dollar following the data.",time:'11h ago',cat:'world',catLabel:'World',url:'https://wsj.com'},
-  {source:'Financial Times',headline:'Vertiv Secures Major Data Center Power Contract With Global Hyperscaler',summary:'Vertiv announced a multi-year supply agreement for thermal management and power infrastructure with a major cloud provider.',time:'12h ago',cat:'market',catLabel:'Market',url:'https://ft.com'},
-  {source:'Reuters',headline:'EU Launches Formal Inquiry Into AI Model Training Data Practices',summary:'European regulators opened a formal investigation into whether leading AI companies obtained training data in compliance with GDPR and copyright law.',time:'13h ago',cat:'world',catLabel:'World',url:'https://reuters.com'},
-];
+const NEWS_CACHE={};
+async function loadNews(cat,containerId){
+  const el=document.getElementById(containerId);if(else:)return;
+  if(NEWS_CACHE[cat]){renderNewsData(el,NEWS_CACHE[cat]);return;}
+  el.innerHTML='<div style="padding:2rem;color:var(--text-muted);text-align:center;letter-spacing:0.1em;font-size:0.8rem;">Loading live news…</div>';
+  try{
+    const r=await fetch('/api/news?cat='+cat);
+    const data=await r.json();
+    NEWS_CACHE[cat]=data;
+    renderNewsData(el,data);
+  }catch(e){el.innerHTML='<div style="padding:2rem;color:var(--text-muted)">Failed to load news</div>';}
+}
+function renderNewsData(el,data){
+  const now=Date.now();
+  el.innerHTML=data.map(n=>{
+    const t=n.time?new Date(n.time):null;
+    const ago=t?Math.round((now-t)/60000):null;
+    const timeStr=ago!=null?(ago<60?ago+'m ago':Math.round(ago/60)+'h ago'):'';
+    return `<div class="news-card" onclick="window.open('${n.url}','_blank')">
+      <div class="news-card-top"><span class="news-source">${n.source}</span><span class="news-time">${timeStr}</span></div>
+      <span class="news-cat cat-${n.cat}">${n.catLabel}</span>
+      <div class="news-headline">${n.headline}</div>
+      <div class="news-summary">${n.summary}</div>
+      <div class="news-footer"><a href="${n.url}" target="_blank" rel="noopener noreferrer" class="btn-read">Read Source ↗</a></div>
+    </div>`;
+  }).join('');
+}
 const CAT_CLASS={market:'cat-market',ai:'cat-ai',world:'cat-world',crypto:'cat-crypto',earnings:'cat-earnings',econ:'cat-econ'};
 let scansLeft=5;
 let compareMode=false;
 
 function showPage(id){
   if(id==='scanner')gsLoadTab(gsCurrentTab);
+  if(id==='news')loadNews('market','newsGrid');
+  if(id==='ai')loadNews('ai','aiGrid');
+  if(id==='world')loadNews('world','worldGrid');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
@@ -788,6 +804,10 @@ function renderNews(containerId,filter){
 }
 function filterNews(cat,btn,gridId){
   btn.closest('.news-tabs').querySelectorAll('.news-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadNews(cat,gridId);
+}
+function filterNews_disabled(cat,btn,gridId){
   btn.classList.add('active');
   renderNews(gridId,cat);
 }
@@ -950,9 +970,9 @@ function gscmpInit(){
 
 // INIT
 renderAssetCards('homeScannerGrid','all');
-renderNews('newsGrid','all');
-renderNews('aiGrid','ai');
-renderNews('worldGrid','world');
+loadNews('market','newsGrid');
+loadNews('ai','aiGrid');
+loadNews('world','worldGrid');
 gscmpInit();
 
 // Home-page preview grid demo movement (home page only - unchanged feature)
