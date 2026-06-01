@@ -232,78 +232,6 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 @media(max-width:600px){
   .everything-grid,.news-grid,.pricing-cards{grid-template-columns:1fr;}
 }
-
-/* ===== MARKET COMPARE TOOL ===== */
-.gscmp-wrap{max-width:920px;}
-.gs-scanner-tabs{display:flex;gap:8px;margin-bottom:2rem;}
-.gs-tab{background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:8px 24px;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
-.gs-tab.active{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.08);}
-.gs-tab:hover{border-color:var(--gold);color:var(--gold);}
-.gs-scanner-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:3rem;}
-.gs-card{background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:1.25rem;position:relative;transition:border-color 0.2s;}
-.gs-card:hover{border-color:var(--gold);}
-.gs-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;}
-.gs-card-sym{font-size:1.1rem;font-weight:700;color:var(--text-primary);font-family:'Cormorant Garamond',serif;}
-.gs-card-name{font-size:0.6rem;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
-.gs-card-price{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text-primary);text-align:right;}
-.gs-card-chg{font-size:0.7rem;text-align:right;margin-top:2px;}
-.gs-card-chg.up{color:var(--green);}
-.gs-card-chg.dn{color:var(--red);}
-.gs-card-metrics{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);}
-.gs-metric{display:flex;flex-direction:column;}
-.gs-metric-label{font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);}
-.gs-metric-val{font-size:0.78rem;color:var(--text-secondary);font-weight:500;}
-.gs-card-signal{margin-top:0.75rem;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:2px;display:inline-block;}
-.gs-card-signal.bullish{background:rgba(0,200,100,0.12);color:#00c864;}
-.gs-card-signal.neutral{background:rgba(212,175,55,0.1);color:var(--gold);}
-.gs-card-signal.watch{background:rgba(255,165,0,0.1);color:orange;}
-.gs-card-loading{text-align:center;color:var(--text-muted);padding:3rem;font-size:0.8rem;letter-spacing:0.1em;}
-.gscmp-picker{background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:1.75rem;margin-bottom:1.5rem;}
-.gscmp-picker h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:0.3rem;}
-.gscmp-picker p.gscmp-sub{font-size:0.78rem;color:var(--text-secondary);margin-bottom:1.25rem;}
-.gscmp-search{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.25rem;}
-.gscmp-search .ticker-input-wrap{flex:1;min-width:160px;}
-.gscmp-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem;}
-.gscmp-chip{background:var(--charcoal-3);border:1px solid var(--charcoal-5);color:var(--text-secondary);padding:7px 14px;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;border-radius:3px;cursor:pointer;transition:all 0.18s;user-select:none;}
-.gscmp-chip:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.06);}
-.gscmp-chip.gscmp-chip-on{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.12);}
-.gscmp-slots{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;}
-.gscmp-slot{background:var(--charcoal-3);border:1px dashed var(--charcoal-5);border-radius:5px;padding:1.1rem 1.25rem;min-height:74px;display:flex;flex-direction:column;justify-content:center;transition:border-color 0.2s;}
-.gscmp-slot.gscmp-filled{border-style:solid;border-color:var(--border-hover);}
-.gscmp-slot-label{font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
-.gscmp-slot-empty{font-size:0.82rem;color:var(--text-muted);}
-.gscmp-slot-filled-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.gscmp-slot-sym{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--text-primary);line-height:1;}
-.gscmp-slot-name{font-size:0.62rem;color:var(--text-muted);margin-top:3px;}
-.gscmp-x{background:transparent;border:1px solid var(--charcoal-5);color:var(--text-muted);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:0.72rem;line-height:1;flex-shrink:0;transition:all 0.18s;}
-.gscmp-x:hover{border-color:var(--red);color:var(--red);}
-.gscmp-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
-.gscmp-msg{font-size:0.7rem;color:var(--gold);letter-spacing:0.04em;min-height:1em;margin-top:0.75rem;}
-.gscmp-msg.gscmp-err{color:var(--red);}
-.btn-scan:disabled{opacity:0.4;cursor:not-allowed;}
-.btn-scan:disabled:hover{background:var(--gold);}
-.gscmp-loading{text-align:center;color:var(--text-muted);font-size:0.8rem;padding:2rem 0;display:none;}
-.gscmp-loading.gscmp-visible{display:block;}
-.gscmp-results{display:none;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.75rem;}
-.gscmp-results.gscmp-visible{display:grid;}
-.gscmp-card{background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:1.5rem;}
-.gscmp-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.1rem;}
-.gscmp-card-sym{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:400;line-height:1;}
-.gscmp-card-name{font-size:0.62rem;color:var(--text-muted);margin-top:3px;}
-.gscmp-card-price{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;text-align:right;line-height:1;}
-.gscmp-card-chg{font-size:0.78rem;text-align:right;margin-top:3px;}
-.gscmp-rows{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:1rem;}
-.gscmp-row{background:var(--charcoal-2);display:flex;justify-content:space-between;padding:0.7rem 0.95rem;}
-.gscmp-row-label{font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);}
-.gscmp-row-val{font-size:0.82rem;color:var(--text-primary);}
-.gscmp-card-foot{display:flex;align-items:center;justify-content:space-between;}
-.gscmp-summary{grid-column:1/-1;background:var(--charcoal-2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:6px;padding:1.4rem 1.6rem;margin-top:0.25rem;}
-.gscmp-summary-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);margin-bottom:0.5rem;}
-.gscmp-summary p{font-size:0.86rem;color:var(--text-secondary);line-height:1.6;margin:0 0 0.6rem;}
-.gscmp-summary-note{font-size:0.62rem!important;color:var(--text-muted)!important;font-style:italic;margin-top:0.8rem!important;}
-.gscmp-why{margin:0.4rem 0 0.6rem;padding-left:1.1rem;}
-.gscmp-why li{font-size:0.74rem;color:var(--text-secondary);line-height:1.7;margin-bottom:0.2rem;}
-@media(max-width:600px){.gscmp-slots{grid-template-columns:1fr;}.gscmp-results{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -458,7 +386,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
       <p style="font-size:0.65rem;color:var(--text-muted);margin:-0.5rem auto 1.5rem;max-width:420px;text-align:center;line-height:1.6;">Weekly market intelligence. No spam. No copied articles. Source-linked once live feeds are connected.</p>
       <div style="display:flex;max-width:420px;margin:0 auto;">
         <input type="email" placeholder="your@email.com" style="flex:1;background:var(--charcoal-3);border:1px solid var(--charcoal-5);border-right:none;color:var(--text-primary);padding:13px 18px;font-family:'DM Sans',sans-serif;font-size:0.85rem;border-radius:3px 0 0 3px;outline:none;"/>
-        <button class="btn-primary" style="border-radius:0 3px 3px 0;white-space:nowrap;" onclick="showPage('pricing')">Subscribe</button>
+        <button class="btn-primary" style="border-radius:0 3px 3px 0;white-space:nowrap;">Subscribe</button>
       </div>
     </div>
   </section>
@@ -472,7 +400,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
     <p class="section-desc" style="margin-bottom:1.25rem;">Curated summaries with links to original sources. We do not republish full articles — click "Read Source" to view each story directly at the publisher.</p>
     <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
       <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Live news &mdash; source-linked headlines from Finnhub, auto-refreshed every 10 minutes.</span>
+      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
     </div>
     <div class="news-tabs">
       <button class="news-tab active" onclick="filterNews('all',this,'newsGrid')">All</button>
@@ -494,7 +422,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
     <h2 class="section-title">AI &amp; Infrastructure</h2>
     <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
       <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Live news &mdash; source-linked headlines from Finnhub, auto-refreshed every 10 minutes.</span>
+      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
     </div>
     <p class="section-desc" style="margin-bottom:2.5rem;">Curated summaries with links to original sources, covering the semiconductor and AI compute stack — NVDA, ASML, AVGO, COHR, and the supply chain powering the AI era.</p>
     <div class="news-grid" id="aiGrid"></div>
@@ -509,74 +437,74 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
     <p class="section-desc" style="margin-bottom:1.25rem;">Geopolitical and macro developments filtered for market relevance.</p>
     <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
       <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Live news &mdash; source-linked headlines from Finnhub, auto-refreshed every 10 minutes.</span>
+      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
     </div>
     <div class="news-grid" id="worldGrid"></div>
   </div>
 </div>
 
-<!-- SCANNER (COMPARE TOOL) -->
+<!-- SCANNER -->
 <div id="page-scanner" class="page">
   <div class="section-inner scanner-page">
-    <div class="section-label">Compare Tool</div>
-    <h2 class="section-title">Market <em>Compare</em></h2>
-    <p class="section-desc" style="margin-bottom:0.5rem;">Pick two assets and compare their live price, momentum, RSI, and signal side by side.</p>
-    <p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2rem;line-height:1.6;max-width:680px;">Signals are generated from live technical indicators and are for <strong style="color:var(--text-secondary);">educational research only</strong> &mdash; not buy/sell recommendations.</p>
-
-    <div class="gscmp-wrap">
-      <!-- Picker: search + clickable chips -->
-      <div class="gscmp-picker">
-        <h3>Choose two to compare</h3>
-        <p class="gscmp-sub">Tap a symbol below (or search one) to add it. Your first pick fills Stock&nbsp;1, the second fills Stock&nbsp;2.</p>
-
-        <div class="gscmp-search">
-          <div class="ticker-input-wrap">
-            <label>Search a symbol</label>
-            <input class="ticker-input" id="gscmpSearch" type="text" placeholder="e.g. NVDA, AAPL, BTC" maxlength="8"/>
-          </div>
-          <button class="btn-compare" onclick="gscmpAddFromSearch()">+ Add</button>
+    <div class="section-label">Scanner Preview</div>
+    <h2 class="section-title">Market Scanner</h2>
+    <p class="section-desc" style="margin-bottom:0.5rem;">Search any ticker for educational signal data, momentum, RSI, and technical indicators.</p><p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2rem;line-height:1.6;max-width:680px;">Scanner labels are generated from technical indicators and sample market data. They are for <strong style="color:var(--text-secondary);">educational research only</strong> and are not buy/sell recommendations.</p>
+    <div class="scanner-search-box">
+      <h3>Search a Ticker</h3>
+      <p>Enter a symbol to pull signal data, momentum score, and risk level.</p>
+      <div class="search-row">
+        <div class="ticker-input-wrap">
+          <label>Primary Symbol</label>
+          <input class="ticker-input" id="ticker1" type="text" placeholder="e.g. NVDA, BTC, AAPL" maxlength="6"/>
         </div>
-
-        <div class="gscmp-chips" id="gscmpChips"></div>
-
-        <!-- The two comparison slots -->
-        <div class="gscmp-slots">
-          <div class="gscmp-slot" id="gscmpSlot1">
-            <div class="gscmp-slot-label">Stock 1</div>
-            <div id="gscmpSlot1Body"><div class="gscmp-slot-empty">Nothing selected</div></div>
-          </div>
-          <div class="gscmp-slot" id="gscmpSlot2">
-            <div class="gscmp-slot-label">Stock 2</div>
-            <div id="gscmpSlot2Body"><div class="gscmp-slot-empty">Nothing selected</div></div>
-          </div>
+        <div class="ticker-input-wrap" id="compareWrap" style="display:none;">
+          <label>Compare Symbol</label>
+          <input class="ticker-input" id="ticker2" type="text" placeholder="e.g. AMD" maxlength="6"/>
         </div>
-
-        <div class="gscmp-actions">
-          <button class="btn-scan" id="gscmpCompareBtn" onclick="gscmpRun()" disabled>Compare &#9654;</button>
-          <button class="btn-compare" onclick="gscmpClearAll()">Clear</button>
-        </div>
-        <div class="gscmp-msg" id="gscmpMsg"></div>
+        <button class="btn-compare" id="compareBtn" onclick="toggleCompare()">+ Compare</button>
+        <button class="btn-scan" onclick="runScan()">Scan ▶</button>
       </div>
-
-      <!-- Loading + live results -->
-      <div class="gscmp-loading" id="gscmpLoading">Pulling live data&hellip;</div>
-      <div class="gscmp-results" id="gscmpResults"></div>
+      <div class="scan-counter">Free scans remaining: <span id="scanCount">5</span> of 5 &nbsp;·&nbsp; <a onclick="showPage('pricing')" style="color:var(--gold);text-decoration:none;font-size:0.62rem;cursor:pointer;">Unlock unlimited →</a></div>
     </div>
-  </div>
-
-  <div class="section-inner scanner-page" style="padding-top:0">
-    <div class="section-label" style="margin-top:0">Live Market Scanner</div>
-    <h2 class="section-title">Market <em>Intelligence</em></h2>
-    <p class="section-desc" style="margin-bottom:1.5rem">Real-time prices, RSI, EMA, and signal strength. Click any card for full detail.</p>
-    <div class="gs-scanner-tabs" id="gsScannerTabs">
-      <button class="gs-tab active" onclick="gsSetTab('stocks')">Stocks</button>
-      <button class="gs-tab" onclick="gsSetTab('tech')">Tech</button>
-      <button class="gs-tab" onclick="gsSetTab('crypto')">Crypto</button>
+    <div class="scan-results" id="scanResults">
+      <div class="result-header">
+        <div><div class="result-sym" id="resSym">—</div><div class="result-name" id="resName">—</div></div>
+        <div><div class="result-price" id="resPrice">—</div><div class="result-chg" id="resChg">—</div></div>
+      </div>
+      <div class="result-grid" id="resMetrics"></div>
+      <div class="signal-box">
+        <div class="signal-score">
+          <div class="signal-score-num" id="resSignalNum">—</div>
+          <div class="signal-score-label">Signal Strength</div>
+          <div style="margin-top:1rem;"><span id="resSignalBadge" class="badge">—</span></div>
+          <div style="margin-top:0.5rem;font-size:0.65rem;color:var(--text-muted);">Risk Level: <span id="resRisk" style="color:var(--text-secondary);">—</span></div>
+        </div>
+        <div class="signal-bars" id="resSignalBars"></div>
+      </div>
     </div>
-    <div class="gs-scanner-grid" id="gsScannerGrid"><div class="gs-card-loading">Loading live data&hellip;</div></div>
+    <div class="paywall-overlay" id="paywallBox" style="display:none;">
+      <div style="font-size:2rem;margin-bottom:1rem;">🔒</div>
+      <h3>You've Used Your 5 Free Scans</h3>
+      <p>Unlock unlimited scanner searches, stock comparisons, and watchlist signals with Gilded Scanner Access.</p>
+      <button class="btn-primary" onclick="showPage('pricing')">Unlock Unlimited Access</button>
+      <div class="plan-note" style="font-size:0.63rem;color:var(--text-muted);text-align:center;margin-top:1rem;">$9/month · Cancel anytime</div>
+    </div>
+    <div style="margin-top:3rem;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+        <div><div class="section-label">All Assets</div><p style="font-size:0.8rem;color:var(--text-secondary);">Tracked signals across AI infrastructure and crypto.</p></div>
+        <div style="display:flex;gap:8px;" id="assetFilters">
+          <button class="filter-btn active" onclick="filterAssets('all',this)">All</button>
+          <button class="filter-btn" onclick="filterAssets('stock',this)">Stocks</button>
+          <button class="filter-btn" onclick="filterAssets('crypto',this)">Crypto</button>
+          <button class="filter-btn" onclick="filterAssets('buy',this)">Bullish Signals</button>
+        </div>
+      </div>
+      <div class="scanner-all-grid" id="allAssetsGrid"></div>
+    </div>
   </div>
 </div>
 
+<!-- PRICING -->
 <div id="page-pricing" class="page">
   <div class="section-inner pricing-page">
     <div class="pricing-header">
@@ -651,8 +579,8 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   <div class="footer-inner">
     <div class="footer-brand"><div class="brand">Gilded Signals</div><p>Market intelligence for disciplined investors. Real signals, no noise.</p></div>
     <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showPage('news')">Market News</a></li><li><a onclick="showPage('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
-    <div class="footer-col"><h4>Company</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('newsletter')">Newsletter</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
-    <div class="footer-col"><h4>Legal</h4><ul><li><a onclick="showPage('terms')">Terms of Service</a></li><li><a onclick="showPage('privacy')">Privacy Policy</a></li><li><a onclick="showPage('disclaimer')">Disclaimer</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Newsletter</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Disclaimer</a></li></ul></div>
   </div>
   <div class="footer-bottom">
     <p>© 2026 Gilded Signals. All rights reserved.</p>
@@ -661,57 +589,6 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 </footer>
 
 <script>
-// === LIVE SCANNER ===
-const GS_TABS={
-  stocks:['SPY','QQQ','TSLA','AMZN','MSFT','JPM','GLD','BAC','DIS'],
-  tech:['NVDA','AMD','AVGO','ASML','MU','MRVL','VRT','COHR','PLTR','PANW'],
-  crypto:['BTC/USD','ETH/USD','SOL/USD','XRP/USD']
-};
-let gsCurrentTab='stocks';
-async function gsLoadTab(tab){
-  gsCurrentTab=tab;
-  const grid=document.getElementById('gsScannerGrid');
-  grid.innerHTML='<div class="gs-card-loading">Pulling live data…</div>';
-  const syms=GS_TABS[tab];
-  const results=await Promise.all(syms.map(s=>fetch('/api/quote?symbol='+encodeURIComponent(s)).then(r=>r.json()).catch(()=>({symbol:s,error:true}))));
-  grid.innerHTML=results.map(d=>{
-    const chg=d.changePercent||0;
-    const chgClass=chg>=0?'up':'dn';
-    const chgArrow=chg>=0?'▲':'▼';
-    const sigClass=(d.signal||'neutral').toLowerCase();
-    const fmt=v=>v!=null?('$'+Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})):'—';
-    return `<div class="gs-card" onclick="gscmpSelectFromGrid('${d.symbol}')" style="cursor:pointer">
-      <div class="gs-card-top">
-        <div><div class="gs-card-sym">${d.symbol.replace('/USD','')}</div><div class="gs-card-name">${d.name||''}</div></div>
-        <div><div class="gs-card-price">${fmt(d.price)}</div><div class="gs-card-chg ${chgClass}">${chgArrow} ${Math.abs(chg).toFixed(2)}%</div></div>
-      </div>
-      <div class="gs-card-metrics">
-        <div class="gs-metric"><span class="gs-metric-label">RSI (14)</span><span class="gs-metric-val">${d.rsi!=null?d.rsi:'—'}</span></div>
-        <div class="gs-metric"><span class="gs-metric-label">EMA Status</span><span class="gs-metric-val">${d.emaStatus||'—'}</span></div>
-        <div class="gs-metric"><span class="gs-metric-label">Day High</span><span class="gs-metric-val">${fmt(d.high)}</span></div>
-        <div class="gs-metric"><span class="gs-metric-label">Day Low</span><span class="gs-metric-val">${fmt(d.low)}</span></div>
-        <div class="gs-metric"><span class="gs-metric-label">Volume</span><span class="gs-metric-val">${d.volume?Number(d.volume).toLocaleString():'—'}</span></div>
-        <div class="gs-metric"><span class="gs-metric-label">Signal Score</span><span class="gs-metric-val">${d.signalScore||'—'}/100</span></div>
-      </div>
-      <div class="gs-card-signal ${sigClass}">${d.signal||'Neutral'}</div>
-    </div>`;
-  }).join('');
-}
-function gscmpSelectFromGrid(sym){
-  const s1=document.getElementById('gscmpSlot1Body');
-  const s2=document.getElementById('gscmpSlot2Body');
-  const apiSym=sym.includes('/')?sym:sym;
-  if(s1.querySelector('.gscmp-slot-empty')){gscmpSelect(apiSym);}
-  else if(s2.querySelector('.gscmp-slot-empty')){gscmpSelect(apiSym);}
-  else{gscmpClearAll();gscmpSelect(apiSym);}
-  document.getElementById('page-scanner').scrollTo({top:0,behavior:'smooth'});
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function gsSetTab(tab){
-  document.querySelectorAll('.gs-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.gs-tab').forEach(b=>{if(b.textContent.toLowerCase()===tab)b.classList.add('active');});
-  gsLoadTab(tab);
-}
 const ASSETS=[
   {sym:'NVDA',name:'NVIDIA Corp',price:875.20,chg:2.4,rsi:61.2,vol:'148%',ema:'Above',signal:'Bullish',type:'stock',cap:'$2.15T',mom:'Strong'},
   {sym:'MU',name:'Micron Technology',price:128.30,chg:3.1,rsi:58.7,vol:'132%',ema:'Above',signal:'Bullish',type:'stock',cap:'$142B',mom:'Strong'},
@@ -726,50 +603,28 @@ const ASSETS=[
   {sym:'LITE',name:'Lumentum Holdings',price:74.30,chg:1.1,rsi:51.6,vol:'91%',ema:'Above',signal:'Watch',type:'stock',cap:'$5.2B',mom:'Moderate'},
   {sym:'XRP',name:'Ripple',price:2.14,chg:-1.2,rsi:42.3,vol:'65%',ema:'Below',signal:'Neutral',type:'crypto',cap:'$123B',mom:'Weak'},
 ];
-const NEWS_CACHE={};
-let newsActiveCat='market';
-async function loadNews(cat,containerId,force){
-  const el=document.getElementById(containerId);if(!el)return;
-  if(!force && NEWS_CACHE[cat]){renderNewsData(el,NEWS_CACHE[cat]);return;}
-  el.innerHTML='<div style="padding:2rem;color:var(--text-muted);text-align:center;letter-spacing:0.1em;font-size:0.8rem;">Loading live news\u2026</div>';
-  try{
-    const r=await fetch('/api/news?cat='+cat);
-    const data=await r.json();
-    if(!Array.isArray(data)||!data.length){
-      el.innerHTML='<div style="padding:2rem;color:var(--text-muted);text-align:center;font-size:0.8rem;">'+((data&&data.error)?'Live news is temporarily unavailable \u2014 it will refresh automatically.':'No stories right now \u2014 check back shortly.')+'</div>';
-      return;
-    }
-    NEWS_CACHE[cat]=data;
-    renderNewsData(el,data);
-  }catch(e){el.innerHTML='<div style="padding:2rem;color:var(--text-muted);text-align:center;font-size:0.8rem;">Couldn\u2019t load news right now \u2014 it will retry automatically.</div>';}
-}
-function renderNewsData(el,data){
-  const now=Date.now();
-  el.innerHTML=data.map(n=>{
-    const t=n.time?new Date(n.time):null;
-    const ago=t?Math.round((now-t)/60000):null;
-    const timeStr=ago!=null?(ago<60?ago+'m ago':Math.round(ago/60)+'h ago'):'';
-    return `<div class="news-card" onclick="window.open('${n.url}','_blank')">
-      <div class="news-card-top"><span class="news-source">${n.source}</span><span class="news-time">${timeStr}</span></div>
-      <span class="news-cat cat-${n.cat}">${n.catLabel}</span>
-      <div class="news-headline">${n.headline}</div>
-      <div class="news-summary">${n.summary}</div>
-      <div class="news-footer"><a href="${n.url}" target="_blank" rel="noopener noreferrer" class="btn-read">Read Source ↗</a></div>
-    </div>`;
-  }).join('');
-}
+const NEWS=[
+  {source:'Reuters',headline:'Fed Officials Signal Patience on Rate Cuts Amid Sticky Inflation',summary:'Federal Reserve members reiterated a data-dependent stance, suggesting interest rate reductions remain unlikely before late 2026 given persistent core inflation above the 2% target.',time:'2h ago',cat:'econ',catLabel:'Economy',url:'https://reuters.com'},
+  {source:'Bloomberg',headline:'NVIDIA Q1 Revenue Beats Estimates, Data Center Demand Accelerates',summary:'NVIDIA reported quarterly revenue surpassing Wall Street projections, driven by record data center sales. Management cited sustained demand from hyperscalers building AI infrastructure.',time:'3h ago',cat:'ai',catLabel:'AI & Infra',url:'https://bloomberg.com'},
+  {source:'WSJ',headline:'Micron Technology Sees Strong DRAM Demand From AI Server Buildout',summary:'Micron forecasts continued upside in high-bandwidth memory shipments as AI server manufacturers increase chip orders. The company is expanding production capacity at its Taiwan facility.',time:'4h ago',cat:'ai',catLabel:'AI & Infra',url:'https://wsj.com'},
+  {source:'Financial Times',headline:'Bitcoin Surpasses $96K as Institutional Accumulation Continues',summary:'Bitcoin extended its rally as on-chain data showed significant accumulation by institutional wallets. ETF inflow data confirmed continued demand from registered investment advisors.',time:'5h ago',cat:'crypto',catLabel:'Crypto',url:'https://ft.com'},
+  {source:'CNBC',headline:'S&P 500 Notches Fifth Consecutive Weekly Gain on AI Optimism',summary:'U.S. equity markets closed the week higher, with the S&P 500 posting its fifth straight weekly advance. Technology and semiconductor sectors led gains.',time:'6h ago',cat:'market',catLabel:'Market',url:'https://cnbc.com'},
+  {source:'Reuters',headline:'ASML Warns of Export Control Uncertainty Affecting 2026 Outlook',summary:'ASML flagged uncertainty related to Dutch government export restrictions on EUV lithography equipment, potentially impacting shipment schedules to certain Asian customers.',time:'7h ago',cat:'ai',catLabel:'AI & Infra',url:'https://reuters.com'},
+  {source:'Bloomberg',headline:'China Trade Tensions Re-Emerge as Treasury Reviews Tariff Framework',summary:'The U.S. Treasury Department is reviewing the tariff structure on Chinese technology imports, with officials signaling potential changes that could affect semiconductor supply chains.',time:'8h ago',cat:'world',catLabel:'World',url:'https://bloomberg.com'},
+  {source:"Barron's",headline:'Broadcom Q2 Earnings Preview: AI Networking Demand in Focus',summary:"Analysts expect Broadcom to report strong custom AI chip and networking revenue when it reports next month. The company's hyperscaler partnerships are seen as a key growth driver.",time:'9h ago',cat:'earnings',catLabel:'Earnings',url:'https://barrons.com'},
+  {source:'CoinDesk',headline:'Ethereum Upgrade Roadmap Points to Improved Transaction Throughput',summary:'Ethereum core developers published an updated scaling roadmap, outlining near-term improvements expected to reduce gas fees and increase transaction capacity.',time:'10h ago',cat:'crypto',catLabel:'Crypto',url:'https://coindesk.com'},
+  {source:'WSJ',headline:'Japan GDP Expansion Exceeds Forecast, Yen Holds Steady',summary:"Japan's economy expanded at a faster-than-expected pace, supported by exports and domestic consumption. The yen held steady against the dollar following the data.",time:'11h ago',cat:'world',catLabel:'World',url:'https://wsj.com'},
+  {source:'Financial Times',headline:'Vertiv Secures Major Data Center Power Contract With Global Hyperscaler',summary:'Vertiv announced a multi-year supply agreement for thermal management and power infrastructure with a major cloud provider.',time:'12h ago',cat:'market',catLabel:'Market',url:'https://ft.com'},
+  {source:'Reuters',headline:'EU Launches Formal Inquiry Into AI Model Training Data Practices',summary:'European regulators opened a formal investigation into whether leading AI companies obtained training data in compliance with GDPR and copyright law.',time:'13h ago',cat:'world',catLabel:'World',url:'https://reuters.com'},
+];
 const CAT_CLASS={market:'cat-market',ai:'cat-ai',world:'cat-world',crypto:'cat-crypto',earnings:'cat-earnings',econ:'cat-econ'};
 let scansLeft=5;
 let compareMode=false;
 
-window.showPage=function showPage(id){
-  if(id==='scanner')gsLoadTab(gsCurrentTab);
-  if(id==='news')loadNews('market','newsGrid');
-  if(id==='ai')loadNews('ai','aiGrid');
-  if(id==='world')loadNews('world','worldGrid');
+function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
+  document.getElementById('page-'+id).classList.add('active');
   const el=document.getElementById('nav-'+id);
   if(el)el.classList.add('active');
   window.scrollTo(0,0);
@@ -816,239 +671,88 @@ function renderNews(containerId,filter){
 function filterNews(cat,btn,gridId){
   btn.closest('.news-tabs').querySelectorAll('.news-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(gridId==='newsGrid') newsActiveCat=cat;
-  loadNews(cat,gridId);
-}
-function filterNews_disabled(cat,btn,gridId){
-  btn.classList.add('active');
   renderNews(gridId,cat);
 }
-/* ===== MARKET COMPARE TOOL (live) ===== */
-/* gscmpSlots is the ONE source of truth: [Stock 1, Stock 2]. */
-const GSCMP_API = '/api/quote?symbol=';                 // live endpoint (quote.js)
-const GSCMP_CRYPTO = ['BTC','ETH','SOL','XRP','DOGE','BNB','ADA','AVAX','LTC']; // bare ticker -> X/USD
-const GSCMP_NAMES = {NVDA:'NVIDIA Corp',AAPL:'Apple Inc',MSFT:'Microsoft Corp',TSLA:'Tesla Inc',AMD:'AMD Inc',AVGO:'Broadcom Inc',PLTR:'Palantir',ASML:'ASML Holding',MU:'Micron Technology',MRVL:'Marvell Technology',VRT:'Vertiv Holdings',COHR:'Coherent Corp',PANW:'Palo Alto Networks',JPM:'JPMorgan Chase',GLD:'SPDR Gold Trust',QQQ:'Invesco QQQ','BTC/USD':'Bitcoin','ETH/USD':'Ethereum','SOL/USD':'Solana','XRP/USD':'XRP'};
-const GSCMP_CHIPS = ['NVDA','AAPL','MSFT','AMD','AVGO','MU','MRVL','VRT','COHR','ASML','PLTR','TSLA','BTC','ETH','SOL'];
-
-let gscmpSlots = [null, null];
-
-/* Normalize typed/clicked symbol to what quote.js expects (crypto -> X/USD). */
-function gscmpNormalize(raw){
-  const s = (raw||'').trim().toUpperCase();
-  if(!s) return null;
-  if(s.includes('/')) return s;
-  if(GSCMP_CRYPTO.includes(s)) return s + '/USD';
-  return s;
+function toggleCompare(){
+  compareMode=!compareMode;
+  document.getElementById('compareWrap').style.display=compareMode?'block':'none';
+  document.getElementById('compareBtn').textContent=compareMode?'− Remove':'+ Compare';
 }
-
-/* Small status / error line. */
-function gscmpMsg(text, isError){
-  const el = document.getElementById('gscmpMsg');
-  if(!el) return;
-  el.textContent = text || '';
-  el.classList.toggle('gscmp-err', !!isError);
-}
-
-/* Add a symbol into the first open slot (Stock 1, then Stock 2). */
-function gscmpSelect(raw){
-  const apiSymbol = gscmpNormalize(raw);
-  if(!apiSymbol) return;
-  if(gscmpSlots.some(s => s && s.apiSymbol === apiSymbol)){ gscmpMsg('That symbol is already selected.'); return; }
-  const entry = {symbol: apiSymbol.replace('/USD',''), apiSymbol, name: GSCMP_NAMES[apiSymbol] || apiSymbol.replace('/USD','')};
-  if(!gscmpSlots[0]){ gscmpSlots[0] = entry; }
-  else if(!gscmpSlots[1]){ gscmpSlots[1] = entry; }
-  else { gscmpMsg('Both comparison slots are filled. Clear one to choose another.'); return; }
-  gscmpMsg('');
-  gscmpRender();
-}
-
-/* Add from the search input. */
-function gscmpAddFromSearch(){
-  const inp = document.getElementById('gscmpSearch');
-  if(!inp) return;
-  gscmpSelect(inp.value);
-  inp.value = '';
-}
-
-/* Clear a single slot (the X button). */
-function gscmpClearSlot(i){
-  gscmpSlots[i] = null;
-  gscmpMsg('');
-  gscmpRender();
-}
-
-/* Clear EVERYTHING: slots, results, error, loading. */
-function gscmpClearAll(){
-  gscmpSlots = [null, null];
-  gscmpMsg('');
-  const res = document.getElementById('gscmpResults');
-  if(res){ res.classList.remove('gscmp-visible'); res.innerHTML = ''; }
-  const ld = document.getElementById('gscmpLoading');
-  if(ld) ld.classList.remove('gscmp-visible');
-  gscmpRender();
-}
-
-/* Render slots, chip highlights, and Compare button enabled-state. */
-function gscmpRender(){
-  for(let i=0;i<2;i++){
-    const slot = document.getElementById('gscmpSlot'+(i+1));
-    const body = document.getElementById('gscmpSlot'+(i+1)+'Body');
-    if(!slot || !body) continue;
-    const data = gscmpSlots[i];
-    if(data){
-      slot.classList.add('gscmp-filled');
-      body.innerHTML = '<div class="gscmp-slot-filled-row"><div><div class="gscmp-slot-sym">'+data.symbol+'</div><div class="gscmp-slot-name">'+data.name+'</div></div><button class="gscmp-x" title="Remove" onclick="gscmpClearSlot('+i+')">&#10005;</button></div>';
-    } else {
-      slot.classList.remove('gscmp-filled');
-      body.innerHTML = '<div class="gscmp-slot-empty">Nothing selected</div>';
-    }
-  }
-  const chosen = gscmpSlots.filter(Boolean).map(s=>s.apiSymbol);
-  document.querySelectorAll('.gscmp-chip').forEach(c=>{
-    c.classList.toggle('gscmp-chip-on', chosen.includes(gscmpNormalize(c.dataset.sym)));
-  });
-  const btn = document.getElementById('gscmpCompareBtn');
-  if(btn) btn.disabled = !(gscmpSlots[0] && gscmpSlots[1]);
-}
-
-/* Fetch one live quote -> {ok,data} or {ok:false,error}. */
-async function gscmpFetch(apiSymbol){
-  try{
-    const r = await fetch(GSCMP_API + encodeURIComponent(apiSymbol));
-    const d = await r.json();
-    if(!d || d.error || d.price == null) return {ok:false, error:(d && d.error) || 'No data'};
-    return {ok:true, data:d};
-  }catch(e){
-    return {ok:false, error:'Network error'};
-  }
-}
-
-/* Run the comparison: fetch both live in parallel, render or show clean error. */
-async function gscmpRun(){
-  if(!(gscmpSlots[0] && gscmpSlots[1])) return;
-  const results = document.getElementById('gscmpResults');
-  const loading = document.getElementById('gscmpLoading');
-  gscmpMsg('');
-  if(results){ results.classList.remove('gscmp-visible'); results.innerHTML = ''; }
-  if(loading) loading.classList.add('gscmp-visible');
-
-  const [a,b] = await Promise.all([
-    gscmpFetch(gscmpSlots[0].apiSymbol),
-    gscmpFetch(gscmpSlots[1].apiSymbol)
-  ]);
-  if(loading) loading.classList.remove('gscmp-visible');
-
-  if(!a.ok || !b.ok){
-    const bad = !a.ok ? gscmpSlots[0].symbol : gscmpSlots[1].symbol;
-    gscmpMsg('Couldn\u2019t load live data for ' + bad + '. Please try again in a moment.', true);
+function runScan(){
+  if(scansLeft<=0){
+    document.getElementById('scanResults').classList.remove('visible');
+    document.getElementById('paywallBox').style.display='block';
     return;
   }
-  if(results){ results.innerHTML = gscmpCard(a.data) + gscmpCard(b.data) + gscmpSummary(a.data, b.data); results.classList.add('gscmp-visible'); }
+  const sym=document.getElementById('ticker1').value.trim().toUpperCase();
+  if(!sym){alert('Enter a ticker symbol.');return;}
+  scansLeft--;
+  document.getElementById('scanCount').textContent=scansLeft;
+  document.getElementById('navScanCount').textContent=scansLeft;
+  const known=ASSETS.find(a=>a.sym===sym);
+  const price=known?known.price:(Math.random()*400+50);
+  const chg=known?known.chg:+(Math.random()*6-3).toFixed(2);
+  const rsi=known?known.rsi:+(Math.random()*40+30).toFixed(1);
+  const vol=known?known.vol:Math.round(Math.random()*150+50)+'%';
+  const ema=rsi>50?'Above EMA':'Below EMA';
+  const signalStr=Math.min(Math.round(rsi*1.4),99);
+  const signal=rsi>58?'Bullish':rsi<45?'Neutral':'Watch';
+  const risk=rsi>65?'Elevated':rsi<45?'Elevated':'Moderate';
+  const mom=known?known.mom:(rsi>58?'Strong':'Moderate');
+  const cap=known?known.cap:'$—';
+  const name=known?known.name:sym;
+  document.getElementById('resSym').textContent=sym;
+  document.getElementById('resName').textContent=name;
+  document.getElementById('resPrice').textContent=fmtPrice(price);
+  document.getElementById('resChg').innerHTML=`<span class="${chg>=0?'up':'dn'}">${chg>=0?'▲':'▼'} ${Math.abs(chg)}%</span>`;
+  document.getElementById('resMetrics').innerHTML=[
+    ['Price',fmtPrice(price),'Current'],
+    ['Daily Change',(chg>=0?'+':'')+chg+'%','Today'],
+    ['RSI (14)',rsi,rsi>70?'Overbought':rsi<30?'Oversold':'Neutral'],
+    ['Volume',vol,'vs Avg'],
+    ['EMA Status',ema.split(' ')[0],ema],
+    ['Momentum',mom,''],
+    ['Market Cap',cap,''],
+    ['Analyst Sentiment','—','API Pending'],
+    ['News Sentiment','—','API Pending'],
+  ].map(([l,v,s])=>`<div class="result-metric"><div class="result-metric-label">${l}</div><div class="result-metric-val">${v}</div><div class="result-metric-sub">${s}</div></div>`).join('');
+  const badgeCls=signal==='Bullish'?'badge-bullish':signal==='Watch'?'badge-watch':'badge-neutral';
+  document.getElementById('resSignalNum').textContent=signalStr+'/100';
+  document.getElementById('resSignalBadge').className=`badge ${badgeCls}`;
+  const sigLabel=signal==='Bullish'?'Bullish':signal==='Watch'?'Watch':'Neutral';
+  document.getElementById('resSignalBadge').textContent=sigLabel;
+  document.getElementById('resRisk').textContent=risk;
+  document.getElementById('resSignalBars').innerHTML=[
+    ['Volume',Math.min(parseFloat(vol),200)/2],
+    ['RSI Score',rsi],
+    ['EMA Alignment',rsi>50?75:25],
+    ['Momentum',mom==='Strong'?80:mom==='Moderate'?50:20],
+  ].map(([l,v])=>`<div class="signal-bar-row"><div class="signal-bar-label">${l}</div><div class="signal-bar-track"><div class="signal-bar-fill" style="width:${Math.min(v,100)}%"></div></div></div>`).join('');
+  document.getElementById('scanResults').classList.add('visible');
+  if(scansLeft<=0)setTimeout(()=>{document.getElementById('paywallBox').style.display='block';},200);
 }
-
-/* Build one comparison card from a live quote (quote.js shape). No fabricated values. */
-function gscmpMoney(v){ return v==null?'\u2014':(Number(v)>=1000?'$'+Number(v).toLocaleString('en-US',{maximumFractionDigits:0}):'$'+Number(v).toFixed(2)); }
-function gscmpPctTxt(v){ if(v==null) return '\u2014'; return (v>=0?'+':'')+Number(v).toFixed(2)+'%'; }
-function gscmpRisk(d){
-  if(d.rsi14==null) return '\u2014';
-  if(d.rsi14>=75||d.rsi14<=25) return 'High';
-  if(d.rsi14>=68||d.rsi14<=32) return 'Elevated';
-  if(d.rvol!=null&&d.rvol>=2.5) return 'Elevated';
-  return 'Moderate';
-}
-function gscmpBadge(d){
-  var s=d.gildedScore, label=d.gildedBadge||'Neutral';
-  if(s==null) return '<span class="badge badge-neutral">Neutral</span>';
-  if(s>=60) return '<span class="badge badge-bullish">'+label+'</span>';
-  if(s>=40) return '<span class="badge badge-neutral">'+label+'</span>';
-  return '<span class="badge" style="background:rgba(214,80,80,0.14);color:#e06a6a;border:1px solid rgba(214,80,80,0.28);">'+label+'</span>';
-}
-function gscmpCard(d){
-  var up=(d.change||0)>=0;
-  var chg=(d.changePercent==null)?'\u2014':(up?'\u25B2':'\u25BC')+' '+Math.abs(d.changePercent).toFixed(2)+'%';
-  var price=gscmpMoney(d.price);
-  var ema=d.emaStatus?(d.emaStatus.charAt(0).toUpperCase()+d.emaStatus.slice(1)):'\u2014';
-  var macd=(d.macdHist==null)?'\u2014':(d.macdHist>0?'Bullish':'Bearish');
-  var rvol=(d.rvol==null)?'\u2014':Number(d.rvol).toFixed(2)+'x';
-  var dayRange=(d.low!=null&&d.high!=null)?gscmpMoney(d.low)+' \u2013 '+gscmpMoney(d.high):'\u2014';
-  var wkRange=(d.week52Low!=null&&d.week52High!=null)?gscmpMoney(d.week52Low)+' \u2013 '+gscmpMoney(d.week52High):'\u2014';
-  var rows=[
-    ['Gilded Score', d.gildedScore!=null? d.gildedScore+'/100':'\u2014'],
-    ['RSI (14)', d.rsi14!=null? d.rsi14:'\u2014'],
-    ['Trend (vs EMA50)', ema],
-    ['MACD Momentum', macd],
-    ['Rel. Volume', rvol],
-    ['Day Range', dayRange],
-    ['52-Wk Range', wkRange],
-    ['Support', gscmpMoney(d.support)],
-    ['Resistance', gscmpMoney(d.resistance)],
-    ['1-Week', gscmpPctTxt(d.weekChange)],
-    ['1-Month', gscmpPctTxt(d.monthChange)],
-    ['YTD', gscmpPctTxt(d.ytdChange)],
-    ['Risk', gscmpRisk(d)]
-  ];
-  if(d.analystRating) rows.push(['Analyst View', d.analystRating]);
-  if(d.peRatio!=null) rows.push(['P/E Ratio', Number(d.peRatio).toFixed(1)]);
-  if(d.sector) rows.push(['Sector', d.sector]);
-  return '<div class="gscmp-card">'
-    + '<div class="gscmp-card-head"><div><div class="gscmp-card-sym">' + (d.symbol||'').replace('/USD','') + '</div><div class="gscmp-card-name">' + (d.name||'') + '</div></div>'
-    + '<div><div class="gscmp-card-price">' + price + '</div><div class="gscmp-card-chg ' + (up?'up':'dn') + '">' + chg + '</div></div></div>'
-    + '<div class="gscmp-rows">' + rows.map(function(r){return '<div class="gscmp-row"><span class="gscmp-row-label">'+r[0]+'</span><span class="gscmp-row-val">'+r[1]+'</span></div>';}).join('') + '</div>'
-    + '<div class="gscmp-card-foot">' + gscmpBadge(d) + '<span style="font-size:0.57rem;color:var(--text-muted);">Live</span></div>'
-    + '</div>';
-}
-function gscmpSummary(a,b){
-  var na=(a.symbol||'').replace('/USD',''), nb=(b.symbol||'').replace('/USD','');
-  var sa=a.gildedScore, sb=b.gildedScore, verdict;
-  if(sa==null||sb==null){
-    verdict='There isn\u2019t enough live signal data to score one above the other right now.';
-  } else if(sa===sb){
-    verdict='<strong>'+na+'</strong> and <strong>'+nb+'</strong> are evenly matched at '+sa+'/100 on the Gilded Score.';
-  } else {
-    var win=sa>sb?na:nb, lose=sa>sb?nb:na, hi=Math.max(sa,sb), lo=Math.min(sa,sb);
-    verdict='<strong>'+win+'</strong> has the stronger setup right now \u2014 '+hi+'/100 vs '+lo+'/100 for '+lose+' on the Gilded Score.';
-  }
-  var winData=(sa>=sb?a:b);
-  var reasons=(winData.gildedReasons||[]).slice(0,3);
-  var why=reasons.length?'<ul class="gscmp-why">'+reasons.map(function(r){return '<li>'+r+'</li>';}).join('')+'</ul>':'';
-  return '<div class="gscmp-summary"><div class="gscmp-summary-title">Which looks stronger?</div><p>'+verdict+'</p>'+why
-    +'<p class="gscmp-summary-note">Educational comparison generated from live technical signals \u2014 not a buy or sell recommendation. Always do your own research.</p></div>';
-}
-
-/* Build clickable chips, wire Enter-to-add, initial render. */
-function gscmpInit(){
-  const chipWrap = document.getElementById('gscmpChips');
-  if(chipWrap){
-    chipWrap.innerHTML = GSCMP_CHIPS.map(s=>'<button class="gscmp-chip" data-sym="'+s+'" onclick="gscmpSelect(\''+s+'\')">'+s+'</button>').join('');
-  }
-  const inp = document.getElementById('gscmpSearch');
-  if(inp) inp.addEventListener('keydown', e=>{ if(e.key === 'Enter') gscmpAddFromSearch(); });
-  gscmpRender();
+function filterAssets(type,btn){
+  document.querySelectorAll('#assetFilters .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAssetCards('allAssetsGrid',type);
 }
 
 // INIT
 renderAssetCards('homeScannerGrid','all');
-loadNews('market','newsGrid');
-loadNews('ai','aiGrid');
-loadNews('world','worldGrid');
-gscmpInit();
+renderAssetCards('allAssetsGrid','all');
+renderNews('newsGrid','all');
+renderNews('aiGrid','ai');
+renderNews('worldGrid','world');
+document.getElementById('ticker1').addEventListener('keydown',e=>{if(e.key==='Enter')runScan();});
 
-// Auto-refresh live news every 10 minutes (force-bypass the client cache).
-setInterval(function(){
-  try{
-    delete NEWS_CACHE['market']; delete NEWS_CACHE['ai']; delete NEWS_CACHE['world']; delete NEWS_CACHE[newsActiveCat];
-    loadNews(newsActiveCat,'newsGrid',true);
-    loadNews('ai','aiGrid',true);
-    loadNews('world','worldGrid',true);
-  }catch(e){}
-}, 600000);
-
-// Home-page preview grid demo movement (home page only - unchanged feature)
+// demo ticker movement
 setInterval(()=>{
   ASSETS.forEach(a=>{a.price=a.price*(1+(Math.random()-0.5)*0.0015);a.chg=+(a.chg+(Math.random()-0.5)*0.06).toFixed(2);});
   renderAssetCards('homeScannerGrid','all');
+  const af=document.querySelector('#assetFilters .filter-btn.active');
+  const m={'All':'all','Stocks':'stock','Crypto':'crypto','Bullish Signals':'buy'};
+  renderAssetCards('allAssetsGrid',m[af?.textContent]||'all');
 },6000);
-
 
 async function updateLiveTicker() {
   const items = document.querySelectorAll('.ticker-item');
@@ -1101,97 +805,6 @@ async function updateGildedTicker() {
 updateGildedTicker();
 setInterval(updateGildedTicker, 20000);
 </script>
-
-<!-- ABOUT PAGE -->
-<div id="page-about" class="page">
-  <div class="section-inner" style="max-width:760px;margin:0 auto;padding:3rem 2rem;">
-    <div class="section-label">Our Story</div>
-    <h2 class="section-title">About <em>Gilded Signals</em></h2>
-    <p class="section-desc" style="margin-bottom:2rem">Premium market intelligence built for disciplined investors.</p>
-    <div style="color:var(--text-secondary);line-height:1.9;font-size:0.95rem;">
-      <p style="margin-bottom:1.25rem">Gilded Signals is a premium market intelligence platform built to make stock market, crypto, AI infrastructure, and world news easier to understand. The goal is to help everyday investors cut through noise, track live market data, compare stocks, follow important trends, and feel more confident learning about the market.</p>
-      <p style="margin-bottom:1.25rem">We believe that access to institutional-grade data and clear, actionable intelligence should not be reserved for Wall Street insiders. Gilded Signals bridges that gap — delivering real-time price data, technical indicators, signal ratings, and curated news in a platform designed for clarity and precision.</p>
-      <p style="margin-bottom:1.25rem">Our scanner pulls live data from trusted market sources, calculates RSI, EMA, MACD, relative volume, and proprietary Gilded Signal Ratings, and presents everything in a clean, professional interface built for serious investors who value their time.</p>
-      <p style="margin-bottom:1.25rem">Whether you are tracking AI infrastructure stocks like NVDA, ASML, and AVGO, monitoring crypto markets, or staying current on global macro events, Gilded Signals is your daily edge.</p>
-      <p style="color:var(--gold);font-style:italic;">Real signals. No noise. No hype.</p>
-    </div>
-    <button class="btn-primary" style="margin-top:2rem" onclick="showPage('scanner')">Try the Scanner</button>
-  </div>
-</div>
-
-<div id="page-newsletter" class="page">
-  <div class="section-inner" style="max-width:600px;margin:0 auto;padding:3rem 2rem;text-align:center;">
-    <div class="section-label">Stay Informed</div>
-    <h2 class="section-title">The Gilded <em>Brief</em></h2>
-    <p class="section-desc" style="margin-bottom:2rem">Weekly market intelligence covering what mattered, what is next, and the themes worth watching. No spam. No noise. Just signal.</p>
-    <div style="background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:2rem;">
-      <script async data-uid="9477301" src="https://gildedsignals.kit.com/9477301/index.js"></script>
-      <p style="color:var(--text-muted);font-size:0.75rem;margin-top:1rem;">Join disciplined investors who read the Gilded Brief every week.</p>
-    </div>
-  </div>
-</div>
-
-<div id="page-contact" class="page">
-  <div class="section-inner" style="max-width:600px;margin:0 auto;padding:3rem 2rem;text-align:center;">
-    <div class="section-label">Get In Touch</div>
-    <h2 class="section-title">Contact <em>Us</em></h2>
-    <p class="section-desc" style="margin-bottom:2rem">Questions, feedback, or partnership inquiries — we would love to hear from you.</p>
-    <div style="background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:2rem;text-align:left;">
-      <p style="color:var(--text-secondary);margin-bottom:1rem;">For general inquiries and support:</p>
-      <a href="mailto:intel@gildedsignals.com" style="color:var(--gold);font-size:1.1rem;letter-spacing:0.05em;">intel@gildedsignals.com</a>
-      <p style="color:var(--text-muted);font-size:0.8rem;margin-top:1.5rem;">We typically respond within 24 hours on business days.</p>
-    </div>
-  </div>
-</div>
-
-<div id="page-terms" class="page">
-  <div class="section-inner" style="max-width:760px;margin:0 auto;padding:3rem 2rem;">
-    <div class="section-label">Legal</div>
-    <h2 class="section-title">Terms of <em>Service</em></h2>
-    <p style="color:var(--text-muted);font-size:0.78rem;margin-bottom:2rem;">Last updated: June 2026</p>
-    <div style="color:var(--text-secondary);line-height:1.9;font-size:0.9rem;">
-      <p style="margin-bottom:1.25rem">By accessing or using Gilded Signals, you agree to be bound by these Terms of Service. If you do not agree, please do not use the platform.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Use of Service.</strong> Gilded Signals provides market data, news aggregation, and analytical tools for informational and educational purposes only. You may not use the platform for any unlawful purpose or in any way that could damage or impair the service.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Intellectual Property.</strong> All content, branding, and platform design are the property of Gilded Signals. You may not reproduce or redistribute any part of the platform without written permission.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Disclaimer of Warranties.</strong> The platform is provided on an as-is basis. We make no warranties regarding accuracy, completeness, or fitness for any particular purpose.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Limitation of Liability.</strong> Gilded Signals shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Changes.</strong> We reserve the right to modify these terms at any time. Continued use of the platform constitutes acceptance of the updated terms.</p>
-      <p>For questions, contact <a href="mailto:intel@gildedsignals.com" style="color:var(--gold)">intel@gildedsignals.com</a>.</p>
-    </div>
-  </div>
-</div>
-
-<div id="page-privacy" class="page">
-  <div class="section-inner" style="max-width:760px;margin:0 auto;padding:3rem 2rem;">
-    <div class="section-label">Legal</div>
-    <h2 class="section-title">Privacy <em>Policy</em></h2>
-    <p style="color:var(--text-muted);font-size:0.78rem;margin-bottom:2rem;">Last updated: June 2026</p>
-    <div style="color:var(--text-secondary);line-height:1.9;font-size:0.9rem;">
-      <p style="margin-bottom:1.25rem">Gilded Signals respects your privacy. This policy explains what information we collect and how we use it.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Information We Collect.</strong> We may collect your email address if you subscribe to our newsletter. We do not sell or share your personal information with third parties.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Usage Data.</strong> We may collect anonymous usage data to improve the platform, including pages visited and features used.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Cookies.</strong> We use minimal cookies necessary for the platform to function. We do not use advertising cookies or third-party tracking.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Third-Party Services.</strong> We use Alpaca Markets, Finnhub, and CoinGecko for market data. These services have their own privacy policies.</p>
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--text-primary)">Your Rights.</strong> You may request deletion of your data at any time by contacting us.</p>
-      <p>For questions, contact <a href="mailto:intel@gildedsignals.com" style="color:var(--gold)">intel@gildedsignals.com</a>.</p>
-    </div>
-  </div>
-</div>
-
-<div id="page-disclaimer" class="page">
-  <div class="section-inner" style="max-width:760px;margin:0 auto;padding:3rem 2rem;">
-    <div class="section-label">Legal</div>
-    <h2 class="section-title">Investment <em>Disclaimer</em></h2>
-    <p style="color:var(--text-muted);font-size:0.78rem;margin-bottom:2rem;">Last updated: June 2026</p>
-    <div style="color:var(--text-secondary);line-height:1.9;font-size:0.9rem;">
-      <p style="margin-bottom:1.25rem"><strong style="color:var(--gold)">Gilded Signals is not a financial advisor and does not provide investment advice.</strong></p>
-      <p style="margin-bottom:1.25rem">All content on this platform — including market data, signal ratings, news summaries, technical indicators, and commentary — is provided for informational and educational purposes only. Nothing on Gilded Signals constitutes a recommendation to buy, sell, or hold any security, cryptocurrency, or other financial instrument.</p>
-      <p style="margin-bottom:1.25rem">Investing and trading involve significant risk, including the possible loss of principal. Past performance is not indicative of future results. Always conduct your own due diligence and consult a qualified financial professional before making any investment decisions.</p>
-      <p style="margin-bottom:1.25rem">Market data displayed on this platform is sourced from third-party providers and may be delayed or subject to inaccuracies. Gilded Signals makes no warranty regarding the accuracy or completeness of any data displayed.</p>
-      <p>By using Gilded Signals, you acknowledge and agree that you are solely responsible for any investment decisions you make.</p>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
