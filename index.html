@@ -586,6 +586,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
     <div class="gs-tabs">
       <button class="gs-tab active" onclick="gsSetTab('stocks',this)">Stocks</button>
       <button class="gs-tab" onclick="gsSetTab('tech',this)">Tech &amp; AI</button>
+      <button class="gs-tab" onclick="gsSetTab('energy',this)">Energy</button>
       <button class="gs-tab" onclick="gsSetTab('crypto',this)">Crypto</button>
     </div>
     <div class="gs-grid" id="gsGrid"><div style="color:#7a7770;font-family:monospace;font-size:.72rem;letter-spacing:.15em;padding:20px 0;">Loading live data…</div></div>
@@ -598,9 +599,14 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 (function(){
 var API='/api/quote?symbol=';
 var NEWS_API='/api/news?cat=';
-var QUICK=['NVDA','TSLA','AAPL','MSFT','AMZN','GOOGL','META','AMD','PLTR','AVGO','ASML','MU','MRVL','VRT','COHR','PANW','SPY','QQQ','JPM','GLD','BTC','ETH','SOL','XRP'];
-var CRYPTO=['BTC','ETH','SOL','XRP','DOGE'];
-var TABS={stocks:['SPY','QQQ','TSLA','AMZN','MSFT','JPM','GLD','BAC'],tech:['NVDA','AMD','AVGO','ASML','MU','MRVL','VRT','COHR','PLTR','PANW'],crypto:['BTC/USD','ETH/USD','SOL/USD','XRP/USD']};
+var QUICK=['NVDA','TSLA','AAPL','MSFT','AMZN','GOOGL','META','AMD','PLTR','AVGO','ASML','MU','MRVL','VRT','COHR','PANW','NOW','DELL','SMCI','NOK','SHOP','HPE','NBIS','SATS','LITE','SPY','QQQ','QQQM','VOO','VTI','VTV','SPMO','JPM','GLD','NFLX','MSTR','BAC','BTC','ETH','SOL','XRP'];
+var CRYPTO=['BTC','ETH','SOL','XRP','DOGE','BNB','AVAX'];
+var TABS={
+  stocks:['SPY','QQQ','QQQM','SPMO','VOO','VTI','VTV','SPX','AMZN','MSFT','AAPL','TSLA','NFLX','MSTR','GOOGL','META','JPM','GLD','BAC','DIS','WMT','V','UNH'],
+  tech:['NVDA','AMD','AVGO','ASML','MU','MRVL','VRT','COHR','LITE','PLTR','PANW','NOW','DELL','SMCI','NOK','SHOP','HPE','NBIS','SATS','INTC','QCOM','ARM','CRM','ORCL','TSM'],
+  energy:['XOM','CVX','NEE','ENPH','FSLR','OXY','SLB','ET','KMI','EPD','LNG','VLO','MPC','PSX','HAL'],
+  crypto:['BTC/USD','ETH/USD','SOL/USD','XRP/USD','DOGE/USD']
+};
 var slots=[null,null];
 function toApi(s){var t=s.toUpperCase().trim();if(t.includes('/'))return t;if(CRYPTO.includes(t))return t+'/USD';return t;}
 function disp(s){return s.replace('/USD','');}
@@ -798,8 +804,12 @@ function buildGridCard(r,rawSym){
 refreshPicker();
 gsLoadGrid('stocks');
 /* Also hook into showPage so grid reloads when scanner tab is clicked */
+/* hook showPage to reload grid when scanner is opened */
 var _origShowPage=window.showPage;
-window.showPage=function(id){if(_origShowPage)_origShowPage(id);if(id==='scanner'){setTimeout(function(){gsLoadGrid(currentTab);},100);}};
+window.showPage=function(id){
+  if(_origShowPage)_origShowPage(id);
+  if(id==='scanner'){setTimeout(function(){if(document.getElementById('gsGrid'))gsLoadGrid(currentTab);},200);}
+};
 })();
 </script>
 </div>
