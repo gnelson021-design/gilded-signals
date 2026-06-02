@@ -457,7 +457,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
           <label>Primary Symbol</label>
           <input class="ticker-input" id="ticker1" type="text" placeholder="e.g. NVDA, BTC, AAPL" maxlength="6"/>
         </div>
-        <div class="ticker-input-wrap" id="compareWrap" style="display:none;">
+        <div class="ticker-input-wrap" id="compareWrap" style="display:block;">
           <label>Compare Symbol</label>
           <input class="ticker-input" id="ticker2" type="text" placeholder="e.g. AMD" maxlength="6"/>
         </div>
@@ -959,6 +959,64 @@ async function renderAssetCards(id, filter){
 
 renderAssetCards('homeScannerGrid','all');
 renderAssetCards('allAssetsGrid','all');
+</script>
+<script>
+/* ===== GILDED SIGNALS CLICK-TO-FILL ===== */
+(function(){
+  var st=document.createElement('style');
+  st.textContent='.gs-ac{cursor:pointer;transition:border-color .15s ease,transform .15s ease}.gs-ac:hover{border-color:#c9a24b;transform:translateY(-1px)}';
+  document.head.appendChild(st);
+
+  function box1(){ return document.getElementById('ticker1'); }
+  function box2(){ return document.getElementById('ticker2'); }
+
+  function gsClearBoxes(){
+    var b1=box1(), b2=box2();
+    if(b1) b1.value='';
+    if(b2) b2.value='';
+    if(b1) b1.focus();
+  }
+
+  function gsFillNext(sym){
+    sym=(sym||'').trim().toUpperCase();
+    if(!sym) return;
+    var b1=box1(), b2=box2();
+    var v1=b1?b1.value.trim().toUpperCase():'';
+    var v2=b2?b2.value.trim().toUpperCase():'';
+    if(sym===v1 || sym===v2) return;
+    if(b1 && !v1){ b1.value=sym; return; }
+    if(b2 && !v2){ b2.value=sym; return; }
+  }
+
+  function init(){
+    var cw=document.getElementById('compareWrap');
+    if(cw) cw.style.display='block';
+
+    var cb=document.getElementById('compareBtn');
+    if(cb){ cb.textContent='Clear'; cb.onclick=gsClearBoxes; }
+
+    if(typeof runScan==='function'){
+      var orig=runScan;
+      runScan=function(){
+        var b2=box2();
+        try{ compareMode = !!(b2 && b2.value.trim()); }catch(e){}
+        return orig.apply(this, arguments);
+      };
+    }
+
+    document.addEventListener('click',function(e){
+      var t=e.target;
+      if(!t || !t.closest) return;
+      var card=t.closest('.gs-ac');
+      if(!card) return;
+      var s=card.querySelector('.gs-ac-sym');
+      if(s) gsFillNext(s.textContent);
+    });
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
 </script>
 </body>
 </html>
