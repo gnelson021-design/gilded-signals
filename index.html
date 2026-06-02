@@ -770,8 +770,17 @@ async function gsLoadGrid(tab){
   var grid=document.getElementById('gsGrid');
   grid.innerHTML='<div style="color:#7a7770;font-family:monospace;font-size:.72rem;letter-spacing:.15em;padding:20px 0;animation:gsPulse 1.4s infinite;">Pulling live data…</div>';
   var syms=TABS[tab];
-  var results=await Promise.all(syms.map(function(s){return fetchQ(s);}));
-  grid.innerHTML=results.map(function(r,i){return buildGridCard(r,syms[i]);}).join('');
+  /* batch in groups of 6 to avoid rate limiting */
+  var allResults=[];
+  var batchSize=6;
+  for(var i=0;i<syms.length;i+=batchSize){
+    var batch=syms.slice(i,i+batchSize);
+    var batchResults=await Promise.all(batch.map(function(s){return fetchQ(s);}));
+    allResults=allResults.concat(batchResults);
+    /* render cards as they come in */
+    grid.innerHTML=allResults.map(function(r,j){return buildGridCard(r,syms[j]);}).join('');
+    if(i+batchSize<syms.length) await new Promise(function(res){setTimeout(res,300);});
+  }
 }
 function buildGridCard(r,rawSym){
   if(!r.ok)return'<div class="gs-gc" style="opacity:.4"><div class="gs-gc-head"><div><div class="gs-gc-sym">'+disp(rawSym)+'</div><div class="gs-gc-name">Unavailable</div></div></div></div>';
