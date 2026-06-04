@@ -423,7 +423,7 @@ async function getCrypto(base, symbol) {
     `&vs_currencies=usd&include_24hr_change=true&include_market_cap=true&include_24hr_vol=true`;
   // Omit interval — CoinGecko auto-returns daily granularity for days > 90.
   const chartUrl =
-    `https://api.coingecko.com/api/v3/coins/${meta.id}/market_chart?vs_currency=usd&days=400`;
+    `https://api.coingecko.com/api/v3/coins/${meta.id}/market_chart?vs_currency=usd&days=365`;
 
   const [priceR, chartR] = await Promise.allSettled([
     getJSON(priceUrl),
