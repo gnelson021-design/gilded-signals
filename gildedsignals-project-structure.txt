@@ -1,8 +1,0 @@
-~/gilded-signals/
-├── index.html          ← homepage + scanner + all pages
-├── netlify.toml        ← redirects /api/* to functions
-└── netlify/
-    └── functions/
-        ├── quote.js    ← single symbol quote
-        ├── quotes.js   ← batch quotes
-        └── news.js     ← news feed

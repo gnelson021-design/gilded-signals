@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Scratch / debugging scripts
+*.py
+
+# HTML backups
+index-*.html
+*-backup*.html
+gilded-demo-*.html
+
+# Duplicate / temp assets
+gs-logo-[0-9].png
+Screenshot*.png
+*-project-structure.txt
+
+# OS / editor junk
+.DS_Store
+*.swp
