@@ -153,7 +153,10 @@
         gsErr('Could not load data for ' + (r[0].ok ? disp(slots[1]) : disp(slots[0])) + '. Try again.');
         return;
       }
-      if (res) res.innerHTML = buildVerdict(r[0].data, r[1].data) + buildCmpCards(r[0].data, r[1].data);
+      if (res) {
+        res.innerHTML = buildVerdict(r[0].data, r[1].data) + buildCmpCards(r[0].data, r[1].data);
+        try { res.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { res.scrollIntoView(); }
+      }
     });
   }
   function buildVerdict(a, b) {
