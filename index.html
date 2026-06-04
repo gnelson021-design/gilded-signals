@@ -623,7 +623,7 @@ function renderPills(){
   document.getElementById('gsPills').innerHTML=QUICK.map(function(s){
     var p=slots.some(function(x){return x===s||x===toApi(s);});
     var c=CRYPTO.includes(s)?'<span class="ctag">crypto</span>':'';
-    return'<button class="gs-pill'+(p?' picked':'')+'"'+(p?' disabled':'')+' onclick="gsPick('\''+s+'\'')">'+s+c+'</button>';
+    return'<button class="gs-pill'+(p?' picked':'')+'"'+(p?' disabled':'')+' data-sym="'+s+'">'+s+c+'</button>';
   }).join('');
 }
 function renderSlots(){
@@ -793,7 +793,7 @@ function buildGridCard(r,rawSym){
   var rsiColor=d.rsi14==null?'#9a9690':d.rsi14>=70?'#d97a7a':d.rsi14>=60?'#4ecb8d':d.rsi14>=45?'#c9a24b':'#9a9690';
   var pct=0;if(d.low!=null&&d.high!=null){var rng=d.high-d.low;pct=rng>0?Math.min(Math.max((d.price-d.low)/rng*100,0),100):50;}
   var rangeHtml=d.low!=null&&d.high!=null?'<div class="gs-gc-range"><div class="gs-gc-range-lbl"><span>Day Range</span><span class="gs-gc-range-cur">'+fmt(d.price)+'</span></div><div class="gs-gc-track"><div class="gs-gc-fill" style="width:'+pct+'%"></div><div class="gs-gc-cursor" style="left:calc('+pct+'% - 1px)"></div></div><div class="gs-gc-ends"><span class="gs-gc-end">'+fmt(d.low)+'</span><span class="gs-gc-end">'+fmt(d.high)+'</span></div></div>':'';
-  return'<div class="gs-gc '+(sig==='Bullish'?'bullish':'')+'" onclick="gsPick('\''+rawSym.replace('/USD','')+'\'');window.scrollTo({top:0,behavior:'smooth'});">'+
+  return'<div class="gs-gc '+(sig==='Bullish'?'bullish':'')+'" data-sym="'+rawSym.replace('/USD','')+'" data-scroll="1">'+
     '<div class="gs-gc-head"><div><div class="gs-gc-sym">'+sym+'</div><div class="gs-gc-name">'+(d.name||sym)+'</div></div><div><div class="gs-gc-price">'+fmt(d.price)+'</div><div class="gs-gc-chg '+chgCls+'">'+chgStr+'</div></div></div>'+
     '<div class="gs-gc-metrics">'+
     '<div class="gs-gc-m"><div class="gs-gc-ml">RSI (14)</div><div class="gs-gc-mv" style="color:'+rsiColor+'">'+(d.rsi14!=null?d.rsi14:'—')+'</div></div>'+
@@ -1062,7 +1062,7 @@ renderAssetCards('allAssetsGrid','all');
 renderNews('newsGrid','all');
 renderNews('aiGrid','ai');
 renderNews('worldGrid','world');
-document.getElementById('ticker1').addEventListener('keydown',e=>{if(e.key==='Enter')runScan();});
+var _t1=document.getElementById('ticker1');if(_t1)_t1.addEventListener('keydown',function(e){if(e.key==='Enter'&&typeof runScan==='function')runScan();});
 
 // demo ticker movement
 setInterval(()=>{
@@ -1537,6 +1537,17 @@ async function gsUpdateHomePreview(){
   }
   buildTicker();setInterval(buildTicker,30000);
 })();
+</script>
+<script>
+/* Gilded Signals: card click delegation (replaces broken inline onclick) */
+document.addEventListener('click',function(e){
+  var el=e.target&&e.target.closest?e.target.closest('[data-sym]'):null;
+  var sym=el.getAttribute('data-sym');
+  if(sym&&typeof window.gsPick==='function'){
+    window.gsPick(sym);
+    if(el.getAttribute('data-scroll')==='1')window.scrollTo({top:0,behavior:'smooth'});
+  }
+});
 </script>
 </body>
 </html>
