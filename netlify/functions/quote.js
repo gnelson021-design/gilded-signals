@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes
 const FETCH_TIMEOUT_MS = 8000;
 const cache = new Map(); // symbol -> { expires, data }  (warm-container only)
 
