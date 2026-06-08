@@ -651,11 +651,26 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   </div>
 </div>
 
+<!-- ABOUT -->
+<div id="page-about" class="page">
+  <div class="section-inner news-page" style="max-width:820px;">
+    <div class="section-label">The Company</div>
+    <h2 class="section-title">About <em>Gilded Signals</em></h2>
+    <p class="section-desc" style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;line-height:1.5;color:var(--text-primary);margin-bottom:1.5rem;">Gilded Signals is a market intelligence platform built for disciplined investors who value clarity over noise.</p>
+    <div style="font-size:0.86rem;line-height:1.8;color:var(--text-secondary);">
+      <p style="margin-bottom:1rem;">We bring together real-time market data, a precision stock and crypto scanner, and continuously updated financial news into a single, refined workspace. Our scanner surfaces momentum, volume, and signal strength across equities and digital assets, while our news desk aggregates headlines from the world's leading financial sources so you stay current without the clutter.</p>
+      <p style="margin-bottom:1rem;">Our philosophy is simple: honest data, clearly presented. We show live prices when markets are open and label market status transparently. We aggregate news with full attribution and link directly to original sources. We never pass synthetic or placeholder data off as live.</p>
+      <p style="margin-bottom:1rem;">Gilded Signals is an independent platform and is not a broker-dealer, investment adviser, or financial institution. Everything we provide is for informational and educational purposes — the decisions, as always, are yours.</p>
+      <p style="margin-bottom:0;">Questions? Reach us anytime at <a href="mailto:gildedsignals.support@gmail.com" style="color:var(--gold);text-decoration:none;">gildedsignals.support@gmail.com</a>.</p>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="footer-inner">
     <div class="footer-brand"><div class="brand">Gilded Signals</div><p>Market intelligence for disciplined investors. Real signals, no noise.</p></div>
-    <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showPage('news')">Market News</a></li><li><a onclick="showPage('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
-    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Newsletter</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showNews('all')">Market News</a></li><li><a onclick="showNews('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showNews('all')">Newsletter</a></li><li><a href="mailto:gildedsignals.support@gmail.com">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Disclaimer</a></li></ul></div>
   </div>
   <div class="footer-bottom">
