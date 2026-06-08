@@ -17,3 +17,6 @@ Screenshot*.png
 # OS / editor junk
 .DS_Store
 *.swp
+
+# Local Netlify folder
+.netlify

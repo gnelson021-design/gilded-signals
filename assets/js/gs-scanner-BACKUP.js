@@ -57,12 +57,7 @@
   }
   function pctCls(v) { return v == null ? '' : (v >= 0 ? 'up' : 'dn'); }
 
-  /* Signal now comes from the server (single source of truth). Fallback only
-     if an older cached payload lacks it. */
-  function signal(d) {
-    if (d && d.signal) return d.signal;
-    // Legacy fallback (older payloads): derive a coarse label.
-    var rsi = d ? d.rsi14 : null, rvol = d ? d.rvol : 1;
+  function signal(rsi, rvol) {
     if (rsi == null) return 'Watch';
     var v = rvol || 1;
     if (rsi > 60 && v > 1.2) return 'Bullish';
@@ -70,28 +65,8 @@
     if (rsi < 35) return 'Bearish';
     return 'Neutral';
   }
-  /* Map any of the 7 labels to a CSS class slug. */
-  function sigSlug(s) {
-    return String(s || '').toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, '');
-  }
   function sigBadge(s) {
-    return '<span class="gs-sig-badge ' + sigSlug(s) + '">' + s + '</span>';
-  }
-  /* RSI condition label (from server). */
-  function rsiCond(d) { return d && d.rsiCondition ? d.rsiCondition : null; }
-
-  /* "Last updated" relative time from updatedAt ISO. */
-  function lastUpdated(d) {
-    if (!d || !d.updatedAt) return '';
-    var then = new Date(d.updatedAt).getTime();
-    if (isNaN(then)) return '';
-    var secs = Math.max(0, Math.floor((Date.now() - then) / 1000));
-    if (secs < 60) return 'Updated just now';
-    var m = Math.floor(secs / 60);
-    if (m < 60) return 'Updated ' + m + 'm ago';
-    var h = Math.floor(m / 60);
-    if (h < 24) return 'Updated ' + h + 'h ago';
-    return 'Updated ' + new Date(then).toLocaleDateString();
+    return '<span class="gs-sig-badge ' + s.toLowerCase() + '">' + s + '</span>';
   }
 
   function fetchQ(sym) {
@@ -208,35 +183,24 @@
     var aWins = sA != null && sB != null && sA >= sB;
     return '<div class="gs-cmp-cards">' + buildCard(a, aWins) + buildCard(b, !aWins && sA != null && sB != null) + '</div>';
   }
-  /* RSI color: extended (70+) is GOLD when trend supports it (not alarm-red).
-     We treat a high RSI as gold/strength rather than red/danger. */
   function rsiColor(v) {
-    return v == null ? '#9a9690'
-      : v >= 70 ? '#d4af37'   // extended — gold (strength/extended, not danger)
-      : v >= 60 ? '#4ecb8d'   // bullish momentum — green
-      : v >= 45 ? '#c9a24b'   // neutral — muted gold
-      : v >= 30 ? '#9a9690'   // weak — gray
-      : '#7da7ff';            // oversold — cool blue (reversal watch)
+    return v == null ? '#9a9690' : v >= 70 ? '#d97a7a' : v >= 60 ? '#4ecb8d' : v >= 45 ? '#c9a24b' : '#9a9690';
   }
   function buildCard(d, isWin) {
     var sym = disp(d.symbol || '');
     var chg = d.changePercent;
     var chgStr = chg == null ? '—' : (chg >= 0 ? '\u25B2 ' : '\u25BC ') + Math.abs(chg).toFixed(2) + '%';
-    var sig = signal(d);
+    var sig = signal(d.rsi14, d.rvol);
     var score = d.gildedScore;
     var scoreHtml = score != null
       ? '<div class="gs-score-block"><div class="gs-score-num">' + score +
-        '</div><div style="flex:1"><div class="gs-score-bar-lbl">Gilded Score / 100' +
-        '<span class="gs-score-info">i<span class="gs-tip">Score uses trend, momentum, RSI, MACD, volume, range position, recent performance, and analyst sentiment when available.</span></span>' +
-        '</div>' +
+        '</div><div style="flex:1"><div class="gs-score-bar-lbl">Gilded Score / 100</div>' +
         '<div class="gs-score-track"><div class="gs-score-fill" style="width:' + score + '%"></div></div></div>' +
         sigBadge(sig) + '</div>'
       : '';
     var rc = rsiColor(d.rsi14);
-    var rcondTxt = rsiCond(d);
     var rsiHtml = d.rsi14 != null
       ? '<div class="gs-rsi-wrap"><div class="gs-rsi-val" style="color:' + rc + '">' + d.rsi14 +
-        (rcondTxt ? ' <span class="gs-rsi-cond" style="color:' + rc + '">' + rcondTxt + '</span>' : '') +
         '</div><div class="gs-rsi-track"><div class="gs-rsi-fill" style="width:' + Math.min(d.rsi14, 100) +
         '%;background:' + rc + '"></div></div></div>'
       : '<span class="gs-mval muted">—</span>';
@@ -258,9 +222,6 @@
       var p = s.split(','), v = d[p[1]];
       return v != null ? '<div class="gs-mrow"><span class="gs-mlbl">' + p[0] + '</span><span class="gs-mval ' + pctCls(v) + '">' + fmtPct(v) + '</span></div>' : '';
     }).join('');
-
-    var updatedTxt = lastUpdated(d);
-    var updatedHtml = updatedTxt ? '<div class="gs-card-updated">' + updatedTxt + '</div>' : '';
 
     return '<div class="gs-cmp-card' + (isWin ? ' winner' : '') + '">' +
       '<div class="gs-card-head"><div><div class="gs-card-sym">' + sym + (isWin ? ' <span style="font-size:.65rem;color:var(--gold)">&#9733;</span>' : '') +
@@ -301,19 +262,19 @@
       (d.analystRating ? '<div class="gs-mrow"><span class="gs-mlbl">Analyst</span><span class="gs-mval gold">' + d.analystRating + '</span></div>' : '') +
       (d.peRatio != null ? '<div class="gs-mrow"><span class="gs-mlbl">P/E Ratio</span><span class="gs-mval">' + Number(d.peRatio).toFixed(1) + '</span></div>' : '') +
       '</div>' +
-      '</div>' + updatedHtml + '</div>';
+      '</div></div>';
   }
 
   /* ---------- GRID (bullish-first, clickable) ---------- */
   function gridCard(r, rawSym) {
     if (!r.ok) {
       return '<div class="gs-gc" style="opacity:.4"><div class="gs-gc-head"><div>' +
-        '<div class="gs-gc-sym">' + disp(rawSym) + '</div><div class="gs-gc-name">Data unavailable</div></div></div></div>';
+        '<div class="gs-gc-sym">' + disp(rawSym) + '</div><div class="gs-gc-name">Unavailable</div></div></div></div>';
     }
     var d = r.data, sym = disp(d.symbol || rawSym);
     var chg = d.changePercent || 0;
     var chgStr = (chg >= 0 ? '\u25B2 ' : '\u25BC ') + Math.abs(chg).toFixed(2) + '%';
-    var sig = signal(d);
+    var sig = signal(d.rsi14, d.rvol);
     var rc = rsiColor(d.rsi14);
     var pct = 0;
     if (d.low != null && d.high != null) { var rng = d.high - d.low; pct = rng > 0 ? Math.min(Math.max((d.price - d.low) / rng * 100, 0), 100) : 50; }
@@ -323,10 +284,7 @@
         '<div class="gs-gc-cursor" style="left:calc(' + pct + '% - 1px)"></div></div>' +
         '<div class="gs-gc-ends"><span class="gs-gc-end">' + fmt(d.low) + '</span><span class="gs-gc-end">' + fmt(d.high) + '</span></div></div>'
       : '';
-    var isBullFamily = sig === 'Bullish' || sig === 'Strong Bullish' || sig === 'Bullish but Extended';
-    var updatedTxt = lastUpdated(d);
-    var updatedHtml = updatedTxt ? '<div class="gs-gc-updated">' + updatedTxt + '</div>' : '';
-    return '<div class="gs-gc ' + (isBullFamily ? 'bullish' : '') + '" data-sym="' + disp(rawSym) + '" data-scroll="1">' +
+    return '<div class="gs-gc ' + (sig === 'Bullish' ? 'bullish' : '') + '" data-sym="' + disp(rawSym) + '" data-scroll="1">' +
       '<div class="gs-gc-head"><div><div class="gs-gc-sym">' + sym + '</div><div class="gs-gc-name">' + (d.name || sym) +
       '</div></div><div><div class="gs-gc-price">' + fmt(d.price) + '</div><div class="gs-gc-chg ' + pctCls(chg) + '">' + chgStr + '</div></div></div>' +
       '<div class="gs-gc-metrics">' +
@@ -340,7 +298,6 @@
       '<div class="gs-gc-m"><div class="gs-gc-ml">52W Low</div><div class="gs-gc-mv dn">' + fmt(d.week52Low) + '</div></div>' +
       '</div>' + rangeHtml +
       '<div class="gs-gc-footer">' + sigBadge(sig) + '<span class="gs-gc-hint">+ Add to compare</span></div>' +
-      updatedHtml +
       '</div>';
   }
 

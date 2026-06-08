@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gilded Signals — Live News Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet"/>
+<style>
+:root{--gold:#D4AF37;--gold-2:#C9A227;--gold-light:#F0D060;--black:#080808;--charcoal:#111111;--charcoal-2:#161616;--charcoal-3:#1E1E1E;--charcoal-4:#282828;--charcoal-5:#333333;--text-primary:#F0EDE8;--text-secondary:#B0ABA5;--text-muted:#6A6560;--border:rgba(212,175,55,0.12);--border-hover:rgba(212,175,55,0.35);--green:#3ECA7A;--red:#E85555;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text-primary);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* ===== TEST HARNESS BAR (not part of real site) ===== */
+.test-bar{position:fixed;top:0;left:0;right:0;z-index:2000;background:#1a1206;border-bottom:1px solid var(--gold);padding:8px 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;font-size:0.7rem;}
+.test-bar strong{color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;font-size:0.62rem;}
+.test-toggle{display:flex;gap:4px;background:var(--charcoal-3);border-radius:3px;padding:3px;}
+.test-toggle button{background:transparent;border:none;color:var(--text-muted);padding:4px 12px;font-family:'DM Sans',sans-serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;}
+.test-toggle button.on{background:var(--gold);color:var(--black);font-weight:600;}
+.test-status{color:var(--text-secondary);margin-left:auto;font-size:0.65rem;}
+.test-status .ok{color:var(--green);}
+.test-status .err{color:var(--red);}
+
+/* ===== BRAND STYLES (copied from index.html) ===== */
+.section-inner{max-width:1200px;margin:0 auto;padding:0 2rem;}
+.section-label{display:inline-flex;align-items:center;gap:10px;font-size:0.59rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;}
+.section-label::before{content:'';display:block;width:22px;height:1px;background:var(--gold);}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,3.2vw,2.8rem);font-weight:400;line-height:1.12;margin-bottom:0.75rem;letter-spacing:-0.01em;}
+.section-title em{font-style:italic;color:var(--gold);}
+.section-desc{font-size:0.88rem;line-height:1.75;color:var(--text-secondary);}
+.live-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:5px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+.news-page{padding:3rem 0 5rem;}
+.news-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;}
+.news-tab{background:transparent;border:none;border-bottom:2px solid transparent;padding:12px 18px;font-family:'DM Sans',sans-serif;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;transition:all 0.2s;white-space:nowrap;margin-bottom:-1px;}
+.news-tab:hover{color:var(--text-secondary);}
+.news-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.news-card{display:block;background:var(--charcoal-2);padding:1.6rem;cursor:pointer;text-decoration:none;color:inherit;border-left:2px solid transparent;transition:background 0.25s,border-color 0.25s,transform 0.25s;}
+.news-card:hover{background:var(--charcoal-3);border-left-color:var(--gold);transform:translateY(-2px);}
+.news-card--nolink{cursor:default;}
+.news-card--nolink:hover{border-left-color:transparent;transform:none;background:var(--charcoal-2);}
+.news-card:hover .news-headline{color:var(--gold-light);}
+.news-card:hover .btn-read{color:var(--gold-light);}
+.news-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.9rem;gap:1rem;}
+.news-source{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);font-weight:500;}
+.news-time{font-size:0.58rem;color:var(--text-muted);white-space:nowrap;}
+.news-cat{display:inline-block;font-size:0.52rem;letter-spacing:0.1em;padding:2px 7px;border-radius:2px;text-transform:uppercase;margin-bottom:0.7rem;}
+.cat-market{background:rgba(62,202,122,0.1);color:var(--green);border:1px solid rgba(62,202,122,0.2);}
+.cat-ai{background:rgba(212,175,55,0.12);color:var(--gold);border:1px solid rgba(212,175,55,0.22);}
+.cat-world{background:rgba(100,140,255,0.1);color:#7DA7FF;border:1px solid rgba(100,140,255,0.2);}
+.cat-crypto{background:rgba(255,165,0,0.1);color:#FFA500;border:1px solid rgba(255,165,0,0.2);}
+.cat-earnings{background:rgba(200,100,255,0.1);color:#C864FF;border:1px solid rgba(200,100,255,0.2);}
+.cat-econ{background:rgba(255,100,100,0.1);color:#FF7070;border:1px solid rgba(255,100,100,0.2);}
+.news-headline{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;line-height:1.25;margin-bottom:0.6rem;color:var(--text-primary);letter-spacing:0.01em;transition:color 0.25s;}
+.news-summary{font-size:0.78rem;line-height:1.65;color:var(--text-secondary);margin-bottom:1rem;}
+.news-footer{display:flex;justify-content:space-between;align-items:center;}
+.btn-read{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:color 0.2s;}
+.btn-read:hover{color:var(--gold-light);}
+
+/* loading + empty states */
+.news-state{grid-column:1/-1;background:var(--charcoal-2);padding:3rem 2rem;text-align:center;color:var(--text-muted);font-size:0.85rem;}
+.news-state .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--charcoal-5);border-top-color:var(--gold);border-radius:50%;animation:rot 0.7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes rot{to{transform:rotate(360deg);}}
+
+body{padding-top:46px;}
+</style>
+</head>
+<body>
+
+<!-- TEST HARNESS — remove this whole bar when merging into index.html -->
+<div class="test-bar">
+  <strong>News Test</strong>
+  <div class="test-toggle">
+    <button id="srcLive" class="on" onclick="setSource('live')">Live API</button>
+    <button id="srcDemo" onclick="setSource('demo')">Demo</button>
+  </div>
+  <span style="color:var(--text-muted);font-size:0.62rem;">Endpoint: <span id="epLabel">/api/news</span></span>
+  <span class="test-status" id="testStatus">Ready.</span>
+</div>
+
+<!-- MARKET NEWS (mirrors index.html structure) -->
+<div class="section-inner news-page">
+  <div class="section-label">Financial Intelligence</div>
+  <h2 class="section-title">Market <em>News</em></h2>
+  <p class="section-desc" style="margin-bottom:1.75rem;"><span class="live-dot"></span>Real-time market intelligence, aggregated from the world's leading financial desks. Updated continuously.</p>
+
+  <div class="news-tabs" id="newsTabs"></div>
+  <div class="news-grid" id="newsGrid"></div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+// When testing locally with `netlify dev`, this same-origin path works.
+// When opening the file directly (file://), point at the deployed site.
+const API_BASE = location.protocol === 'file:'
+  ? 'https://gildedsignals.com'   // direct-open fallback
+  : '';                            // same-origin (netlify dev / deployed)
+
+let SOURCE = 'live';   // 'live' = /api/news, 'demo' = local sample
+let currentCat = 'all';
+
+const TABS = [
+  ['all','All'],
+  ['market','Market'],
+  ['ai','AI & Infrastructure'],
+  ['earnings','Earnings'],
+  ['crypto','Crypto'],
+  ['econ','Economy'],
+  ['world','World'],
+];
+
+const CAT_CLASS = {market:'cat-market',ai:'cat-ai',world:'cat-world',crypto:'cat-crypto',earnings:'cat-earnings',econ:'cat-econ'};
+
+/* ============================================================
+   DEMO DATA (fallback / offline preview)
+   ============================================================ */
+const DEMO = [
+  {source:'Reuters',headline:'Fed Officials Signal Patience on Rate Cuts Amid Sticky Inflation',summary:'Federal Reserve members reiterated a data-dependent stance, suggesting rate reductions remain unlikely before late 2026 given persistent core inflation.',time:'2h ago',cat:'econ',catLabel:'Economy',url:'#'},
+  {source:'Bloomberg',headline:'NVIDIA Revenue Beats Estimates, Data Center Demand Accelerates',summary:'NVIDIA reported quarterly revenue surpassing projections, driven by record data center sales from hyperscalers building AI infrastructure.',time:'3h ago',cat:'ai',catLabel:'AI & Infra',url:'#'},
+  {source:'CNBC',headline:'S&P 500 Notches Fifth Consecutive Weekly Gain',summary:'U.S. equity markets closed the week higher, with technology and semiconductor sectors leading gains.',time:'6h ago',cat:'market',catLabel:'Market',url:'#'},
+];
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+// Convert the API's ISO timestamp -> "2h ago" style the cards expect.
+function timeAgo(input){
+  if(!input) return '';
+  // demo data already uses "2h ago" strings — pass through.
+  if(typeof input === 'string' && /ago|now/i.test(input)) return input;
+  const then = new Date(input).getTime();
+  if(isNaN(then)) return '';
+  const secs = Math.max(0, Math.floor((Date.now() - then)/1000));
+  if(secs < 60) return 'just now';
+  const mins = Math.floor(secs/60);
+  if(mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins/60);
+  if(hrs < 24) return hrs + 'h ago';
+  const days = Math.floor(hrs/24);
+  if(days < 7) return days + 'd ago';
+  const wks = Math.floor(days/7);
+  if(wks < 5) return wks + 'w ago';
+  return new Date(then).toLocaleDateString();
+}
+
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function setStatus(msg, kind){
+  const el = document.getElementById('testStatus');
+  el.innerHTML = kind ? `<span class="${kind}">${msg}</span>` : msg;
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function cardHTML(n){
+  const cat = n.cat || 'market';
+  const catLabel = n.catLabel || cat;
+  const cls = CAT_CLASS[cat] || 'cat-market';
+  const url = n.url && n.url !== '#' ? n.url : null;
+
+  const inner = `
+    <div class="news-card-top"><span class="news-source">${esc(n.source||'—')}</span><span class="news-time">${esc(timeAgo(n.time))}</span></div>
+    <span class="news-cat ${cls}">${esc(catLabel)}</span>
+    <div class="news-headline">${esc(n.headline||'')}</div>
+    <div class="news-summary">${esc(n.summary||'')}</div>
+    <div class="news-footer">${url ? `<span class="btn-read">Full story →</span>` : `<span class="btn-read" style="opacity:0.4;">No link</span>`}</div>`;
+
+  // Whole card is clickable when a source URL exists.
+  return url
+    ? `<a class="news-card" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
+    : `<div class="news-card news-card--nolink">${inner}</div>`;
+}
+
+function showLoading(){
+  document.getElementById('newsGrid').innerHTML =
+    `<div class="news-state"><span class="spin"></span>Loading ${currentCat} news…</div>`;
+}
+
+function showEmpty(msg){
+  document.getElementById('newsGrid').innerHTML =
+    `<div class="news-state">${esc(msg)}</div>`;
+}
+
+function renderList(data){
+  const grid = document.getElementById('newsGrid');
+  if(!Array.isArray(data) || data.length === 0){
+    showEmpty('No stories available right now. Please try another category.');
+    return;
+  }
+  grid.innerHTML = data.map(cardHTML).join('');
+}
+
+/* ============================================================
+   DATA FETCH
+   ============================================================ */
+async function loadNews(cat){
+  currentCat = cat;
+
+  if(SOURCE === 'demo'){
+    const data = cat === 'all' ? DEMO : DEMO.filter(n => n.cat === cat);
+    renderList(data);
+    setStatus(`Demo • ${data.length} items`, 'ok');
+    return;
+  }
+
+  // LIVE
+  showLoading();
+  setStatus('Fetching…');
+  const url = `${API_BASE}/api/news?cat=${encodeURIComponent(cat)}`;
+  try{
+    const r = await fetch(url);
+    const data = await r.json();
+    if(data && data.error){
+      showEmpty('Live feed error: ' + data.error);
+      setStatus('Error: ' + data.error, 'err');
+      return;
+    }
+    renderList(data);
+    setStatus(`Live • ${Array.isArray(data)?data.length:0} items • ${cat}`, 'ok');
+  }catch(err){
+    showEmpty('Could not reach the news API. (' + err.message + ')');
+    setStatus('Fetch failed: ' + err.message, 'err');
+  }
+}
+
+/* ============================================================
+   TABS + TOGGLE
+   ============================================================ */
+function buildTabs(){
+  const wrap = document.getElementById('newsTabs');
+  wrap.innerHTML = TABS.map(([id,label],i) =>
+    `<button class="news-tab${i===0?' active':''}" data-cat="${id}">${label}</button>`
+  ).join('');
+  wrap.querySelectorAll('.news-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.news-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadNews(btn.dataset.cat);
+    });
+  });
+}
+
+function setSource(src){
+  SOURCE = src;
+  document.getElementById('srcLive').classList.toggle('on', src==='live');
+  document.getElementById('srcDemo').classList.toggle('on', src==='demo');
+  document.getElementById('epLabel').textContent = src==='live' ? (API_BASE||'') + '/api/news' : 'demo (local)';
+  loadNews(currentCat);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+buildTabs();
+document.getElementById('epLabel').textContent = (API_BASE||'') + '/api/news';
+loadNews('all');
+</script>
+</body>
+</html>

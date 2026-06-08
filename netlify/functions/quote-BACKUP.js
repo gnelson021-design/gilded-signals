@@ -129,76 +129,16 @@ function macd(closes) {
 }
 
 // ---------------------------------------------------------------------------
-// RSI condition — describes momentum state ONLY (separate from overall trend).
-// A high RSI is NOT inherently bearish; it just means "extended".
-// ---------------------------------------------------------------------------
-function rsiCondition(rsiVal) {
-  if (rsiVal == null) return null;
-  if (rsiVal < 30) return 'Oversold / Reversal Watch';
-  if (rsiVal < 45) return 'Weak Momentum';
-  if (rsiVal < 60) return 'Neutral';
-  if (rsiVal < 70) return 'Bullish Momentum';
-  return 'Overbought / Extended';
-}
-
-// ---------------------------------------------------------------------------
-// Trend posture from EMA stack — used to decide whether a high RSI means
-// "strong & extended" (uptrend) vs "exhausted" (weak/downtrend).
-// Returns: 'bull' | 'lean-bull' | 'mixed' | 'lean-bear' | 'bear' | null
-// ---------------------------------------------------------------------------
-function trendPosture(m) {
-  const { price, ema20, ema50, ema200 } = m;
-  if (price == null || ema20 == null || ema50 == null || ema200 == null) return null;
-  if (price > ema20 && ema20 > ema50 && ema50 > ema200) return 'bull';
-  if (price < ema20 && ema20 < ema50 && ema50 < ema200) return 'bear';
-  let s = 0;
-  if (price > ema20) s++; else s--;
-  if (ema20 > ema50) s++; else s--;
-  if (ema50 > ema200) s++; else s--;
-  if (s >= 2) return 'lean-bull';
-  if (s <= -2) return 'lean-bear';
-  return 'mixed';
-}
-
-// ---------------------------------------------------------------------------
-// Gilded Score — starts at 50, capped 0..100.
-// Now also produces a professional combined `signal` label that separates
-// RSI condition from overall trend (RSI 70+ never auto-bearish).
+// Gilded Score — starts at 50, capped 0..100
 // ---------------------------------------------------------------------------
 function gildedScore(m) {
   let score = 50;
   const reasons = [];
 
-  const posture = trendPosture(m);
-  const trendIsUp = posture === 'bull' || posture === 'lean-bull';
-  const trendIsDown = posture === 'bear' || posture === 'lean-bear';
-  const macdUp = m.macdHist != null && m.macdHist > 0;
-  const macdDown = m.macdHist != null && m.macdHist < 0;
-
-  // --- RSI: condition is separate from trend ---
-  // Oversold => reversal bonus. Overbought is only penalized when the trend is
-  // NOT up (genuine exhaustion); in an uptrend it's confirmation, not a warning.
+  // RSI extremes
   if (m.rsi14 != null) {
-    if (m.rsi14 < 30) {
-      score += 8;
-      reasons.push(`RSI ${round(m.rsi14, 1)} — oversold, reversal potential`);
-    } else if (m.rsi14 > 70) {
-      if (trendIsUp && macdUp) {
-        score += 4; // strength confirmation, not a penalty
-        reasons.push(`RSI ${round(m.rsi14, 1)} — extended, but trend & MACD confirm strength`);
-      } else if (trendIsDown) {
-        score -= 8;
-        reasons.push(`RSI ${round(m.rsi14, 1)} — overbought into a weak trend (exhaustion risk)`);
-      } else {
-        reasons.push(`RSI ${round(m.rsi14, 1)} — extended; watch for cooling`);
-      }
-    } else if (m.rsi14 >= 60) {
-      score += 4;
-      reasons.push(`RSI ${round(m.rsi14, 1)} — healthy bullish momentum`);
-    } else if (m.rsi14 < 45) {
-      score -= 3;
-      reasons.push(`RSI ${round(m.rsi14, 1)} — weak momentum`);
-    }
+    if (m.rsi14 < 30) { score += 8; reasons.push(`RSI ${round(m.rsi14, 1)} — oversold, reversal potential`); }
+    else if (m.rsi14 > 70) { score -= 8; reasons.push(`RSI ${round(m.rsi14, 1)} — overbought, extended`); }
   }
 
   // EMA alignment (price > 20 > 50 > 200 = textbook uptrend)
@@ -242,17 +182,6 @@ function gildedScore(m) {
     else if (m.weekChange < 0) { score -= 5; reasons.push(`Down ${round(m.weekChange, 2)}% over the week`); }
   }
 
-  // Position inside 52-week range (momentum/context)
-  if (m.price != null && m.week52High != null && m.week52Low != null && m.week52High > m.week52Low) {
-    const posPct = ((m.price - m.week52Low) / (m.week52High - m.week52Low)) * 100;
-    if (posPct >= 85) { score += 4; reasons.push('Trading near 52-week highs'); }
-    else if (posPct <= 15) { score -= 4; reasons.push('Trading near 52-week lows'); }
-  }
-
-  // Analyst rating (stocks; null for crypto)
-  if (m.analystRating === 'Buy') { score += 5; reasons.push('Analyst consensus: Buy'); }
-  else if (m.analystRating === 'Sell') { score -= 5; reasons.push('Analyst consensus: Sell'); }
-
   // Valuation (stocks only)
   if (m.peRatio != null && m.peRatio > 0 && m.peRatio < 25) {
     score += 5;
@@ -267,41 +196,6 @@ function gildedScore(m) {
 
   score = Math.max(0, Math.min(100, Math.round(score)));
 
-  // --- Combined professional signal (7 labels) ---
-  // Built from trend + MACD + RSI condition + score. RSI 70+ in an uptrend
-  // becomes "Bullish but Extended", never bearish.
-  const rsiVal = m.rsi14;
-  const extended = rsiVal != null && rsiVal > 70;
-  const oversold = rsiVal != null && rsiVal < 30;
-  let signal;
-
-  if (trendIsUp && macdUp && extended) {
-    signal = 'Bullish but Extended';
-  } else if ((posture === 'bull') && macdUp && score >= 72) {
-    signal = 'Strong Bullish';
-  } else if (trendIsUp && (macdUp || score >= 60) && !extended) {
-    signal = 'Bullish';
-  } else if (trendIsDown && macdDown) {
-    signal = 'Bearish';
-  } else if (posture === 'lean-bear' || (trendIsDown && !macdDown) || (rsiVal != null && rsiVal < 45 && !trendIsUp)) {
-    signal = 'Weak';
-  } else if (oversold && !trendIsDown) {
-    signal = 'Watch';
-  } else if (posture === 'mixed' || (macdUp !== macdDown && !trendIsUp && !trendIsDown)) {
-    signal = 'Watch';
-  } else {
-    signal = 'Neutral';
-  }
-
-  // Fallback for thin data (e.g. some crypto): lean on score alone.
-  if (posture == null && m.macdHist == null) {
-    if (score >= 72) signal = 'Strong Bullish';
-    else if (score >= 58) signal = 'Bullish';
-    else if (score >= 45) signal = 'Neutral';
-    else if (score >= 30) signal = 'Weak';
-    else signal = 'Bearish';
-  }
-
   let badge;
   if (score >= 80) badge = 'Strong Bullish';
   else if (score >= 60) badge = 'Bullish';
@@ -309,13 +203,7 @@ function gildedScore(m) {
   else if (score >= 20) badge = 'Bearish';
   else badge = 'Strong Bearish';
 
-  return {
-    gildedScore: score,
-    gildedBadge: badge,
-    gildedReasons: reasons,
-    signal,
-    rsiCondition: rsiCondition(rsiVal),
-  };
+  return { gildedScore: score, gildedBadge: badge, gildedReasons: reasons };
 }
 
 // Shared derivation of momentum/levels from chronological close/high/low/volume arrays.
@@ -475,7 +363,6 @@ async function getStock(symbol) {
     price, changePercent, weekChange: d.weekChange, rvol: d.rvol,
     rsi14: d.rsi14, ema20: d.ema20, ema50: d.ema50, ema200: d.ema200,
     macdHist: d.macdHist, peRatio,
-    week52High: d.week52High, week52Low: d.week52Low, analystRating,
   };
   const gild = gildedScore(metrics);
 
@@ -519,8 +406,6 @@ async function getStock(symbol) {
     gildedScore: gild.gildedScore,
     gildedBadge: gild.gildedBadge,
     gildedReasons: gild.gildedReasons,
-    signal: gild.signal,
-    rsiCondition: gild.rsiCondition,
     updatedAt: new Date().toISOString(),
     source: 'Alpaca + Finnhub',
   };
@@ -573,7 +458,6 @@ async function getCrypto(base, symbol) {
     price, changePercent, weekChange: d.weekChange, rvol: d.rvol,
     rsi14: d.rsi14, ema20: d.ema20, ema50: d.ema50, ema200: d.ema200,
     macdHist: d.macdHist, peRatio: null,
-    week52High: d.week52High, week52Low: d.week52Low, analystRating: null,
   };
   const gild = gildedScore(metrics);
 
@@ -617,8 +501,6 @@ async function getCrypto(base, symbol) {
     gildedScore: gild.gildedScore,
     gildedBadge: gild.gildedBadge,
     gildedReasons: gild.gildedReasons,
-    signal: gild.signal,
-    rsiCondition: gild.rsiCondition,
     updatedAt: new Date().toISOString(),
     source: 'CoinGecko',
   };
