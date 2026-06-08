@@ -132,10 +132,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,0.97)
 .cat-crypto{background:rgba(255,165,0,0.1);color:#FFA500;border:1px solid rgba(255,165,0,0.2);}
 .cat-earnings{background:rgba(200,100,255,0.1);color:#C864FF;border:1px solid rgba(200,100,255,0.2);}
 .cat-econ{background:rgba(255,100,100,0.1);color:#FF7070;border:1px solid rgba(255,100,100,0.2);}
-.news-headline{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:500;line-height:1.38;margin-bottom:0.6rem;color:var(--text-primary);}
+.news-headline{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;line-height:1.25;margin-bottom:0.6rem;color:var(--text-primary);letter-spacing:0.01em;transition:color 0.25s;}
+.news-card{display:block;background:var(--charcoal-2);padding:1.6rem;cursor:pointer;text-decoration:none;color:inherit;border-left:2px solid transparent;transition:background 0.25s,border-color 0.25s,transform 0.25s;}
+.news-card:hover{background:var(--charcoal-3);border-left-color:var(--gold);transform:translateY(-2px);}
+.news-card--nolink{cursor:default;}
+.news-card--nolink:hover{border-left-color:transparent;transform:none;background:var(--charcoal-2);}
+.news-card:hover .news-headline{color:var(--gold-light);}
+.news-card:hover .btn-read{color:var(--gold-light);}
+.live-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:7px;animation:pulse 2s infinite;vertical-align:middle;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.news-state{grid-column:1/-1;background:var(--charcoal-2);padding:3rem 2rem;text-align:center;color:var(--text-muted);font-size:0.85rem;}
+.news-state .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--charcoal-5);border-top-color:var(--gold);border-radius:50%;animation:rot 0.7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes rot{to{transform:rotate(360deg);}}
 .news-summary{font-size:0.78rem;line-height:1.65;color:var(--text-secondary);margin-bottom:1.1rem;}
 .news-footer{display:flex;justify-content:flex-end;}
-.btn-read{background:transparent;border:1px solid var(--charcoal-5);color:var(--text-muted);padding:6px 14px;font-family:'DM Sans',sans-serif;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.2s;text-decoration:none;}
+.btn-read{background:none;border:none;color:var(--gold);padding:0;font-family:'DM Sans',sans-serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:color 0.2s;text-decoration:none;}
 .btn-read:hover{border-color:var(--gold);color:var(--gold);}
 
 /* SCANNER */
@@ -246,9 +257,9 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   </a>
   <ul class="nav-links">
     <li><a id="nav-home" class="active" onclick="showPage('home')">Home</a></li>
-    <li><a id="nav-news" onclick="showPage('news')">Market News</a></li>
-    <li><a id="nav-ai" onclick="showPage('ai')">AI Infrastructure</a></li>
-    <li><a id="nav-world" onclick="showPage('world')">World News</a></li>
+    <li><a id="nav-news" onclick="showNews('all')">Market News</a></li>
+    <li><a id="nav-ai" onclick="showNews('ai')">AI Infrastructure</a></li>
+    <li><a id="nav-world" onclick="showNews('world')">World News</a></li>
     <li><a id="nav-scanner" onclick="showPage('scanner')">Scanner</a></li>
     <li><a id="nav-pricing" onclick="showPage('pricing')">Pricing</a></li>
   </ul>
@@ -278,7 +289,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
         <div style="width:48px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:1.5rem;opacity:0.6;"></div>
         <p class="hero-sub">Curated market news, AI infrastructure updates, and scanner insights built for disciplined investors — with source-linked summaries, clean signals, and no hype.</p>
         <div class="hero-ctas">
-          <button class="btn-primary" onclick="showPage('news')">Read Market News</button>
+          <button class="btn-primary" onclick="showNews('all')">Read Market News</button>
           <button class="btn-ghost" onclick="showPage('scanner')">Try Free Scanner</button>
         </div>
         <p style="margin-top:1.1rem;font-size:0.65rem;color:var(--text-muted);letter-spacing:0.06em;">Educational research only. No financial advice. No guaranteed returns.</p>
@@ -334,10 +345,10 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
         <p class="section-desc" style="text-align:center;margin:0 auto;">From AI infrastructure news to real-time stock signals — all in one premium, noise-free dashboard.</p>
       </div>
       <div class="everything-grid">
-        <div class="everything-card" onclick="showPage('news')"><div class="ec-icon">◈</div><div class="ec-title">Market News</div><p class="ec-desc">Curated financial headlines with summaries and source links. No full article copies — just the signal.</p></div>
-        <div class="everything-card" onclick="showPage('ai')"><div class="ec-icon">⬡</div><div class="ec-title">AI Infrastructure</div><p class="ec-desc">The semiconductor and AI compute stack — NVDA, ASML, AVGO, COHR and the supply chain behind them.</p></div>
+        <div class="everything-card" onclick="showNews('all')"><div class="ec-icon">◈</div><div class="ec-title">Market News</div><p class="ec-desc">Curated financial headlines with summaries and source links. No full article copies — just the signal.</p></div>
+        <div class="everything-card" onclick="showNews('ai')"><div class="ec-icon">⬡</div><div class="ec-title">AI Infrastructure</div><p class="ec-desc">The semiconductor and AI compute stack — NVDA, ASML, AVGO, COHR and the supply chain behind them.</p></div>
         <div class="everything-card" onclick="showPage('scanner')"><div class="ec-icon">◎</div><div class="ec-title">Stock Scanner</div><p class="ec-desc">Search any ticker. Get RSI, volume, EMA, momentum, risk level, and signal strength in seconds.</p></div>
-        <div class="everything-card" onclick="showPage('world')"><div class="ec-icon">◯</div><div class="ec-title">World News</div><p class="ec-desc">Geopolitical and macro events that move markets — filtered for relevance, not clicks.</p></div>
+        <div class="everything-card" onclick="showNews('world')"><div class="ec-icon">◯</div><div class="ec-title">World News</div><p class="ec-desc">Geopolitical and macro events that move markets — filtered for relevance, not clicks.</p></div>
         <div class="everything-card" onclick="showPage('scanner')"><div class="ec-icon">▲</div><div class="ec-title">Watchlist Signals</div><p class="ec-desc">Bullish, Watch, and Neutral signal labels across tracked assets updated throughout the session.</p></div>
         <div class="everything-card" onclick="showPage('pricing')"><div class="ec-icon">✦</div><div class="ec-title">Weekly Briefs</div><p class="ec-desc">A weekly intelligence brief covering what mattered, what's next, and the market themes worth watching.</p></div>
       </div>
@@ -370,50 +381,18 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 <div id="page-news" class="page">
   <div class="section-inner news-page">
     <div class="section-label">Financial Intelligence</div>
-    <h2 class="section-title">Market News</h2>
-    <p class="section-desc" style="margin-bottom:1.25rem;">Curated summaries with links to original sources. We do not republish full articles — click "Read Source" to view each story directly at the publisher.</p>
-    <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
-      <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
-    </div>
-    <div class="news-tabs">
-      <button class="news-tab active" onclick="filterNews('all',this,'newsGrid')">All</button>
-      <button class="news-tab" onclick="filterNews('market',this,'newsGrid')">Market</button>
-      <button class="news-tab" onclick="filterNews('ai',this,'newsGrid')">AI & Infrastructure</button>
-      <button class="news-tab" onclick="filterNews('earnings',this,'newsGrid')">Earnings</button>
-      <button class="news-tab" onclick="filterNews('crypto',this,'newsGrid')">Crypto</button>
-      <button class="news-tab" onclick="filterNews('econ',this,'newsGrid')">Economy</button>
-      <button class="news-tab" onclick="filterNews('world',this,'newsGrid')">World</button>
+    <h2 class="section-title">Market <em>News</em></h2>
+    <p class="section-desc" style="margin-bottom:1.75rem;"><span class="live-dot"></span>Real-time market intelligence, aggregated from the world's leading financial desks. Updated continuously.</p>
+    <div class="news-tabs" id="newsTabs">
+      <button class="news-tab active" data-cat="all">All</button>
+      <button class="news-tab" data-cat="market">Market</button>
+      <button class="news-tab" data-cat="ai">AI &amp; Infrastructure</button>
+      <button class="news-tab" data-cat="earnings">Earnings</button>
+      <button class="news-tab" data-cat="crypto">Crypto</button>
+      <button class="news-tab" data-cat="econ">Economy</button>
+      <button class="news-tab" data-cat="world">World</button>
     </div>
     <div class="news-grid" id="newsGrid"></div>
-  </div>
-</div>
-
-<!-- AI INFRASTRUCTURE -->
-<div id="page-ai" class="page">
-  <div class="section-inner news-page">
-    <div class="section-label">Sector Intelligence</div>
-    <h2 class="section-title">AI &amp; Infrastructure</h2>
-    <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
-      <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
-    </div>
-    <p class="section-desc" style="margin-bottom:2.5rem;">Curated summaries with links to original sources, covering the semiconductor and AI compute stack — NVDA, ASML, AVGO, COHR, and the supply chain powering the AI era.</p>
-    <div class="news-grid" id="aiGrid"></div>
-  </div>
-</div>
-
-<!-- WORLD NEWS -->
-<div id="page-world" class="page">
-  <div class="section-inner news-page">
-    <div class="section-label">Global Macro</div>
-    <h2 class="section-title">World News</h2>
-    <p class="section-desc" style="margin-bottom:1.25rem;">Geopolitical and macro developments filtered for market relevance.</p>
-    <div style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);border-radius:4px;padding:10px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;">
-      <span style="color:var(--gold);font-size:0.75rem;">◎</span>
-      <span style="font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.04em;">Demo news shown for preview. Live source-linked news integration coming soon.</span>
-    </div>
-    <div class="news-grid" id="worldGrid"></div>
   </div>
 </div>
 
@@ -607,6 +586,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
       <div class="section-label" style="justify-content:center;">Simple Pricing</div>
       <h2 class="section-title" style="text-align:center;">Intelligence Without the<br><em>Wall Street Price Tag.</em></h2>
       <p class="section-desc" style="text-align:center;margin:0 auto;">One plan. Everything you need. No hidden fees.</p>
+      <div style="max-width:560px;margin:1.5rem auto 0;padding:0.85rem 1.25rem;border:1px solid var(--border);border-radius:4px;background:rgba(212,175,55,0.05);"><p style="font-size:0.78rem;line-height:1.6;color:var(--text-secondary);margin:0;text-align:center;"><span class="live-dot"></span>Secure checkout is launching soon. Sign up now to reserve your spot — you'll be notified by email the moment your subscription goes live.</p></div>
     </div>
     <div class="pricing-cards">
       <div class="pricing-card">
@@ -685,53 +665,108 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 </footer>
 
 <script>
-const NEWS=[
-  {source:'Reuters',headline:'Fed Officials Signal Patience on Rate Cuts Amid Sticky Inflation',summary:'Federal Reserve members reiterated a data-dependent stance, suggesting interest rate reductions remain unlikely before late 2026 given persistent core inflation above the 2% target.',time:'2h ago',cat:'econ',catLabel:'Economy',url:'https://reuters.com'},
-  {source:'Bloomberg',headline:'NVIDIA Q1 Revenue Beats Estimates, Data Center Demand Accelerates',summary:'NVIDIA reported quarterly revenue surpassing Wall Street projections, driven by record data center sales. Management cited sustained demand from hyperscalers building AI infrastructure.',time:'3h ago',cat:'ai',catLabel:'AI & Infra',url:'https://bloomberg.com'},
-  {source:'WSJ',headline:'Micron Technology Sees Strong DRAM Demand From AI Server Buildout',summary:'Micron forecasts continued upside in high-bandwidth memory shipments as AI server manufacturers increase chip orders. The company is expanding production capacity at its Taiwan facility.',time:'4h ago',cat:'ai',catLabel:'AI & Infra',url:'https://wsj.com'},
-  {source:'Financial Times',headline:'Bitcoin Surpasses $96K as Institutional Accumulation Continues',summary:'Bitcoin extended its rally as on-chain data showed significant accumulation by institutional wallets. ETF inflow data confirmed continued demand from registered investment advisors.',time:'5h ago',cat:'crypto',catLabel:'Crypto',url:'https://ft.com'},
-  {source:'CNBC',headline:'S&P 500 Notches Fifth Consecutive Weekly Gain on AI Optimism',summary:'U.S. equity markets closed the week higher, with the S&P 500 posting its fifth straight weekly advance. Technology and semiconductor sectors led gains.',time:'6h ago',cat:'market',catLabel:'Market',url:'https://cnbc.com'},
-  {source:'Reuters',headline:'ASML Warns of Export Control Uncertainty Affecting 2026 Outlook',summary:'ASML flagged uncertainty related to Dutch government export restrictions on EUV lithography equipment, potentially impacting shipment schedules to certain Asian customers.',time:'7h ago',cat:'ai',catLabel:'AI & Infra',url:'https://reuters.com'},
-  {source:'Bloomberg',headline:'China Trade Tensions Re-Emerge as Treasury Reviews Tariff Framework',summary:'The U.S. Treasury Department is reviewing the tariff structure on Chinese technology imports, with officials signaling potential changes that could affect semiconductor supply chains.',time:'8h ago',cat:'world',catLabel:'World',url:'https://bloomberg.com'},
-  {source:"Barron's",headline:'Broadcom Q2 Earnings Preview: AI Networking Demand in Focus',summary:"Analysts expect Broadcom to report strong custom AI chip and networking revenue when it reports next month. The company's hyperscaler partnerships are seen as a key growth driver.",time:'9h ago',cat:'earnings',catLabel:'Earnings',url:'https://barrons.com'},
-  {source:'CoinDesk',headline:'Ethereum Upgrade Roadmap Points to Improved Transaction Throughput',summary:'Ethereum core developers published an updated scaling roadmap, outlining near-term improvements expected to reduce gas fees and increase transaction capacity.',time:'10h ago',cat:'crypto',catLabel:'Crypto',url:'https://coindesk.com'},
-  {source:'WSJ',headline:'Japan GDP Expansion Exceeds Forecast, Yen Holds Steady',summary:"Japan's economy expanded at a faster-than-expected pace, supported by exports and domestic consumption. The yen held steady against the dollar following the data.",time:'11h ago',cat:'world',catLabel:'World',url:'https://wsj.com'},
-  {source:'Financial Times',headline:'Vertiv Secures Major Data Center Power Contract With Global Hyperscaler',summary:'Vertiv announced a multi-year supply agreement for thermal management and power infrastructure with a major cloud provider.',time:'12h ago',cat:'market',catLabel:'Market',url:'https://ft.com'},
-  {source:'Reuters',headline:'EU Launches Formal Inquiry Into AI Model Training Data Practices',summary:'European regulators opened a formal investigation into whether leading AI companies obtained training data in compliance with GDPR and copyright law.',time:'13h ago',cat:'world',catLabel:'World',url:'https://reuters.com'},
-];
+/* ============== GILDED SIGNALS — LIVE NEWS ENGINE ============== */
 const CAT_CLASS={market:'cat-market',ai:'cat-ai',world:'cat-world',crypto:'cat-crypto',earnings:'cat-earnings',econ:'cat-econ'};
 let scansLeft=5;
 let compareMode=false;
+let newsCurrentCat='all';
+const newsCache={};
+const NEWS_TTL=120000;
 
+/* Original page switching preserved — scanner and all pages depend on this. */
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
+  const pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
   const el=document.getElementById('nav-'+id);
   if(el)el.classList.add('active');
   window.scrollTo(0,0);
 }
-function renderNews(containerId,filter){
-  const el=document.getElementById(containerId);if(!el)return;
-  let data=filter==='all'?NEWS:NEWS.filter(n=>n.cat===filter);
-  el.innerHTML=data.map(n=>`<div class="news-card">
-    <div class="news-card-top"><span class="news-source">${n.source}</span><span class="news-time">${n.time}</span></div>
-    <span class="news-cat ${CAT_CLASS[n.cat]}">${n.catLabel}</span>
-    <div class="news-headline">${n.headline}</div>
-    <div class="news-summary">${n.summary}</div>
-    <div class="news-footer"><a href="${n.url}" target="_blank" rel="noopener noreferrer" class="btn-read">Read Source ↗</a></div>
-  </div>`).join('');
+
+/* Deep-link into the one news page at a specific tab. */
+function showNews(cat){
+  showPage('news');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const navId=cat==='ai'?'nav-ai':cat==='world'?'nav-world':'nav-news';
+  const navEl=document.getElementById(navId);
+  if(navEl)navEl.classList.add('active');
+  const tabCat=(cat==='ai'||cat==='world')?cat:(cat||'all');
+  document.querySelectorAll('#newsTabs .news-tab').forEach(b=>b.classList.toggle('active',b.dataset.cat===tabCat));
+  loadNews(tabCat);
 }
-function filterNews(cat,btn,gridId){
-  btn.closest('.news-tabs').querySelectorAll('.news-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderNews(gridId,cat);
+
+function timeAgo(input){
+  if(!input)return '';
+  if(typeof input==='string'&&/ago|now/i.test(input))return input;
+  const then=new Date(input).getTime();
+  if(isNaN(then))return '';
+  const secs=Math.max(0,Math.floor((Date.now()-then)/1000));
+  if(secs<60)return 'just now';
+  const m=Math.floor(secs/60);if(m<60)return m+'m ago';
+  const h=Math.floor(m/60);if(h<24)return h+'h ago';
+  const d=Math.floor(h/24);if(d<7)return d+'d ago';
+  const w=Math.floor(d/7);if(w<5)return w+'w ago';
+  return new Date(then).toLocaleDateString();
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+function newsCardHTML(n){
+  const cat=n.cat||'market';
+  const catLabel=n.catLabel||cat;
+  const cls=CAT_CLASS[cat]||'cat-market';
+  const url=n.url&&n.url!=='#'?n.url:null;
+  const inner=`
+    <div class="news-card-top"><span class="news-source">${esc(n.source||'—')}</span><span class="news-time">${esc(timeAgo(n.time))}</span></div>
+    <span class="news-cat ${cls}">${esc(catLabel)}</span>
+    <div class="news-headline">${esc(n.headline||'')}</div>
+    <div class="news-summary">${esc(n.summary||'')}</div>
+    <div class="news-footer">${url?`<span class="btn-read">Full story →</span>`:`<span class="btn-read" style="opacity:0.4;">No link</span>`}</div>`;
+  return url
+    ? `<a class="news-card" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
+    : `<div class="news-card news-card--nolink">${inner}</div>`;
+}
+function newsRender(data){
+  const grid=document.getElementById('newsGrid');
+  if(!grid)return;
+  if(!Array.isArray(data)||data.length===0){
+    grid.innerHTML='<div class="news-state">No stories available right now. Please try another category.</div>';
+    return;
+  }
+  grid.innerHTML=data.map(newsCardHTML).join('');
+}
+async function loadNews(cat){
+  newsCurrentCat=cat;
+  const grid=document.getElementById('newsGrid');
+  if(!grid)return;
+  const hit=newsCache[cat];
+  if(hit&&Date.now()-hit.ts<NEWS_TTL){newsRender(hit.data);return;}
+  grid.innerHTML='<div class="news-state"><span class="spin"></span>Loading '+esc(cat)+' news…</div>';
+  try{
+    const r=await fetch('/api/news?cat='+encodeURIComponent(cat));
+    const data=await r.json();
+    if(data&&data.error){grid.innerHTML='<div class="news-state">Live feed temporarily unavailable. Please check back shortly.</div>';return;}
+    newsCache[cat]={ts:Date.now(),data};
+    newsRender(data);
+  }catch(err){
+    grid.innerHTML='<div class="news-state">Could not reach the news feed right now. Please check back shortly.</div>';
+  }
+}
+function initNewsTabs(){
+  const wrap=document.getElementById('newsTabs');
+  if(!wrap)return;
+  wrap.querySelectorAll('.news-tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      wrap.querySelectorAll('.news-tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      loadNews(btn.dataset.cat);
+    });
+  });
 }
 
 // INIT
-renderNews('newsGrid','all');
-renderNews('aiGrid','ai');
-renderNews('worldGrid','world');
+initNewsTabs();
+loadNews('all');
 
 </script>
 
