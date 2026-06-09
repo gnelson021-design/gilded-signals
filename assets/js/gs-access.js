@@ -128,6 +128,21 @@
     m.className = 'gsx-msg' + (kind ? ' ' + kind : '');
   }
 
+  function goToStripe() {
+    var btn = document.getElementById('gsxSubmit');
+    if (btn) { btn.disabled = true; btn.textContent = 'Redirecting\u2026'; }
+    fetch('/.netlify/functions/create-checkout-session', { method: 'POST' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.url) { window.location.href = d.url; }
+        else { setMsg('Could not start checkout. Please try again.', 'err'); if (btn) { btn.disabled = false; btn.textContent = 'Subscribe Now \u2192'; } }
+      })
+      .catch(function () {
+        setMsg('Could not reach checkout. Please try again.', 'err');
+        if (btn) { btn.disabled = false; btn.textContent = 'Subscribe Now \u2192'; }
+      });
+  }
+
   function onSubmit() {
     var inp = document.getElementById('gsxEmail');
     var btn = document.getElementById('gsxSubmit');
@@ -147,15 +162,10 @@
         setTimeout(function () { hideModal(); btn.disabled = false; }, 900);
         return;
       }
-      // Non-allowlisted: capture lead to Kit, stay gated.
-      submitToKit(email).then(function () {
-        setMsg('Thanks! Your subscription is being processed \u2014 we\u2019ll be in touch.', 'ok');
-        btn.disabled = false;
-      }).catch(function () {
-        // Even if Kit fails, acknowledge so UX isn't broken.
-        setMsg('Thanks! We\u2019ve recorded your interest.', 'ok');
-        btn.disabled = false;
-      });
+      // Non-allowlisted: capture to Kit then redirect to Stripe.
+      submitToKit(email).catch(function () { /* silent — proceed to Stripe regardless */ });
+      setMsg('Taking you to secure checkout\u2026', 'ok');
+      setTimeout(goToStripe, 600);
     }).catch(function () {
       setMsg('Something went wrong. Try again.', 'err');
       btn.disabled = false;
@@ -201,6 +211,8 @@
       if (installWrapper() || tries > 40) clearInterval(iv);
     }, 100);
   }
+
+  window.gsGoToStripe = goToStripe;
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
