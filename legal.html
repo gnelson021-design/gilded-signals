@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Legal — Gilded Signals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet"/>
+<style>
+:root{--gold:#D4AF37;--gold-2:#C9A227;--gold-light:#F0D060;--black:#080808;--charcoal:#111111;--charcoal-2:#161616;--charcoal-3:#1E1E1E;--charcoal-4:#282828;--charcoal-5:#333333;--text-primary:#F0EDE8;--text-secondary:#B0ABA5;--text-muted:#6A6560;--border:rgba(212,175,55,0.12);--border-hover:rgba(212,175,55,0.35);--green:#3ECA7A;--red:#E85555;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text-primary);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* ===== TOP NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,0.97);backdrop-filter:blur(28px);border-bottom:1px solid var(--border);height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;}
+.wordmark{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:var(--text-primary);letter-spacing:0.06em;line-height:1;text-decoration:none;}
+.wordmark em{font-style:italic;color:var(--gold);}
+.nav-back{font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;transition:color 0.2s;display:inline-flex;align-items:center;gap:8px;}
+.nav-back:hover{color:var(--gold);}
+
+/* ===== HEADER ===== */
+.legal-head{max-width:880px;margin:0 auto;padding:9rem 2rem 1.5rem;}
+.section-label{display:inline-flex;align-items:center;gap:10px;font-size:0.59rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem;}
+.section-label::before{content:'';display:block;width:22px;height:1px;background:var(--gold);}
+.legal-head h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:400;line-height:1.1;letter-spacing:-0.01em;}
+.legal-head h1 em{font-style:italic;color:var(--gold);}
+.legal-intro{font-size:0.9rem;line-height:1.75;color:var(--text-secondary);max-width:620px;margin-top:1.1rem;}
+
+/* ===== JUMP NAV ===== */
+.legal-jump{position:sticky;top:70px;z-index:900;background:rgba(8,8,8,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.legal-jump-inner{max-width:880px;margin:0 auto;padding:0 2rem;display:flex;gap:0.5rem;flex-wrap:wrap;}
+.legal-jump a{font-size:0.64rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;padding:14px 14px;border-bottom:2px solid transparent;transition:all 0.2s;}
+.legal-jump a:hover{color:var(--text-secondary);}
+.legal-jump a.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ===== SECTIONS ===== */
+.legal-body{max-width:880px;margin:0 auto;padding:3.5rem 2rem 1rem;}
+.legal-section{padding:2.5rem 0;border-top:1px solid var(--border);scroll-margin-top:140px;}
+.legal-section:first-child{border-top:none;padding-top:1rem;}
+.legal-section h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,2.6vw,2.1rem);font-weight:400;letter-spacing:-0.01em;margin-bottom:0.4rem;}
+.legal-section h2 em{font-style:italic;color:var(--gold);}
+.updated{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1.6rem;}
+.legal-section h3{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--text-primary);letter-spacing:0.01em;margin:1.8rem 0 0.5rem;}
+.legal-section p{font-size:0.86rem;line-height:1.8;color:var(--text-secondary);margin-bottom:0.9rem;}
+.legal-section ul{list-style:none;margin:0.3rem 0 0.9rem;}
+.legal-section ul li{position:relative;font-size:0.86rem;line-height:1.75;color:var(--text-secondary);padding-left:1.2rem;margin-bottom:0.5rem;}
+.legal-section ul li::before{content:'';position:absolute;left:0;top:0.7rem;width:5px;height:5px;background:var(--gold);border-radius:50%;opacity:0.7;}
+.legal-section a{color:var(--gold);text-decoration:none;transition:opacity 0.2s;}
+.legal-section a:hover{opacity:0.75;}
+.legal-section strong{color:var(--text-primary);font-weight:500;}
+
+/* ===== FOOTER ===== */
+footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3rem 0 0;margin-top:3rem;}
+.footer-bottom{max-width:880px;margin:0 auto;padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;}
+.footer-bottom p{font-size:0.65rem;color:#7A7570;letter-spacing:0.04em;}
+.footer-disclaimer{font-size:0.65rem;color:#7A7570;max-width:560px;line-height:1.65;}
+
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px;}
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{transition:none!important;}}
+@media(max-width:640px){
+  nav{padding:0 1.25rem;}
+  .legal-head{padding:8rem 1.25rem 1.25rem;}
+  .legal-jump-inner,.legal-body,.footer-bottom{padding-left:1.25rem;padding-right:1.25rem;}
+  .legal-jump a{padding:12px 10px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="wordmark">Gilded<em> Signals</em></a>
+  <a href="index.html" class="nav-back">← Back to site</a>
+</nav>
+
+<header class="legal-head">
+  <span class="section-label">Legal</span>
+  <h1>Terms, Privacy &amp; <em>Disclaimer</em></h1>
+  <p class="legal-intro">Gilded Signals is a market intelligence platform. We provide real-time data, news, and research tools for informational purposes only — not financial advice. The terms below govern your use of the platform.</p>
+</header>
+
+<div class="legal-jump">
+  <div class="legal-jump-inner">
+    <a href="#terms" data-target="terms">Terms of Service</a>
+    <a href="#privacy" data-target="privacy">Privacy Policy</a>
+    <a href="#disclaimer" data-target="disclaimer">Disclaimer</a>
+  </div>
+</div>
+
+<main class="legal-body">
+
+  <!-- ============ TERMS OF SERVICE ============ -->
+  <section class="legal-section" id="terms">
+    <h2>Terms of <em>Service</em></h2>
+    <p class="updated">Last updated June 2026</p>
+
+    <p>By accessing or using Gilded Signals (the "Platform"), you agree to these Terms of Service. If you do not agree, please do not use the Platform.</p>
+
+    <h3>The service we provide</h3>
+    <p>Gilded Signals offers a market scanner, price tickers, comparison tools, and aggregated financial news drawn from third-party data providers. The Platform is a research and informational tool. It does not execute trades, hold funds, or provide brokerage services.</p>
+
+    <h3>Not financial advice</h3>
+    <p>Nothing on the Platform is financial, investment, tax, or legal advice, or a recommendation to buy or sell any security or asset. All decisions you make are your own. See the <a href="#disclaimer">Disclaimer</a> below for full detail.</p>
+
+    <h3>Acceptable use</h3>
+    <p>You agree to use the Platform lawfully and not to:</p>
+    <ul>
+      <li>Scrape, resell, or redistribute our data or content without permission</li>
+      <li>Attempt to disrupt, overload, or gain unauthorized access to the Platform</li>
+      <li>Use the Platform to mislead others or violate any applicable law</li>
+    </ul>
+
+    <h3>Third-party data</h3>
+    <p>Market prices, fundamentals, and news are supplied by external providers. We pass this data through as accurately as we can, but we do not originate it and cannot guarantee its completeness, timeliness, or accuracy.</p>
+
+    <h3>Intellectual property</h3>
+    <p>The Platform's design, branding, and original content are the property of Gilded Signals. You may view and use them for personal, non-commercial purposes only.</p>
+
+    <h3>Disclaimer of warranties &amp; limitation of liability</h3>
+    <p>The Platform is provided "as is" and "as available," without warranties of any kind. To the fullest extent permitted by law, Gilded Signals is not liable for any loss or damage arising from your use of, or reliance on, the Platform or its data.</p>
+
+    <h3>Changes</h3>
+    <p>We may update these terms from time to time. Continued use of the Platform after changes take effect means you accept the revised terms.</p>
+
+    <h3>Contact</h3>
+    <p>Questions about these terms? Reach us at <a href="mailto:gildedsignals.support@gmail.com">gildedsignals.support@gmail.com</a>.</p>
+  </section>
+
+  <!-- ============ PRIVACY POLICY ============ -->
+  <section class="legal-section" id="privacy">
+    <h2>Privacy <em>Policy</em></h2>
+    <p class="updated">Last updated June 2026</p>
+
+    <p>This policy explains what information Gilded Signals collects and how we use it. We aim to collect as little as possible.</p>
+
+    <h3>What we collect</h3>
+    <ul>
+      <li><strong>Usage data</strong> — basic, anonymized information about how the Platform is used, to keep it running and improve it</li>
+      <li><strong>Contact information</strong> — only if you email us or sign up for updates, and only what you choose to share</li>
+    </ul>
+    <p>We do not ask for or store brokerage credentials, payment card numbers, or sensitive financial account details on our servers.</p>
+
+    <h3>How we use it</h3>
+    <ul>
+      <li>To operate, maintain, and improve the Platform</li>
+      <li>To respond to your messages and support requests</li>
+      <li>To send updates only if you have opted in</li>
+    </ul>
+
+    <h3>Third-party services</h3>
+    <p>We rely on external providers for market data and news, and on hosting infrastructure to deliver the site. These providers process requests needed to display data to you and operate under their own privacy practices.</p>
+
+    <h3>Data security</h3>
+    <p>We take reasonable measures to protect any information we hold. No method of transmission over the internet is completely secure, and we cannot guarantee absolute security.</p>
+
+    <h3>Your choices</h3>
+    <p>You can opt out of any updates at any time, and you may request that we delete contact information you have shared with us.</p>
+
+    <h3>Changes</h3>
+    <p>We may revise this policy as the Platform evolves. The "last updated" date above reflects the latest version.</p>
+
+    <h3>Contact</h3>
+    <p>For any privacy question, email <a href="mailto:gildedsignals.support@gmail.com">gildedsignals.support@gmail.com</a>.</p>
+  </section>
+
+  <!-- ============ DISCLAIMER ============ -->
+  <section class="legal-section" id="disclaimer">
+    <h2><em>Disclaimer</em></h2>
+    <p class="updated">Last updated June 2026</p>
+
+    <p><strong>Gilded Signals is not a financial advisor, broker, or dealer.</strong> Everything on the Platform is provided for informational and educational purposes only.</p>
+
+    <h3>No financial advice</h3>
+    <p>Nothing on the Platform — including scanner results, price data, comparisons, news, or any other content — is financial advice, investment advice, or a recommendation to buy, sell, or hold any security, cryptocurrency, or other asset.</p>
+
+    <h3>Do your own research</h3>
+    <p>All investment decisions are yours alone. Before acting on any information, consult a licensed financial professional and conduct your own due diligence.</p>
+
+    <h3>Data accuracy</h3>
+    <p>Market data and news come from third-party sources. While we work to display them faithfully, we cannot guarantee that the information is accurate, complete, or current. Quotes may be delayed, and markets are not open 24/7.</p>
+
+    <h3>Risk</h3>
+    <p>Trading and investing involve substantial risk, including the possible loss of principal. Past performance does not guarantee future results. You are solely responsible for any losses you may incur.</p>
+
+    <h3>No guarantees</h3>
+    <p>Gilded Signals makes no representations about the outcomes of any decision based on information found on the Platform, and accepts no liability for such decisions.</p>
+
+    <h3>Contact</h3>
+    <p>Questions? Reach us at <a href="mailto:gildedsignals.support@gmail.com">gildedsignals.support@gmail.com</a>.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-bottom">
+    <p>© 2026 Gilded Signals. All rights reserved.</p>
+    <p class="footer-disclaimer">Gilded Signals provides market research, news aggregation, and scanner tools for informational and educational purposes only. Nothing on this site is financial advice, investment advice, or a recommendation to buy or sell any security or asset. Trading and investing involve risk, and past performance does not guarantee future results.</p>
+  </div>
+</footer>
+
+<script>
+/* Highlight the active jump link as you scroll */
+(function(){
+  var links = document.querySelectorAll('.legal-jump a');
+  var sections = ['terms','privacy','disclaimer'].map(function(id){return document.getElementById(id);});
+  function setActive(id){
+    links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('data-target')===id); });
+  }
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) setActive(e.target.id); });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){ if(s) obs.observe(s); });
+  }
+})();
+</script>
+
+</body>
+</html>
