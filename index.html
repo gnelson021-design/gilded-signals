@@ -880,5 +880,15 @@ loadNews('all');
 
 
 <!-- old delegation removed; handled in gs-scanner.js -->
+<script>
+async function gsGoToStripe(){
+  try{
+    const r=await fetch('/api/create-checkout-session',{method:'POST'});
+    const d=await r.json();
+    if(d&&d.url){window.location=d.url;return;}
+    alert('Checkout is temporarily unavailable. Please try again shortly.');
+  }catch(e){alert('Checkout is temporarily unavailable. Please try again shortly.');}
+}
+</script>
 </body>
 </html>
