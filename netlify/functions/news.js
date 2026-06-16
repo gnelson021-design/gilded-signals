@@ -27,7 +27,7 @@ function shape(arr, cat, label) {
   return arr.map((n) => ({
     source: n.source || 'Finnhub',
     headline: n.headline || '',
-    summary: n.summary || '',
+    summary: (n.summary || '').replace(/<[^>]*>/g, '').trim(),
     url: n.url || '#',
     time: n.datetime ? new Date(n.datetime * 1000).toISOString() : new Date().toISOString(),
     cat: cat,
