@@ -68,8 +68,20 @@ async function build(cat) {
     case 'econ':
       return shape((await getBase('forex')).slice(0, 20), 'econ', 'Economy');
     case 'market':
-    case 'all':
       return shape((await getBase('general')).slice(0, 24), 'market', 'Market');
+    case 'all': {
+      const [gen, cry, fx] = await Promise.all([getBase('general'), getBase('crypto'), getBase('forex')]);
+      const ai    = shape(kwFilter(gen, AI_RE).slice(0, 6), 'ai', 'AI & Infra');
+      const world = shape(kwFilter(gen, WORLD_RE).slice(0, 6), 'world', 'World');
+      const earn  = shape(kwFilter(gen, EARN_RE).slice(0, 6), 'earnings', 'Earnings');
+      const market= shape(gen.slice(0, 10), 'market', 'Market');
+      const crypto= shape(cry.slice(0, 6), 'crypto', 'Crypto');
+      const econ  = shape(fx.slice(0, 6), 'econ', 'Economy');
+      const merged = [...market, ...ai, ...world, ...earn, ...crypto, ...econ];
+      merged.sort((a, b) => new Date(b.time) - new Date(a.time));
+      const seen = new Set();
+      return merged.filter(n => { if (seen.has(n.headline)) return false; seen.add(n.headline); return true; });
+    }
     case 'ai': {
       const gen = await getBase('general');
       let f = kwFilter(gen, AI_RE);
