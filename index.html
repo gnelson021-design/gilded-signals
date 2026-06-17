@@ -349,7 +349,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
         <div class="everything-card" onclick="showNews('ai')"><div class="ec-icon">⬡</div><div class="ec-title">AI Infrastructure</div><p class="ec-desc">The semiconductor and AI compute stack — NVDA, ASML, AVGO, COHR and the supply chain behind them.</p></div>
         <div class="everything-card" onclick="showPage('scanner')"><div class="ec-icon">◎</div><div class="ec-title">Stock Scanner</div><p class="ec-desc">Search any ticker. Get RSI, volume, EMA, momentum, risk level, and signal strength in seconds.</p></div>
         <div class="everything-card" onclick="showNews('world')"><div class="ec-icon">◯</div><div class="ec-title">World News</div><p class="ec-desc">Geopolitical and macro events that move markets — filtered for relevance, not clicks.</p></div>
-        <div class="everything-card" onclick="showPage('scanner')"><div class="ec-icon">▲</div><div class="ec-title">Watchlist Signals</div><p class="ec-desc">Bullish, Watch, and Neutral signal labels across tracked assets updated throughout the session.</p></div>
+        <div class="everything-card" onclick="showBullishSignals()"><div class="ec-icon">▲</div><div class="ec-title">Watchlist Signals</div><p class="ec-desc">Bullish, Watch, and Neutral signal labels across tracked assets updated throughout the session.</p></div>
         <div class="everything-card" onclick="showPage('pricing')"><div class="ec-icon">✦</div><div class="ec-title">Weekly Briefs</div><p class="ec-desc">A weekly intelligence brief covering what mattered, what's next, and the market themes worth watching.</p></div>
       </div>
     </div>
@@ -705,6 +705,17 @@ function showPage(id){
   const el=document.getElementById('nav-'+id);
   if(el)el.classList.add('active');
   window.scrollTo(0,0);
+}
+
+function showBullishSignals(){
+  showPage('scanner');
+  setTimeout(function(){
+    const sec = document.querySelector('#page-scanner .gs-grid-section');
+    if(sec){
+      const y = sec.getBoundingClientRect().top + window.pageYOffset - 110;
+      window.scrollTo({top:y, behavior:'smooth'});
+    }
+  }, 250);
 }
 
 /* Deep-link into the one news page at a specific tab. */
