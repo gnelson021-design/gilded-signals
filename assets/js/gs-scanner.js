@@ -400,7 +400,7 @@
     var card = t.closest('[data-sym]');
     if (card) {
       var sym = card.getAttribute('data-sym');
-      if (sym) { pick(sym); if (card.getAttribute('data-scroll') === '1') window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      if (sym) { pick(sym); if (card.closest('#homeScannerGrid')) { showPage('scanner'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); } }
       return;
     }
 
