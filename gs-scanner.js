@@ -354,7 +354,7 @@
     var card = t.closest('[data-sym]');
     if (card) {
       var sym = card.getAttribute('data-sym');
-      if (sym) { pick(sym); if (document.getElementById('page-scanner')?.classList.contains('active')) { window.scrollTo({ top: 0, behavior: 'smooth' }); } else { showPage('scanner'); } }
+      if (sym) { pick(sym); if (card.closest('#homeScannerGrid')) { showPage('scanner'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); } }
       return;
     }
 
