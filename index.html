@@ -261,6 +261,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
     <li><a id="nav-ai" onclick="showNews('ai')">AI Infrastructure</a></li>
     <li><a id="nav-world" onclick="showNews('world')">World News</a></li>
     <li><a id="nav-scanner" onclick="showPage('scanner')">Scanner</a></li>
+    <li><a id="nav-brief" onclick="showPage('brief')">Weekly Brief</a></li>
     <li><a id="nav-pricing" onclick="showPage('pricing')">Pricing</a></li>
   </ul>
   <div class="nav-right">
@@ -350,7 +351,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
         <div class="everything-card" onclick="showPage('scanner')"><div class="ec-icon">◎</div><div class="ec-title">Stock Scanner</div><p class="ec-desc">Search any ticker. Get RSI, volume, EMA, momentum, risk level, and signal strength in seconds.</p></div>
         <div class="everything-card" onclick="showNews('world')"><div class="ec-icon">◯</div><div class="ec-title">World News</div><p class="ec-desc">Geopolitical and macro events that move markets — filtered for relevance, not clicks.</p></div>
         <div class="everything-card" onclick="showBullishSignals()"><div class="ec-icon">▲</div><div class="ec-title">Watchlist Signals</div><p class="ec-desc">Bullish, Watch, and Neutral signal labels across tracked assets updated throughout the session.</p></div>
-        <div class="everything-card" onclick="showPage('pricing')"><div class="ec-icon">✦</div><div class="ec-title">Weekly Briefs</div><p class="ec-desc">A weekly intelligence brief covering what mattered, what's next, and the market themes worth watching.</p></div>
+        <div class="everything-card" onclick="showPage('brief')"><div class="ec-icon">✦</div><div class="ec-title">Weekly Briefs</div><p class="ec-desc">A weekly intelligence brief covering what mattered, what's next, and the market themes worth watching.</p></div>
       </div>
     </div>
   </section>
@@ -659,6 +660,127 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   </div>
 </div>
 
+<!-- WEEKLY BRIEF -->
+<div id="page-brief" class="page">
+<style>
+.gb-wrap{max-width:780px;margin:0 auto;padding:50px 24px 90px;}
+.gb-eyebrow{font-family:'DM Sans',sans-serif;font-size:.58rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:14px;}
+.gb-title{font-family:'Cormorant Garamond',serif;font-size:2.9rem;font-weight:600;line-height:1.05;background:linear-gradient(180deg,#fff,#e8ca7a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 4px;}
+.gb-title em{font-style:italic;}
+.gb-dateline{font-family:monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-top:10px;}
+.gb-dateline b{color:var(--gold);font-weight:500;}
+.gb-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.35),transparent);margin:32px 0;}
+.gb-lead{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;line-height:1.55;color:var(--text-primary);font-style:italic;border-left:2px solid var(--gold);padding-left:22px;margin-bottom:14px;}
+.gb-body p{font-size:.96rem;line-height:1.8;color:var(--text-secondary);margin-bottom:16px;}
+.gb-section-lbl{font-family:'DM Sans',sans-serif;font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);opacity:.85;margin:44px 0 4px;}
+.gb-section-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;margin-bottom:24px;}
+.gb-pick{display:grid;grid-template-columns:54px 1fr;gap:20px;padding:24px 0;border-top:1px solid var(--border);align-items:start;}
+.gb-pick:last-of-type{border-bottom:1px solid var(--border);}
+.gb-rank{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:600;color:var(--gold);opacity:.55;line-height:1;}
+.gb-pick-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px;}
+.gb-ticker{font-family:monospace;font-size:1.25rem;font-weight:700;color:var(--text-primary);letter-spacing:.04em;}
+.gb-company{font-size:.82rem;color:var(--text-muted);}
+.gb-conviction{margin-left:auto;font-family:monospace;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid rgba(212,175,55,.3);color:var(--gold);background:rgba(212,175,55,.07);white-space:nowrap;}
+.gb-thesis{font-size:.92rem;line-height:1.72;color:var(--text-secondary);margin:8px 0 12px;}
+.gb-watch{font-family:monospace;font-size:.72rem;color:var(--text-muted);letter-spacing:.03em;}
+.gb-watch b{color:var(--gold-light);font-weight:500;}
+.gb-close{margin-top:40px;font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;color:var(--text-secondary);line-height:1.6;}
+.gb-sign{margin-top:18px;font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);}
+.gb-disclaimer{margin-top:48px;padding-top:22px;border-top:1px solid var(--border);font-size:.68rem;line-height:1.7;color:var(--text-muted);text-align:center;}
+.gb-disclaimer strong{color:var(--text-secondary);}
+@media(max-width:600px){.gb-title{font-size:2.1rem;}.gb-pick{grid-template-columns:38px 1fr;gap:14px;}.gb-rank{font-size:1.6rem;}.gb-conviction{margin-left:0;}}
+</style>
+<div class="gb-wrap">
+  <div class="gb-eyebrow">Weekly Intelligence Brief</div>
+  <h1 class="gb-title">The Week <em>Ahead</em></h1>
+  <div class="gb-dateline">For the week of <b>June 16, 2026</b> · Updated Sundays</div>
+
+  <div class="gb-rule"></div>
+
+  <p class="gb-lead">The AI-infrastructure trade is still the only story that matters &mdash; and the tape keeps paying the names attached to it.</p>
+  <div class="gb-body">
+    <p>The Dow pushed above 52,000 for the first time as oil eased on hopes of a Hormuz resolution, while a tech pullback on rising yields kept the broad market in check. That split is the whole picture: rate-sensitive names are trading the Fed, energy-adjacent names are trading the Strait, and the AI build-out cuts straight through the middle of both.</p>
+    <p>Five names are on my screen going into the week, ranked by conviction. A note before the list: four of the five are AI-correlated and several are extended after big runs &mdash; if the AI trade sells off, they move together. That concentration is the risk to respect. This is where my attention is, not a recommendation to buy or sell.</p>
+  </div>
+
+  <div class="gb-section-lbl">Conviction Ranking</div>
+  <h2 class="gb-section-title">Five Names on My Screen</h2>
+
+  <div class="gb-pick">
+    <div class="gb-rank">01</div>
+    <div>
+      <div class="gb-pick-head">
+        <span class="gb-ticker">MU</span>
+        <span class="gb-company">Micron Technology</span>
+        <span class="gb-conviction">High Conviction</span>
+      </div>
+      <p class="gb-thesis">The cleanest dated catalyst of the group: earnings land after the close on June 24. Micron has crossed a trillion-dollar market cap on the memory super-cycle, with HBM demand from AI tight across the board and the technical trend reading strong. The catch is it goes into the print overbought, so the report itself is the risk &mdash; a great setup with a coin-flip moment attached.</p>
+      <div class="gb-watch">Watching: <b>June 24 earnings</b> · whether it holds the $1,000 level into the print</div>
+    </div>
+  </div>
+
+  <div class="gb-pick">
+    <div class="gb-rank">02</div>
+    <div>
+      <div class="gb-pick-head">
+        <span class="gb-ticker">TSM</span>
+        <span class="gb-company">Taiwan Semiconductor</span>
+        <span class="gb-conviction">High Conviction</span>
+      </div>
+      <p class="gb-thesis">The cleanest trend in the group, and the one I'd call lowest-drama. Record Q1 profits, full-year guidance raised above 30% revenue growth, and the stock holding above its key moving averages with momentum still pointed up. It also trades at a lower multiple than ASML while growing faster. The single real risk is geopolitical &mdash; everything routes through Taiwan.</p>
+      <div class="gb-watch">Watching: <b>$392 resistance</b> · any headline shift on Taiwan</div>
+    </div>
+  </div>
+
+  <div class="gb-pick">
+    <div class="gb-rank">03</div>
+    <div>
+      <div class="gb-pick-head">
+        <span class="gb-ticker">MRVL</span>
+        <span class="gb-company">Marvell Technology</span>
+        <span class="gb-conviction">High Conviction</span>
+      </div>
+      <p class="gb-thesis">The strongest narrative on the board after Jensen Huang called it "the next trillion-dollar company" on stage in early June. The trend since has been vertical, which is exactly the appeal and exactly the danger &mdash; this is a high-beta name that gives ground as fast as it takes it on any sector wobble. I want it, but sized for the volatility, not against it.</p>
+      <div class="gb-watch">Watching: <b>the $300 round number</b> · whether dips keep getting bought</div>
+    </div>
+  </div>
+
+  <div class="gb-pick">
+    <div class="gb-rank">04</div>
+    <div>
+      <div class="gb-pick-head">
+        <span class="gb-ticker">COHR</span>
+        <span class="gb-company">Coherent Corp.</span>
+        <span class="gb-conviction">Accumulate on Weakness</span>
+      </div>
+      <p class="gb-thesis">The optical play with NVIDIA's name behind it &mdash; a $2 billion investment, and a datacenter segment now three-quarters of revenue and growing fast. It pulled back with the whole optics group, and that reset is the appeal: a sector leader on sale rather than a vertical chase. JPMorgan flagged the same cooling as a buying window earlier this month.</p>
+      <div class="gb-watch">Watching: <b>reclaim of the prior high near $425</b> · relative volume on the bounce</div>
+    </div>
+  </div>
+
+  <div class="gb-pick">
+    <div class="gb-rank">05</div>
+    <div>
+      <div class="gb-pick-head">
+        <span class="gb-ticker">NBIS</span>
+        <span class="gb-company">Nebius Group</span>
+        <span class="gb-conviction">Speculative</span>
+      </div>
+      <p class="gb-thesis">The highest-momentum, highest-risk name here, with a dated catalyst of its own: Nasdaq-100 inclusion on June 22 should pull in passive index buying. Revenue growth is staggering. Two honest cautions keep this in the speculative slot &mdash; the stock is flashing overbought exhaustion signals, and it's trading above the average analyst price target. Lower conviction by design.</p>
+      <div class="gb-watch">Watching: <b>June 22 index inclusion</b> · whether it holds support after the event</div>
+    </div>
+  </div>
+
+  <p class="gb-close">That's the read. Markets rarely move in straight lines, and neither should conviction &mdash; I'll update where I'm wrong as fast as where I'm right.</p>
+  <div class="gb-sign">&mdash; Gilded Signals</div>
+
+  <div class="gb-disclaimer">
+    <strong>Market Research Only &middot; Not Financial Advice.</strong><br/>
+    This brief reflects one person's market observations for informational and educational purposes only. Nothing here is a recommendation to buy or sell any security. Always do your own research and consult a qualified financial advisor.
+  </div>
+</div>
+</div>
+
 <!-- ABOUT -->
 <div id="page-about" class="page">
   <div class="section-inner news-page" style="max-width:820px;">
@@ -677,7 +799,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 <footer>
   <div class="footer-inner">
     <div class="footer-brand"><div class="brand">Gilded Signals</div><p>Market intelligence for disciplined investors. Real signals, no noise.</p></div>
-    <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showNews('market')">Market News</a></li><li><a onclick="showNews('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
+    <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showNews('market')">Market News</a></li><li><a onclick="showNews('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('brief')">Weekly Brief</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
     <div class="footer-col"><h4>Company</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showNews('all')">Newsletter</a></li><li><a href="mailto:gildedsignals.support@gmail.com">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Legal</h4><ul><li><a href="legal.html#terms">Terms of Service</a></li><li><a href="legal.html#privacy">Privacy Policy</a></li><li><a href="legal.html#disclaimer">Disclaimer</a></li></ul></div>
   </div>
