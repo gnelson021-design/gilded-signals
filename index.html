@@ -304,7 +304,9 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
       </div>
       <div class="hero-right">
         <style>
-        .wbh-card{background:linear-gradient(180deg,var(--charcoal-2),var(--charcoal));border:1px solid var(--border);border-radius:8px;padding:26px 26px 22px;box-shadow:0 26px 64px -30px rgba(0,0,0,.85);}
+        .wbh-card{position:relative;background:linear-gradient(180deg,var(--charcoal-2),var(--charcoal));border:1px solid var(--border);border-radius:8px;padding:26px 26px 22px;box-shadow:0 26px 64px -30px rgba(0,0,0,.85),0 0 90px -8px rgba(212,175,55,.20);transition:transform .4s ease,box-shadow .4s ease,border-color .4s ease;}
+        .wbh-card::before{content:'';position:absolute;inset:-40px;z-index:-1;border-radius:50%;background:radial-gradient(ellipse at center,rgba(212,175,55,.18),rgba(212,175,55,0) 70%);filter:blur(20px);pointer-events:none;}
+        .wbh-card:hover{transform:translateY(-4px);border-color:var(--border-hover);box-shadow:0 36px 80px -28px rgba(0,0,0,.9),0 0 120px -4px rgba(212,175,55,.30);}
         .wbh-eyebrow{font-family:'DM Sans',sans-serif;font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:12px;}
         .wbh-title{font-family:'Cormorant Garamond',serif;font-size:1.95rem;font-weight:600;line-height:1.05;background:linear-gradient(180deg,#fff,#e8ca7a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin:0;}
         .wbh-title em{font-style:italic;}
@@ -312,8 +314,9 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
         .wbh-dateline b{color:var(--gold);font-weight:500;}
         .wbh-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.3),transparent);margin:18px 0;}
         .wbh-lbl{font-family:'DM Sans',sans-serif;font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:6px;}
-        .wbh-pick{display:grid;grid-template-columns:26px 1fr auto;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--border);}
+        .wbh-pick{display:grid;grid-template-columns:26px 1fr auto;gap:12px;align-items:center;padding:9px 10px;margin:0 -10px;border-top:1px solid var(--border);border-radius:5px;transition:background .2s ease;}
         .wbh-pick:first-of-type{border-top:none;}
+        .wbh-pick:hover{background:rgba(212,175,55,.05);}
         .wbh-rank{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--gold);opacity:.5;line-height:1;}
         .wbh-name{display:flex;flex-direction:column;gap:1px;min-width:0;}
         .wbh-ticker{font-family:monospace;font-size:.92rem;font-weight:700;color:var(--text-primary);letter-spacing:.03em;}
