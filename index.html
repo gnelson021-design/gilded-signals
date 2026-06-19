@@ -241,7 +241,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 
 @media(max-width:900px){
   .hero-content{grid-template-columns:1fr;gap:2.5rem;}
-  .hero-right{display:none;}
+  .hero-right{display:block;}
   .everything-grid{grid-template-columns:1fr 1fr;}
   nav .nav-links{display:none;}
   .nav-right .nav-scans{display:none;}
@@ -303,22 +303,37 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
         <p style="margin-top:1.1rem;font-size:0.65rem;color:var(--text-muted);letter-spacing:0.06em;">Educational research only. No financial advice. No guaranteed returns.</p>
       </div>
       <div class="hero-right">
-        <div class="dp">
-          <div class="dp-header">
-            <div class="dp-dots"><div class="dp-dot"></div><div class="dp-dot"></div><div class="dp-dot"></div></div>
-            <div class="dp-url">gildedsignals.com — Scanner Preview</div>
-          </div>
-          <div class="dp-body">
-            <div class="dp-row">
-              <div class="dp-stat"><div class="dp-stat-label">Signals</div><div class="dp-stat-val">7</div><div class="dp-stat-chg up">Active</div></div>
-              <div class="dp-stat"><div class="dp-stat-label">BTC</div><div class="dp-stat-val" id="dp-btc-price">—</div><div class="dp-stat-chg up" id="dp-btc-chg">—</div></div>
-              <div class="dp-stat"><div class="dp-stat-label">NVDA</div><div class="dp-stat-val" id="dp-nvda-price">—</div><div class="dp-stat-chg up" id="dp-nvda-chg">—</div></div>
-            </div>
-            <table class="dp-table">
-              <thead><tr><th>Symbol</th><th>Price</th><th>RSI</th><th>Signal</th></tr></thead>
-              <tbody id="dp-table-body"><tr><td colspan="4" style="color:var(--text-muted);font-size:0.7rem;padding:12px 7px;">Loading live data…</td></tr></tbody>
-            </table>
-          </div>
+        <style>
+        .wbh-card{background:linear-gradient(180deg,var(--charcoal-2),var(--charcoal));border:1px solid var(--border);border-radius:8px;padding:26px 26px 22px;box-shadow:0 26px 64px -30px rgba(0,0,0,.85);}
+        .wbh-eyebrow{font-family:'DM Sans',sans-serif;font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:12px;}
+        .wbh-title{font-family:'Cormorant Garamond',serif;font-size:1.95rem;font-weight:600;line-height:1.05;background:linear-gradient(180deg,#fff,#e8ca7a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin:0;}
+        .wbh-title em{font-style:italic;}
+        .wbh-dateline{font-family:monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-top:8px;}
+        .wbh-dateline b{color:var(--gold);font-weight:500;}
+        .wbh-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.3),transparent);margin:18px 0;}
+        .wbh-lbl{font-family:'DM Sans',sans-serif;font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:6px;}
+        .wbh-pick{display:grid;grid-template-columns:26px 1fr auto;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--border);}
+        .wbh-pick:first-of-type{border-top:none;}
+        .wbh-rank{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--gold);opacity:.5;line-height:1;}
+        .wbh-name{display:flex;flex-direction:column;gap:1px;min-width:0;}
+        .wbh-ticker{font-family:monospace;font-size:.92rem;font-weight:700;color:var(--text-primary);letter-spacing:.03em;}
+        .wbh-company{font-size:.64rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .wbh-tag{font-family:monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid rgba(212,175,55,.28);color:var(--gold);background:rgba(212,175,55,.06);white-space:nowrap;}
+        .wbh-cta{display:flex;align-items:center;justify-content:center;width:100%;margin-top:18px;padding:11px;background:var(--gold);color:#0c0c0c;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer;transition:opacity .2s;}
+        .wbh-cta:hover{opacity:.88;}
+        </style>
+        <div class="wbh-card">
+          <div class="wbh-eyebrow">Weekly Intelligence Brief</div>
+          <h2 class="wbh-title">The Week <em>Ahead</em></h2>
+          <div class="wbh-dateline">For the week of <b>June 16, 2026</b></div>
+          <div class="wbh-rule"></div>
+          <div class="wbh-lbl">Five Names on My Screen</div>
+          <div class="wbh-pick"><div class="wbh-rank">01</div><div class="wbh-name"><span class="wbh-ticker">MU</span><span class="wbh-company">Micron Technology</span></div><span class="wbh-tag">High Conviction</span></div>
+          <div class="wbh-pick"><div class="wbh-rank">02</div><div class="wbh-name"><span class="wbh-ticker">TSM</span><span class="wbh-company">Taiwan Semiconductor</span></div><span class="wbh-tag">High Conviction</span></div>
+          <div class="wbh-pick"><div class="wbh-rank">03</div><div class="wbh-name"><span class="wbh-ticker">MRVL</span><span class="wbh-company">Marvell Technology</span></div><span class="wbh-tag">High Conviction</span></div>
+          <div class="wbh-pick"><div class="wbh-rank">04</div><div class="wbh-name"><span class="wbh-ticker">COHR</span><span class="wbh-company">Coherent Corp.</span></div><span class="wbh-tag">Accumulate on Weakness</span></div>
+          <div class="wbh-pick"><div class="wbh-rank">05</div><div class="wbh-name"><span class="wbh-ticker">NBIS</span><span class="wbh-company">Nebius Group</span></div><span class="wbh-tag">Speculative</span></div>
+          <button class="wbh-cta" onclick="showPage('brief')">Read Full Brief</button>
         </div>
       </div>
     </div>
@@ -969,49 +984,7 @@ loadNews('all');
     const doubled=[...items,...items].join('');
     track.innerHTML=doubled;
 
-    /* update hero preview BTC/NVDA */
-    results.forEach((d,i)=>{
-      const sym=TICKER_SYMS[i];
-      if(!d) return;
-      const chgPct=d.changePercent;
-      const chgStr=chgPct!=null?(chgPct>=0?'+':'')+chgPct.toFixed(2)+'%':'—';
-      const chgCls=chgPct!=null?(chgPct>=0?'up':'dn'):'';
-      if(sym==='BTC/USD'){
-        const el=document.getElementById('dp-btc-price');
-        const chgEl=document.getElementById('dp-btc-chg');
-        if(el) el.textContent=fmtTickerPrice(d.price);
-        if(chgEl){chgEl.textContent=chgStr;chgEl.className='dp-stat-chg '+chgCls;}
-      }
-      if(sym==='NVDA'){
-        const el=document.getElementById('dp-nvda-price');
-        const chgEl=document.getElementById('dp-nvda-chg');
-        if(el) el.textContent=fmtTickerPrice(d.price);
-        if(chgEl){chgEl.textContent=chgStr;chgEl.className='dp-stat-chg '+chgCls;}
-      }
-    });
 
-    /* update hero preview table */
-    const tableSyms=['NVDA','AVGO','MU','BTC/USD','ASML'];
-    const tableData=tableSyms.map(s=>{
-      const i=TICKER_SYMS.indexOf(s);
-      return i>=0?results[i]:null;
-    });
-    const tbody=document.getElementById('dp-table-body');
-    if(tbody){
-      tbody.innerHTML=tableData.map((d,i)=>{
-        const sym=tableSyms[i].replace('/USD','');
-        if(!d) return `<tr><td>${sym}</td><td>—</td><td>—</td><td>—</td></tr>`;
-        const rsi=d.rsi14!=null?d.rsi14:'—';
-        const sig=d.gildedBadge||'—';
-        const sigCls=sig.toLowerCase().includes('bull')?'badge-bullish':sig.toLowerCase().includes('watch')?'badge-watch':'badge-neutral';
-        return `<tr><td>${sym}</td><td>${fmtTickerPrice(d.price)}</td><td>${rsi}</td><td><span class="badge ${sigCls}">${sig}</span></td></tr>`;
-      }).join('');
-    }
-
-    /* update Signals count */
-    const bullCount=results.filter(d=>d&&d.gildedBadge&&d.gildedBadge.toLowerCase().includes('bull')).length;
-    const sigEl=document.getElementById('dp-signal-count');
-    if(sigEl) sigEl.textContent=bullCount||'—';
   }
   buildTicker();
   setInterval(buildTicker, 30000);
