@@ -1010,8 +1010,8 @@ async function gsGoToStripe(){
 if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(console.error); }); }
 </script>
 <style id="gs-box-glow">
-  .everything-card,.gs-cmp-card,.pricing-card{transition:background .25s ease,transform .35s ease,box-shadow .35s ease,border-color .35s ease;}
-  .everything-card:hover,.gs-cmp-card:hover,.pricing-card:hover{transform:translateY(-5px);box-shadow:0 22px 55px -24px rgba(0,0,0,.9),0 0 80px -10px rgba(212,175,55,.32);border-color:var(--border-hover);}
+  .everything-card,.gs-cmp-card,.pricing-card,.gs-gc{transition:background .25s ease,transform .35s ease,box-shadow .35s ease,border-color .35s ease;}
+  .everything-card:hover,.gs-cmp-card:hover,.pricing-card:hover,.gs-gc:hover{transform:translateY(-5px);box-shadow:0 22px 55px -24px rgba(0,0,0,.9),0 0 80px -10px rgba(212,175,55,.32);border-color:var(--border-hover);}
   .news-card:not(.news-card--nolink){transition:background .25s ease,border-color .25s ease,transform .25s ease,box-shadow .35s ease;}
   .news-card:not(.news-card--nolink):hover{box-shadow:0 18px 48px -26px rgba(0,0,0,.9),0 0 70px -12px rgba(212,175,55,.28);}
   .btn-nav:hover,.btn-primary:hover,.btn-ghost:hover{transform:translateY(-2px);box-shadow:0 10px 30px -6px rgba(212,175,55,.40);}
