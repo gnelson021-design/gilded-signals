@@ -10,7 +10,7 @@
 
   /* Symbol universes per tab. Stocks = your tracked names. */
   var TABS = {
-    stocks: ['NVDA','MU','MRVL','AVGO','COHR','LITE','TSM','AMD','ASML','VRT','SMCI','NOW','DELL','SHOP','PLTR','QQQ'],
+    stocks: ['NVDA','MU','MRVL','NBIS','AVGO','COHR','LITE','TSM','AMD','ASML','VRT','SMCI','NOW','DELL','SHOP','PLTR','QQQ'],
     tech:   ['NVDA','AMD','AVGO','ASML','MU','MRVL','VRT','COHR','LITE','PLTR','PANW','NOW','DELL','SMCI','SHOP','TSM','ARM','CRM','ORCL'],
     energy: ['XOM','CVX','NEE','ENPH','FSLR','OXY','SLB','ET','KMI','EPD','LNG','VLO','MPC','PSX','HAL'],
     crypto: ['BTC/USD','ETH/USD','SOL/USD','XRP/USD','DOGE/USD','AVAX/USD','BNB/USD']
@@ -432,9 +432,23 @@
   };
 
   window.gsPickAndScan = function (sym) {
-    if (!sym) return;
-    clearAll();
-    pick(sym);
     if (window.showPage) window.showPage('scanner');
+    var mobile = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+    function go(el, off) {
+      if (!el) return;
+      var y = el.getBoundingClientRect().top + window.pageYOffset - off;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+    setTimeout(function () {
+      var grid = document.querySelector('#page-scanner .gs-grid-section');
+      if (!mobile || !sym) { go(grid, 90); return; }
+      var tries = 0;
+      (function find() {
+        var card = document.querySelector('#page-scanner .gs-grid [data-sym="' + sym + '"]');
+        if (card) { go(card, 70); return; }
+        if (tries === 0) go(grid, 70);
+        if (tries++ < 12) setTimeout(find, 250); else go(grid, 70);
+      })();
+    }, 280);
   };
 })();
