@@ -320,7 +320,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
         .wbh-dateline b{color:var(--gold);font-weight:500;}
         .wbh-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.3),transparent);margin:18px 0;}
         .wbh-lbl{font-family:'DM Sans',sans-serif;font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:6px;}
-        .wbh-pick{display:grid;grid-template-columns:26px 1fr auto;gap:12px;align-items:center;padding:9px 10px;margin:0 -10px;border-top:1px solid var(--border);border-radius:5px;transition:background .2s ease;}
+        .wbh-pick{display:grid;grid-template-columns:26px 1fr auto;gap:12px;align-items:center;padding:9px 10px;margin:0 -10px;border-top:1px solid var(--border);border-radius:5px;transition:background .2s ease;cursor:pointer;}
         .wbh-pick:first-of-type{border-top:none;}
         .wbh-pick:hover{background:rgba(212,175,55,.05);}
         .wbh-rank{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--gold);opacity:.5;line-height:1;}
@@ -337,11 +337,11 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
           <div class="wbh-dateline">For the week of <b>June 22, 2026</b></div>
           <div class="wbh-rule"></div>
           <div class="wbh-lbl">Five Names on My Screen</div>
-          <div class="wbh-pick"><div class="wbh-rank">01</div><div class="wbh-name"><span class="wbh-ticker">MU</span><span class="wbh-company">Micron Technology</span></div><span class="wbh-tag">High Conviction</span></div>
-          <div class="wbh-pick"><div class="wbh-rank">02</div><div class="wbh-name"><span class="wbh-ticker">NBIS</span><span class="wbh-company">Nebius Group</span></div><span class="wbh-tag">Speculative</span></div>
-          <div class="wbh-pick"><div class="wbh-rank">03</div><div class="wbh-name"><span class="wbh-ticker">MRVL</span><span class="wbh-company">Marvell Technology</span></div><span class="wbh-tag">High Conviction</span></div>
-          <div class="wbh-pick"><div class="wbh-rank">04</div><div class="wbh-name"><span class="wbh-ticker">VRT</span><span class="wbh-company">Vertiv Holdings</span></div><span class="wbh-tag">High Conviction</span></div>
-          <div class="wbh-pick"><div class="wbh-rank">05</div><div class="wbh-name"><span class="wbh-ticker">COHR</span><span class="wbh-company">Coherent Corp.</span></div><span class="wbh-tag">Accumulate on Weakness</span></div>
+          <div class="wbh-pick" onclick="gsPickAndScan('MU')"><div class="wbh-rank">01</div><div class="wbh-name"><span class="wbh-ticker">MU</span><span class="wbh-company">Micron Technology</span></div><span class="wbh-tag">High Conviction</span></div>
+          <div class="wbh-pick" onclick="gsPickAndScan('NBIS')"><div class="wbh-rank">02</div><div class="wbh-name"><span class="wbh-ticker">NBIS</span><span class="wbh-company">Nebius Group</span></div><span class="wbh-tag">Speculative</span></div>
+          <div class="wbh-pick" onclick="gsPickAndScan('MRVL')"><div class="wbh-rank">03</div><div class="wbh-name"><span class="wbh-ticker">MRVL</span><span class="wbh-company">Marvell Technology</span></div><span class="wbh-tag">High Conviction</span></div>
+          <div class="wbh-pick" onclick="gsPickAndScan('VRT')"><div class="wbh-rank">04</div><div class="wbh-name"><span class="wbh-ticker">VRT</span><span class="wbh-company">Vertiv Holdings</span></div><span class="wbh-tag">High Conviction</span></div>
+          <div class="wbh-pick" onclick="gsPickAndScan('COHR')"><div class="wbh-rank">05</div><div class="wbh-name"><span class="wbh-ticker">COHR</span><span class="wbh-company">Coherent Corp.</span></div><span class="wbh-tag">Accumulate on Weakness</span></div>
           <button class="wbh-cta" onclick="showPage('brief')">Read Full Brief</button>
         </div>
       </div>

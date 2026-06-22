@@ -430,4 +430,11 @@
     if (origShow) origShow(id);
     if (id === 'scanner') setTimeout(function () { if ($('gsGrid')) loadGrid($('gsGrid'), TABS[currentTab] || TABS.stocks); }, 150);
   };
+
+  window.gsPickAndScan = function (sym) {
+    if (!sym) return;
+    clearAll();
+    pick(sym);
+    if (window.showPage) window.showPage('scanner');
+  };
 })();
