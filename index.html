@@ -32,6 +32,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,0.97)
 .nav-scans span{color:var(--gold);font-weight:600;}
 .btn-nav{background:var(--gold);color:var(--black);border:none;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:0.66rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.2s;white-space:nowrap;}
 .btn-nav:hover{background:var(--gold-light);}
+.nav-burger{display:none;background:none;border:none;color:var(--gold);font-size:1.5rem;line-height:1;cursor:pointer;padding:4px 10px;border-radius:3px;}
+.nav-burger:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 .ticker-bar{position:fixed;top:70px;left:0;right:0;z-index:999;background:#0E0E0E;border-bottom:1px solid rgba(212,175,55,0.08);height:30px;display:flex;align-items:center;overflow:hidden;}
 .ticker-label{background:rgba(212,175,55,0.15);color:var(--gold);font-size:0.52rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;padding:0 13px;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;border-right:1px solid rgba(212,175,55,0.15);}
 .ticker-wrap{overflow:hidden;flex:1;}
@@ -243,7 +245,10 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   .hero-content{grid-template-columns:1fr;gap:2.5rem;}
   .hero-right{display:block;}
   .everything-grid{grid-template-columns:1fr 1fr;}
-  nav .nav-links{display:none;}
+  .nav-burger{display:block;}
+  nav .nav-links{display:none;position:absolute;top:70px;left:0;right:0;flex-direction:column;align-items:stretch;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);padding:0.5rem 0;backdrop-filter:blur(28px);}
+  nav.nav-open .nav-links{display:flex;}
+  nav .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   .nav-right .nav-scans{display:none;}
   .signal-box{grid-template-columns:1fr;}
 }
@@ -274,6 +279,7 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   <div class="nav-right">
     <div class="nav-scans" style="font-size:0.66rem;color:#8A8580;letter-spacing:0.06em;white-space:nowrap;">Free scans: <span id="navScanCount" style="color:var(--gold);font-weight:600;">5</span></div>
     <button class="btn-nav" onclick="showPage('pricing')">Get Access</button>
+    <button class="nav-burger" aria-label="Open menu" aria-expanded="false" onclick="gsToggleNav()">&#9776;</button>
   </div>
 </nav>
 
@@ -395,10 +401,15 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
       <h2 class="section-title">The Edge Is Already<br><em>Moving.</em></h2>
       <p class="section-desc" style="margin:0.75rem auto 2rem;max-width:400px;text-align:center;">Market intelligence delivered weekly. No spam, no noise, no hype.</p>
       <p style="font-size:0.65rem;color:var(--text-muted);margin:-0.5rem auto 1.5rem;max-width:420px;text-align:center;line-height:1.6;">Weekly market intelligence. No spam. No copied articles. Source-linked headlines only — we never republish full articles.</p>
-      <div style="display:flex;max-width:420px;margin:0 auto;">
-        <input type="email" placeholder="your@email.com" style="flex:1;background:var(--charcoal-3);border:1px solid var(--charcoal-5);border-right:none;color:var(--text-primary);padding:13px 18px;font-family:'DM Sans',sans-serif;font-size:0.85rem;border-radius:3px 0 0 3px;outline:none;"/>
-        <button class="btn-primary" style="border-radius:0 3px 3px 0;white-space:nowrap;" onclick="showPage('pricing')">Subscribe</button>
-      </div>
+      <form name="newsletter" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit="return gsNewsletterSubmit(event)" style="max-width:420px;margin:0 auto;">
+        <input type="hidden" name="form-name" value="newsletter"/>
+        <p style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:-1px;padding:0;border:0;"><label>Leave blank if you are human: <input name="bot-field" tabindex="-1" autocomplete="off"/></label></p>
+        <div id="gs-nl-row" style="display:flex;">
+          <input type="email" name="email" required placeholder="your@email.com" style="flex:1;background:var(--charcoal-3);border:1px solid var(--charcoal-5);border-right:none;color:var(--text-primary);padding:13px 18px;font-family:'DM Sans',sans-serif;font-size:0.85rem;border-radius:3px 0 0 3px;outline:none;"/>
+          <button type="submit" class="btn-primary" style="border-radius:0 3px 3px 0;white-space:nowrap;">Subscribe</button>
+        </div>
+        <p id="gs-nl-msg" style="display:none;font-size:0.8rem;margin:0.9rem 0 0;text-align:center;"></p>
+      </form>
     </div>
   </section>
 </div>
@@ -1014,5 +1025,59 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function () 
   .news-card:not(.news-card--nolink):hover{box-shadow:0 18px 48px -26px rgba(0,0,0,.9),0 0 70px -12px rgba(212,175,55,.28);}
   .btn-nav:hover,.btn-primary:hover,.btn-ghost:hover{transform:translateY(-2px);box-shadow:0 10px 30px -6px rgba(212,175,55,.40);}
 </style>
+<script>
+function gsNewsletterSubmit(e){
+  e.preventDefault();
+  var form=e.target;
+  var msg=document.getElementById('gs-nl-msg');
+  var row=document.getElementById('gs-nl-row');
+  var body=new URLSearchParams(new FormData(form)).toString();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body})
+    .then(function(r){
+      if(!r.ok){throw new Error('status');}
+      if(row){row.style.display='none';}
+      msg.style.color='var(--gold)';
+      msg.textContent='You\u2019re on the list \u2014 the next brief is on its way.';
+      msg.style.display='block';
+    })
+    .catch(function(){
+      msg.style.color='#e57373';
+      msg.textContent='Something went wrong. Please try again in a moment.';
+      msg.style.display='block';
+    });
+  return false;
+}
+function gsToggleNav(){
+  var nav=document.querySelector('nav');
+  if(!nav){return;}
+  var open=nav.classList.toggle('nav-open');
+  var b=document.querySelector('.nav-burger');
+  if(b){b.textContent=open?'\u2715':'\u2630';b.setAttribute('aria-expanded',open?'true':'false');}
+}
+(function(){
+  function closeNav(){
+    var nav=document.querySelector('nav');
+    if(nav){nav.classList.remove('nav-open');}
+    var b=document.querySelector('.nav-burger');
+    if(b){b.textContent='\u2630';b.setAttribute('aria-expanded','false');}
+  }
+  function key(el){
+    el.addEventListener('keydown',function(ev){
+      if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();el.click();}
+    });
+  }
+  function init(){
+    document.querySelectorAll('.nav-links a').forEach(function(a){
+      a.setAttribute('tabindex','0');
+      a.setAttribute('role','link');
+      key(a);
+      a.addEventListener('click',closeNav);
+    });
+    var logo=document.querySelector('.nav-logo');
+    if(logo){logo.setAttribute('tabindex','0');logo.setAttribute('role','link');key(logo);}
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+})();
+</script>
 </body>
 </html>
