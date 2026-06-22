@@ -721,6 +721,16 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
 .gb-watch{font-family:monospace;font-size:.72rem;color:var(--text-muted);letter-spacing:.03em;}
 .gb-watch b{color:var(--gold-light);font-weight:500;}
 .gb-close{margin-top:40px;font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;color:var(--text-secondary);line-height:1.6;}
+.gb-score{display:grid;grid-template-columns:54px 1fr;gap:20px;padding:22px 0;border-top:1px solid var(--border);align-items:start;}
+.gb-score:last-of-type{border-bottom:1px solid var(--border);}
+.gb-scoretop{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.gb-scoretop .gb-pick-head{margin-bottom:0;}
+.gb-scoretop .gb-conviction{margin-left:0;}
+.gb-scorepct{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;line-height:1;white-space:nowrap;}
+.gb-scoreline{font-family:monospace;font-size:.78rem;color:var(--text-muted);letter-spacing:.02em;margin-top:6px;}
+.gb-scorecontext{font-size:.85rem;line-height:1.65;color:var(--text-secondary);margin-top:8px;}
+.gb-scorenote{font-family:monospace;font-size:.72rem;color:var(--text-muted);letter-spacing:.04em;line-height:1.7;margin-bottom:6px;}
+.gb-scorefoot{font-family:monospace;font-size:.66rem;color:var(--text-muted);opacity:.85;letter-spacing:.03em;line-height:1.7;margin-top:18px;}
 .gb-sign{margin-top:18px;font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);}
 .gb-disclaimer{margin-top:48px;padding-top:22px;border-top:1px solid var(--border);font-size:.68rem;line-height:1.7;color:var(--text-muted);text-align:center;}
 .gb-disclaimer strong{color:var(--text-secondary);}
@@ -737,6 +747,68 @@ footer{background:var(--charcoal-2);border-top:1px solid var(--border);padding:3
   <div class="gb-body">
     <p>Early June handed the chip complex its worst session in months, set off by Broadcom's cautious guidance and a spike in geopolitical risk &mdash; then most of the damage was bought straight back. That round-trip is the backdrop: conviction in the AI build-out is intact, but the market is no longer paying any price for it, and positioning is crowded. Two events frame the week &mdash; Nasdaq-100 inclusions take effect Monday the 22nd, and the May PCE inflation print, the Fed's preferred gauge, lands Thursday the 25th.</p>
     <p>Five names are on my screen going into the week, ranked by this week's setup rather than pure safety. A note before the list: four of the five are AI-correlated and several are extended after big runs &mdash; if the AI trade sells off, they move together. That concentration is the risk to respect. This is where my attention is, not a recommendation to buy or sell.</p>
+  <div class="gb-section-lbl">Results</div>
+  <h2 class="gb-section-title">Last Week&rsquo;s Scorecard</h2>
+  <p class="gb-scorenote">Week of June 15 &middot; Monday open &rarr; Thursday close (Fri 19 closed for Juneteenth) &middot; <span class="up">4 of 5 green</span> &middot; avg <span class="up">+5.56%</span></p>
+
+  <div class="gb-score">
+    <div class="gb-rank">01</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">MU</span><span class="gb-company">Micron Technology</span><span class="gb-conviction">High Conviction</span></div>
+        <span class="gb-scorepct up">+7.40%</span>
+      </div>
+      <div class="gb-scoreline">$1,055.89 &rarr; $1,133.99</div>
+    </div>
+  </div>
+
+  <div class="gb-score">
+    <div class="gb-rank">02</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">TSM</span><span class="gb-company">Taiwan Semiconductor</span><span class="gb-conviction">High Conviction</span></div>
+        <span class="gb-scorepct up">+5.34%</span>
+      </div>
+      <div class="gb-scoreline">$438.68 &rarr; $462.12</div>
+    </div>
+  </div>
+
+  <div class="gb-score">
+    <div class="gb-rank">03</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">MRVL</span><span class="gb-company">Marvell Technology</span><span class="gb-conviction">High Conviction</span></div>
+        <span class="gb-scorepct up">+4.67%</span>
+      </div>
+      <div class="gb-scoreline">$296.71 &rarr; $310.58</div>
+    </div>
+  </div>
+
+  <div class="gb-score">
+    <div class="gb-rank">04</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">COHR</span><span class="gb-company">Coherent Corp.</span><span class="gb-conviction">Accumulate on Weakness</span></div>
+        <span class="gb-scorepct dn">&minus;3.42%</span>
+      </div>
+      <div class="gb-scoreline">$403.35 &rarr; $389.57</div>
+      <div class="gb-scorecontext">The lone red name &mdash; and the &ldquo;accumulate on weakness&rdquo; stance flagged exactly this: it slid with the optics group, the dip the call said to lean into rather than chase.</div>
+    </div>
+  </div>
+
+  <div class="gb-score">
+    <div class="gb-rank">05</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">NBIS</span><span class="gb-company">Nebius Group</span><span class="gb-conviction">Speculative</span></div>
+        <span class="gb-scorepct up">+13.78%</span>
+      </div>
+      <div class="gb-scoreline">$251.96 &rarr; $286.69</div>
+    </div>
+  </div>
+
+  <p class="gb-scorefoot">Scored uniformly, Monday open &rarr; Thursday close. Stance tags reflect each call&rsquo;s intent, not a separate scoring method.</p>
+
   <div class="gb-section-lbl">This Week's Ranking</div>
   <h2 class="gb-section-title">Five Names on My Screen</h2>
 
