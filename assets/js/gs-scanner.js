@@ -218,6 +218,30 @@
       : v >= 30 ? '#9a9690'   // weak — gray
       : '#7da7ff';            // oversold — cool blue (reversal watch)
   }
+  function buildLevels(d) {
+    var p = d.price, sup = d.support, res = d.resistance;
+    if (p == null || sup == null || res == null) return '';
+    function note(t){ return ' <span style="font-size:.62rem;color:#7a7770;letter-spacing:.04em;">' + t + '</span>'; }
+    var rows =
+      '<div class="gs-mrow"><span class="gs-mlbl">Entry zone</span><span class="gs-mval dn">' + fmt(sup) + note('20-day low') + '</span></div>' +
+      '<div class="gs-mrow"><span class="gs-mlbl">Upside level</span><span class="gs-mval up">' + fmt(res) + note('20-day high') + '</span></div>';
+    if (p <= sup) {
+      rows += '<div class="gs-mrow"><span class="gs-mlbl">Status</span><span class="gs-mval dn">Below 20-day support \u00b7 breakdown</span></div>';
+    } else if (p >= res) {
+      rows += '<div class="gs-mrow"><span class="gs-mlbl">Status</span><span class="gs-mval gold">At 20-day high \u00b7 breakout</span></div>';
+    } else {
+      var risk = p - sup, reward = res - p, rr = risk > 0 ? reward / risk : null;
+      var rrTxt = rr == null ? '\u2014' : '1 : ' + rr.toFixed(1);
+      var rrCls = rr == null ? 'muted' : rr >= 2 ? 'gold' : rr >= 1 ? '' : 'dn';
+      var toSup = (p - sup) / p * 100, toRes = (res - p) / p * 100;
+      rows += '<div class="gs-mrow"><span class="gs-mlbl">Risk / Reward</span><span class="gs-mval ' + rrCls + '">' + rrTxt + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:.66rem;padding:5px 0 1px;">' +
+        '<span style="color:#d97a7a;">\u2193 ' + toSup.toFixed(1) + '% to support</span>' +
+        '<span style="color:#4ecb8d;">\u2191 ' + toRes.toFixed(1) + '% to resistance</span></div>';
+    }
+    return '<div class="gs-metric-sec"><div class="gs-metric-sec-lbl">Technical Levels</div>' + rows + '</div>';
+  }
+
   function buildCard(d, isWin) {
     var sym = disp(d.symbol || '');
     var chg = d.changePercent;
@@ -293,10 +317,7 @@
       (d.rvol != null && d.rvol > 1.3 ? 'up' : d.rvol != null && d.rvol < 0.7 ? 'dn' : '') + '">' +
       (d.rvol != null ? Number(d.rvol).toFixed(2) + 'x' : '—') + '</span></div>' +
       '</div>' +
-      '<div class="gs-metric-sec"><div class="gs-metric-sec-lbl">Support &amp; Resistance</div>' +
-      '<div class="gs-mrow"><span class="gs-mlbl">Support</span><span class="gs-mval dn">' + fmt(d.support) + '</span></div>' +
-      '<div class="gs-mrow"><span class="gs-mlbl">Resistance</span><span class="gs-mval up">' + fmt(d.resistance) + '</span></div>' +
-      '</div>' +
+      buildLevels(d) +
       '<div class="gs-metric-sec"><div class="gs-metric-sec-lbl">Performance</div>' + retRows +
       (d.analystRating ? '<div class="gs-mrow"><span class="gs-mlbl">Analyst</span><span class="gs-mval gold">' + d.analystRating + '</span></div>' : '') +
       (d.peRatio != null ? '<div class="gs-mrow"><span class="gs-mlbl">P/E Ratio</span><span class="gs-mval">' + Number(d.peRatio).toFixed(1) + '</span></div>' : '') +
