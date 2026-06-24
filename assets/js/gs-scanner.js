@@ -502,6 +502,17 @@
     if (dest) { e.preventDefault(); dest.focus(); }
   });
 
+  /* gs-entercmp: both boxes filled -> Enter anywhere on the scanner runs the comparison */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    var t = e.target;
+    if (t && (t.id === 'gsRunBtn' || t.id === 'gsSearchInput')) return; /* handled by their own logic */
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    var sp = document.getElementById('page-scanner');
+    if (!sp || !sp.classList.contains('active')) return;
+    if (slots.filter(Boolean).length === 2) { e.preventDefault(); runCompare(); }
+  });
+
   /* ---------- init ---------- */
   function init() {
     refreshPicker();
