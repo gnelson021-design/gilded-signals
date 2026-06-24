@@ -123,11 +123,12 @@
     [0, 1].forEach(function (i) {
       var el = $('gsSlot' + i), body = $('gsSlot' + i + 'body');
       if (!el || !body) return;
+      el.tabIndex = 0;
       var v = slots[i];
       if (v) {
         el.classList.add('filled');
         body.innerHTML = '<span class="gs-slot-chip">' + disp(v) +
-          '<button class="xbtn" data-remove="' + i + '">&times;</button></span>';
+          '<button class="xbtn" tabindex="-1" data-remove="' + i + '">&times;</button></span>';
       } else {
         el.classList.remove('filled');
         body.innerHTML = '<span class="gs-slot-empty">Tap a symbol above</span>';
@@ -432,7 +433,73 @@
 
   /* search box: Enter to add */
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && e.target && e.target.id === 'gsSearchInput') { e.preventDefault(); addTyped(); }
+    if (e.key === 'Enter' && e.target && e.target.id === 'gsSearchInput') {
+      e.preventDefault();
+      addTyped();
+      if (slots.filter(Boolean).length === 2) runCompare(); /* gs-uxfix: Enter auto-compares when both boxes full */
+    }
+  });
+
+  /* gs-kbnav: keyboard navigation for the scanner picker (spatial arrows + step-back Backspace). */
+  function gsPickerEls() {
+    var picker = document.querySelector('.gs-picker');
+    if (!picker) return [];
+    var sel = '.gs-pill:not([disabled]), #gsSlot0, #gsSlot1, #gsSearchInput, .gs-add-btn, .gs-clear-btn, #gsRunBtn:not([disabled])';
+    return Array.prototype.slice.call(picker.querySelectorAll(sel)).filter(function (el) {
+      var r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    });
+  }
+  function gsGap(a1, a2, b1, b2) { if (a1 < b2 && b1 < a2) return 0; return Math.max(b1 - a2, a1 - b2); }
+  function gsNearest(cur, key) {
+    var cr = cur.getBoundingClientRect();
+    var ccx = cr.left + cr.width / 2, ccy = cr.top + cr.height / 2;
+    var els = gsPickerEls();
+    var aligned = null, alignedP = Infinity, any = null, anyScore = Infinity;
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i]; if (el === cur) continue;
+      var r = el.getBoundingClientRect();
+      var dx = (r.left + r.width / 2) - ccx, dy = (r.top + r.height / 2) - ccy;
+      var inDir, primary, crossGap;
+      if (key === 'ArrowUp')        { inDir = dy < -1; primary = -dy; crossGap = gsGap(cr.left, cr.right, r.left, r.right); }
+      else if (key === 'ArrowDown') { inDir = dy > 1;  primary = dy;  crossGap = gsGap(cr.left, cr.right, r.left, r.right); }
+      else if (key === 'ArrowLeft') { inDir = dx < -1; primary = -dx; crossGap = gsGap(cr.top, cr.bottom, r.top, r.bottom); }
+      else                          { inDir = dx > 1;  primary = dx;  crossGap = gsGap(cr.top, cr.bottom, r.top, r.bottom); }
+      if (!inDir) continue;
+      if (crossGap === 0) { if (primary < alignedP) { alignedP = primary; aligned = el; } }
+      var score = primary + crossGap * 3;
+      if (score < anyScore) { anyScore = score; any = el; }
+    }
+    return aligned || any;
+  }
+  document.addEventListener('keydown', function (e) {
+    var t = e.target; if (!t || !t.closest) return;
+    var k = e.key;
+    var isArrow = (k === 'ArrowUp' || k === 'ArrowDown' || k === 'ArrowLeft' || k === 'ArrowRight');
+    if (k !== 'Backspace' && !isArrow) return;
+    if (!t.closest('.gs-picker')) return;
+    if (k === 'Backspace') {
+      var chain = [
+        document.getElementById('gsSlot0'),
+        document.getElementById('gsSlot1'),
+        document.getElementById('gsSearchInput'),
+        document.querySelector('.gs-add-btn'),
+        document.querySelector('.gs-clear-btn'),
+        document.getElementById('gsRunBtn')
+      ];
+      var ci = chain.indexOf(t);
+      if (ci === -1) return;
+      if (t.id === 'gsSearchInput' && t.value) return;
+      if ((t.id === 'gsSlot0' || t.id === 'gsSlot1') && slots[ci]) { e.preventDefault(); removeSlot(ci); return; }
+      if (ci > 0) { var pv = chain[ci - 1]; if (pv) { e.preventDefault(); pv.focus(); } }
+      return;
+    }
+    if (t.id === 'gsSearchInput') {
+      if (k === 'ArrowLeft' || k === 'ArrowRight') return; /* keep the text cursor */
+      if (k === 'ArrowUp') { var b = document.getElementById('gsSlot1'); if (b) { e.preventDefault(); b.focus(); } return; }
+    }
+    var dest = gsNearest(t, k);
+    if (dest) { e.preventDefault(); dest.focus(); }
   });
 
   /* ---------- init ---------- */
