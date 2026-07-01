@@ -702,6 +702,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 <!-- legacy inline scanner disabled; logic moved to /assets/js/gs-scanner.js -->
 <script src="/assets/js/gs-scanner.js"></script>
 <script src="/assets/js/gs-access.js"></script>
+<script src="/assets/js/gs-brief-live.js"></script>
 </div>
 
 <!-- PRICING -->
@@ -825,15 +826,21 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 .up{color:#3ECA7A;} .dn{color:#E85555;}
 .tl{margin:4px 0 14px;background:linear-gradient(180deg,#111115,#0c0c10);border:1px solid rgba(212,175,55,.14);border-radius:12px;padding:18px 18px 16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);}
 .tl-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:18px;}
-.tl-curlabel{font-family:monospace;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);}
+.tl-curlabel{font-family:monospace;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);display:flex;align-items:center;gap:6px;}
 .tl-cur{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--text-primary);line-height:1;}
 .tl-avgwrap{text-align:right;}
 .tl-avglabel{font-family:monospace;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);}
 .tl-avg{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;line-height:1;}
-.tl-track{position:relative;height:4px;border-radius:3px;margin:30px 0 8px;background:linear-gradient(90deg,rgba(232,85,85,.55),rgba(212,175,55,.55) 50%,rgba(62,202,122,.6));}
+.tl-track{position:relative;height:4px;border-radius:3px;margin:42px 0 8px;background:linear-gradient(90deg,rgba(232,85,85,.55),rgba(212,175,55,.55) 50%,rgba(62,202,122,.6));}
 .tl-dot{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--gold);transform:translate(-50%,-50%);box-shadow:0 0 0 3px rgba(212,175,55,.18);}
+.tl-dot-lbl{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-family:monospace;font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
 .tl-cur-marker{position:absolute;top:-9px;bottom:-9px;width:2px;background:var(--text-primary);transform:translateX(-50%);}
 .tl-cur-marker::after{content:'TODAY';position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-family:monospace;font-size:.48rem;letter-spacing:.12em;color:var(--text-secondary);white-space:nowrap;}
+.tl-cur-marker-live{position:absolute;top:-30px;left:50%;transform:translateX(-50%);font-family:monospace;font-size:.62rem;font-weight:700;color:var(--gold);white-space:nowrap;background:rgba(0,0,0,.55);padding:1px 6px;border-radius:3px;border:1px solid rgba(212,175,55,.22);}
+.tl-live-badge{font-family:monospace;font-size:.5rem;font-weight:700;letter-spacing:.06em;color:#7a7770;padding:1px 6px;border-radius:999px;border:1px solid rgba(255,255,255,.08);white-space:nowrap;}
+.tl-live-badge.is-live{color:#4ecb8d;border-color:rgba(78,203,141,.35);background:rgba(78,203,141,.08);}
+.tl-live-badge.is-live::before{content:'\25CF';margin-right:3px;font-size:.5rem;display:inline-block;animation:tlPulse 1.6s ease infinite;}
+@keyframes tlPulse{0%,100%{opacity:.35}50%{opacity:1}}
 .tl-ends{display:flex;justify-content:space-between;font-family:monospace;font-size:.66rem;color:var(--text-muted);margin-top:6px;}
 .tl-ends .v{color:var(--text-secondary);font-weight:500;}
 .tl-foot{font-family:monospace;font-size:.6rem;color:var(--text-muted);opacity:.8;letter-spacing:.04em;margin-top:14px;border-top:1px solid var(--border);padding-top:10px;}
@@ -933,14 +940,14 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         </div>
         <p class="gb-thesis">The rare setup where the entire analyst range sits <em>above</em> today&rsquo;s price &mdash; even the most bearish target implies +50%. First earnings as a public company (June 23) showed 92% revenue growth and confirmed a $20B+ multi-year OpenAI deal, but Q2 margin guidance of 36&ndash;38% (down from 46.5%) spooked the stock into a 16&ndash;17% drop before it bounced ~8% into the weekend.</p>
         <div class="gb-catalyst"><b>Catalyst:</b> Post-IPO earnings volatility plus a confirmed AWS partnership (Trainium 3 + CS-3 disaggregated inference). Morgan Stanley, UBS, and Needham all reiterated bullish targets through the selloff; Cathie Wood's ARK bought the dip.</div>
-        <div class="tl">
+        <div class="tl" id="tl-CBRS" data-symbol="CBRS" data-min="273.00" data-max="340.00">
           <div class="tl-head">
-            <div><div class="tl-curlabel">Current</div><div class="tl-cur">$181.59</div></div>
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jun 28</span></div><div class="tl-cur">$181.59</div></div>
             <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$299.30</div><div class="tl-curlabel up">+64.82%</div></div>
           </div>
           <div class="tl-track">
-            <div class="tl-cur-marker" style="left:0%"></div>
-            <div class="tl-dot" style="left:39.3%"></div>
+            <div class="tl-cur-marker" style="left:0%"><span class="tl-cur-marker-live">$181.59</span></div>
+            <div class="tl-dot" style="left:39.3%"><span class="tl-dot-lbl">Avg</span></div>
           </div>
           <div class="tl-ends"><span>Min <span class="v up">$273.00 &middot; +50.34%</span></span><span>Max <span class="v up">$340.00 &middot; +87.23%</span></span></div>
           <div class="tl-foot">11 analysts &middot; consensus as of Jun 28, 2026 &middot; price sits below the entire target range</div>
@@ -962,14 +969,14 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         </div>
         <p class="gb-thesis">The single biggest catalyst on the board. Rocket Lab agreed today to acquire Iridium Communications for ~$8.0B in cash and stock, instantly converting the company from a launch provider into a vertically integrated space player with Iridium&rsquo;s 66 active LEO satellites and 2.5M+ billable subscribers. Shares jumped as much as 15.6% intraday on the news.</p>
         <div class="gb-catalyst"><b>Catalyst:</b> $8B Iridium acquisition (announced today, deal expected to close mid-2027), funded by a $3.6B bridge loan from Deutsche Bank and Wells Fargo. Adds recurring satellite-services revenue the company calls immediately accretive. KeyBanc separately called RKLB &ldquo;the clear #2 to SpaceX&rdquo; (June 15).</div>
-        <div class="tl">
+        <div class="tl" id="tl-RKLB" data-symbol="RKLB" data-min="60.00" data-max="150.00">
           <div class="tl-head">
-            <div><div class="tl-curlabel">Current</div><div class="tl-cur">$96.91</div></div>
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jun 28</span></div><div class="tl-cur">$96.91</div></div>
             <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$108.81</div><div class="tl-curlabel up">+12.28%</div></div>
           </div>
           <div class="tl-track">
-            <div class="tl-cur-marker" style="left:40.9%"></div>
-            <div class="tl-dot" style="left:54.2%"></div>
+            <div class="tl-cur-marker" style="left:40.9%"><span class="tl-cur-marker-live">$96.91</span></div>
+            <div class="tl-dot" style="left:54.2%"><span class="tl-dot-lbl">Avg</span></div>
           </div>
           <div class="tl-ends"><span>Min <span class="v dn">$60.00 &middot; &minus;38.09%</span></span><span>Max <span class="v up">$150.00 &middot; +54.78%</span></span></div>
           <div class="tl-foot">16 analysts &middot; consensus as of Jun 28, 2026 &middot; targets predate today&rsquo;s deal news</div>
@@ -991,14 +998,14 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         </div>
         <p class="gb-thesis">Caught in the sector-wide AI selloff with no company-specific bad news &mdash; which is exactly what makes it interesting. Lumentum sits at the center of Nvidia&rsquo;s $6.5B+ photonics buildout, anchored by Nvidia&rsquo;s own $2B investment in the company. The floor on this one sits <em>above</em> today&rsquo;s price.</p>
         <div class="gb-catalyst"><b>Catalyst:</b> No fresh company-specific news &mdash; the drop was sector rotation, not a Lumentum problem. JPMorgan's Samik Chatterjee called the optical-sector selloff a buying opportunity; Northland raised its target to $1,200.</div>
-        <div class="tl">
+        <div class="tl" id="tl-LITE" data-symbol="LITE" data-min="900.00" data-max="1400.00">
           <div class="tl-head">
-            <div><div class="tl-curlabel">Current</div><div class="tl-cur">$816.98</div></div>
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jun 28</span></div><div class="tl-cur">$816.98</div></div>
             <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$1,132.81</div><div class="tl-curlabel up">+38.66%</div></div>
           </div>
           <div class="tl-track">
-            <div class="tl-cur-marker" style="left:0%"></div>
-            <div class="tl-dot" style="left:46.5%"></div>
+            <div class="tl-cur-marker" style="left:0%"><span class="tl-cur-marker-live">$816.98</span></div>
+            <div class="tl-dot" style="left:46.5%"><span class="tl-dot-lbl">Avg</span></div>
           </div>
           <div class="tl-ends"><span>Min <span class="v up">$900.00 &middot; +10.16%</span></span><span>Max <span class="v up">$1,400.00 &middot; +71.36%</span></span></div>
           <div class="tl-foot">25 analysts &middot; consensus as of Jun 28, 2026 &middot; price below the entire target range</div>
@@ -1020,14 +1027,14 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         </div>
         <p class="gb-thesis">The name that started the whole sector's selloff in early June now has the update that could turn sentiment back around. Broadcom and OpenAI unveiled <em>Jalapeño</em>, OpenAI&rsquo;s first custom inference chip, co-developed in nine months for gigawatt-scale deployment by end of 2026. CEO Hock Tan called compute demand from customers &ldquo;simply insatiable.&rdquo;</p>
         <div class="gb-catalyst"><b>Catalyst:</b> Jalapeño chip reveal (June 24) plus Micron&rsquo;s blockbuster June 24 earnings reigniting the broader AI-chip trade. Bernstein&rsquo;s Stacy Rasgon called valuations &ldquo;absurdly cheap&rdquo; with &ldquo;no signs of slowing&rdquo; demand.</div>
-        <div class="tl">
+        <div class="tl" id="tl-AVGO" data-symbol="AVGO" data-min="215.88" data-max="671.00">
           <div class="tl-head">
-            <div><div class="tl-curlabel">Current</div><div class="tl-cur">$365.02</div></div>
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jun 28</span></div><div class="tl-cur">$365.02</div></div>
             <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$525.71</div><div class="tl-curlabel up">+44.02%</div></div>
           </div>
           <div class="tl-track">
-            <div class="tl-cur-marker" style="left:32.8%"></div>
-            <div class="tl-dot" style="left:68.1%"></div>
+            <div class="tl-cur-marker" style="left:32.8%"><span class="tl-cur-marker-live">$365.02</span></div>
+            <div class="tl-dot" style="left:68.1%"><span class="tl-dot-lbl">Avg</span></div>
           </div>
           <div class="tl-ends"><span>Min <span class="v dn">$215.88 &middot; &minus;40.86%</span></span><span>Max <span class="v up">$671.00 &middot; +83.83%</span></span></div>
           <div class="tl-foot">49 analysts &middot; consensus as of Jun 28, 2026</div>
@@ -1049,14 +1056,14 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         </div>
         <p class="gb-thesis">The steadiest name on the list, with a real technical headline behind it: IBM unveiled the world&rsquo;s first sub-1nm chip architecture on June 25, claiming up to 50% more performance or 70% better energy efficiency than its 2nm node. JPMorgan upgraded to Overweight two days earlier, citing software acceleration into H2.</p>
         <div class="gb-catalyst"><b>Catalyst:</b> Sub-1nm chip breakthrough (June 25) + JPMorgan upgrade to Overweight, $291 target (June 23). Note: this is a multi-year roadmap milestone licensed to foundry partners, not near-term revenue &mdash; the move here is sentiment, not an earnings event.</div>
-        <div class="tl">
+        <div class="tl" id="tl-IBM" data-symbol="IBM" data-min="195.00" data-max="390.00">
           <div class="tl-head">
-            <div><div class="tl-curlabel">Current</div><div class="tl-cur">$271.63</div></div>
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jun 28</span></div><div class="tl-cur">$271.63</div></div>
             <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$298.53</div><div class="tl-curlabel up">+9.90%</div></div>
           </div>
           <div class="tl-track">
-            <div class="tl-cur-marker" style="left:39.3%"></div>
-            <div class="tl-dot" style="left:53.1%"></div>
+            <div class="tl-cur-marker" style="left:39.3%"><span class="tl-cur-marker-live">$271.63</span></div>
+            <div class="tl-dot" style="left:53.1%"><span class="tl-dot-lbl">Avg</span></div>
           </div>
           <div class="tl-ends"><span>Min <span class="v dn">$195.00 &middot; &minus;28.21%</span></span><span>Max <span class="v up">$390.00 &middot; +43.58%</span></span></div>
           <div class="tl-foot">25 analysts &middot; consensus as of Jun 28, 2026</div>
@@ -1073,14 +1080,14 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
     <h3 class="gb-bonus-title">MSTR &middot; Strategy</h3>
     <p class="gb-thesis">This is the one I&rsquo;m watching hardest this week, outside the core five. Strategy just unveiled a sweeping <em>Digital Credit Capital Framework</em> on June 29 &mdash; a $1B preferred buyback, a $1B common buyback, a $2.55B USD reserve, and a dividend hike on its STRC preferred to 12% &mdash; aimed squarely at the problem that's had the stock trading below its own Bitcoin holdings. It's a leveraged Bitcoin proxy, not a chip story, which is exactly why the targets look surreal: a +308% average and a floor of +98% above today's price, because they ride on where Bitcoin goes, not company fundamentals.</p>
     <div class="gb-catalyst"><b>Catalyst:</b> Digital Credit Capital Framework announced today, directly targeting the NAV-discount complaint. Bitcoin sits near $59,860 &mdash; below Strategy&rsquo;s own average cost basis of ~$75,651/BTC &mdash; after a stretch of spot-ETF outflows. The framework is a real positive; the stock's fate still rides on Bitcoin's price.</div>
-    <div class="tl">
+    <div class="tl" id="tl-MSTR" data-symbol="MSTR" data-min="163.00" data-max="570.00">
       <div class="tl-head">
-        <div><div class="tl-curlabel">Current</div><div class="tl-cur">$82.31</div></div>
+        <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jun 28</span></div><div class="tl-cur">$82.31</div></div>
         <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$336.33</div><div class="tl-curlabel up">+308.62%</div></div>
       </div>
       <div class="tl-track">
-        <div class="tl-cur-marker" style="left:0%"></div>
-        <div class="tl-dot" style="left:42.6%"></div>
+        <div class="tl-cur-marker" style="left:0%"><span class="tl-cur-marker-live">$82.31</span></div>
+        <div class="tl-dot" style="left:42.6%"><span class="tl-dot-lbl">Avg</span></div>
       </div>
       <div class="tl-ends"><span>Min <span class="v up">$163.00 &middot; +98.03%</span></span><span>Max <span class="v up">$570.00 &middot; +592.50%</span></span></div>
       <div class="tl-foot">19 analysts &middot; consensus as of Jun 28, 2026 &middot; tracks Bitcoin, not company fundamentals</div>
