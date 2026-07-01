@@ -1,7 +1,33 @@
 /* =====================================================================
-   GILDED SIGNALS — SCANNER ENGINE (clean external module)
-   Powers: compare picker (slots), live signal grid, homepage grid.
-   Live data only via /api/quote. No demo data. No inline onclick.
+   GILDED SIGNALS — SCANNER ENGINE (v2 picker)
+   Powers: compare picker (search/quick-pick/watchlist), live signal grid,
+   homepage grid. Live data only via /api/quote. No demo data.
+   No inline onclick — everything routes through the delegated handlers
+   at the bottom of this file.
+
+   v2 changes vs the previous picker:
+     - Search input now has a live typeahead dropdown instead of a
+       separate ADD button.
+     - Quick picks are grouped into categories (Top Stocks, Top AI
+       Stocks, Top Energy Stocks, Top Index Funds, Recent IPOs, Crypto)
+       instead of one flat row.
+     - Picking a ticker while both slots are full now repopulates Asset A
+       and clears Asset B, instead of showing an error.
+     - New: a Watchlist section remembers every ticker you've searched or
+       tapped (localStorage), with a live price/24h change per row and a
+       hover "x" to remove just one entry.
+     - New: a gold beam sweeps the screen while Compare loads, and the
+       reveal is tied to real data completion (not a guessed delay).
+     - Results now lead with a clean, simple comparison table (Price,
+       Today's Move, Today's Range, Volume, Momentum/RSI, 52-Week Range,
+       Gilded Score) instead of jumping straight to the full technical
+       cards. The full technical breakdown (score bar, EMA/MACD,
+       support/resistance, risk/reward, performance, analyst/valuation)
+       is still there for every asset — now behind a "Full Technical
+       Breakdown" expander per asset, so casual visitors get something
+       readable and serious traders can still go deep.
+   Everything below the picker — the Live Signal Grid, its tabs, and the
+   homepage grid — is unchanged.
    ===================================================================== */
 (function () {
   'use strict';
@@ -20,10 +46,26 @@
 
   var CRYPTO = ['BTC','ETH','SOL','XRP','DOGE','BNB','AVAX','LINK','MATIC','DOT','LTC','ADA'];
 
+  /* Quick-pick groups for the picker (separate from the grid tabs above —
+     this is what people see as tappable chips before they compare). */
+  var QUICK_GROUPS = [
+    { label: 'Top Stocks',        syms: ['AAPL','MSFT','AMZN','GOOGL','META','TSLA','NFLX','BRK.B'] },
+    { label: 'Top AI Stocks',     syms: TABS.stocks },
+    { label: 'Top Energy Stocks', syms: TABS.energy },
+    { label: 'Top Index Funds',   syms: ['QQQ','SPY','VOO','DIA','IWM','SMH'] },
+    { label: 'Recent IPOs',       syms: ['CRCL','CRWV','RDDT','ARM','CART','KVYO'] },
+    { label: 'Crypto',            syms: ['BTC','ETH','SOL'] }
+  ];
+
   var slots = [null, null];
   var currentTab = 'stocks';
   var cache = {};            // sym -> { t, data }
   var CACHE_MS = 20000;
+  var BEAM_MS = 1100;        // must match .gs-beam animation-duration in CSS
+
+  var WL_KEY = 'gs_watchlist';
+  var WL_CAP = 12;
+  var watchlist = loadWatchlist();
 
   /* ---------- helpers ---------- */
   function toApi(s) {
@@ -55,6 +97,7 @@
     if (n >= 1e3) return (n / 1e3).toFixed(0) + 'K';
     return String(n);
   }
+  function fmtRange(lo, hi) { return (lo == null || hi == null) ? '—' : fmt(lo) + ' – ' + fmt(hi); }
   function pctCls(v) { return v == null ? '' : (v >= 0 ? 'up' : 'dn'); }
 
   /* Signal now comes from the server (single source of truth). Fallback only
@@ -108,17 +151,99 @@
       .catch(function () { return { ok: false }; });
   }
 
-  /* ---------- PICKER (slots) ---------- */
-  function renderPills() {
-    var box = $('gsPills');
+  /* ---------- WATCHLIST ---------- */
+  function loadWatchlist() {
+    try { return JSON.parse(localStorage.getItem(WL_KEY) || '[]'); }
+    catch (e) { return []; }
+  }
+  function saveWatchlist() {
+    try { localStorage.setItem(WL_KEY, JSON.stringify(watchlist)); } catch (e) {}
+  }
+  function watchKind(sym) { return CRYPTO.indexOf(disp(sym).toUpperCase()) !== -1 ? 'crypto' : 'stock'; }
+  function addToWatchlist(sym) {
+    var t = disp(sym).toUpperCase();
+    watchlist = watchlist.filter(function (w) { return w.t !== t; });
+    watchlist.unshift({ t: t, k: watchKind(t) });
+    watchlist = watchlist.slice(0, WL_CAP);
+    saveWatchlist();
+  }
+  function removeFromWatchlist(t) {
+    watchlist = watchlist.filter(function (w) { return w.t !== t; });
+    saveWatchlist();
+    renderWatchlist();
+  }
+  function clearWatchlist() {
+    watchlist = [];
+    try { localStorage.removeItem(WL_KEY); } catch (e) {}
+    renderWatchlist();
+  }
+  function renderWatchlist() {
+    var box = $('gsWlBody');
     if (!box) return;
-    box.innerHTML = TABS.stocks.concat(['BTC', 'ETH', 'SOL']).map(function (s) {
-      var picked = slots.some(function (x) { return x === s || x === toApi(s); });
-      var ctag = CRYPTO.indexOf(s) !== -1 ? '<span class="ctag">crypto</span>' : '';
-      return '<button class="gs-pill' + (picked ? ' picked' : '') + '"' +
-             (picked ? ' disabled' : '') + ' data-sym="' + s + '">' + s + ctag + '</button>';
+    if (!watchlist.length) {
+      box.innerHTML = '<div class="gs-wl-empty">Nothing here yet — search or tap a ticker above and it will show up here with a live price.</div>';
+      return;
+    }
+    box.innerHTML = '<table class="gs-wl-table"><thead><tr><th>Ticker</th><th>Type</th><th>Live Price</th><th>24H</th></tr></thead><tbody>' +
+      watchlist.map(function (w) {
+        return '<tr class="gs-wl-row" data-sym="' + w.t + '">' +
+          '<td><div class="gs-wl-tk-cell"><button class="gs-wl-x" data-remove-watch="' + w.t + '" title="Remove from watchlist">&times;</button>' +
+          '<span class="gs-wl-tk">' + w.t + '</span></div></td>' +
+          '<td class="gs-wl-type">' + w.k + '</td>' +
+          '<td id="gsWlPrice-' + w.t + '">…</td>' +
+          '<td id="gsWlChg-' + w.t + '">…</td></tr>';
+      }).join('') + '</tbody></table>' +
+      '<div style="text-align:right;margin-top:10px"><button class="gs-wl-clear" id="gsWlClearBtn">Clear watchlist</button></div>';
+
+    watchlist.forEach(function (w) {
+      fetchQ(w.t).then(function (r) {
+        var pEl = document.getElementById('gsWlPrice-' + w.t);
+        var cEl = document.getElementById('gsWlChg-' + w.t);
+        if (!pEl || !cEl) return;
+        if (r.ok) {
+          pEl.textContent = fmt(r.data.price);
+          cEl.innerHTML = '<span class="' + pctCls(r.data.changePercent) + '">' + fmtPct(r.data.changePercent) + '</span>';
+        } else {
+          pEl.textContent = '—'; cEl.textContent = '—';
+        }
+      });
+    });
+  }
+
+  /* ---------- PICKER (search, quick picks, slots) ---------- */
+  function renderQuick() {
+    var box = $('gsQuick');
+    if (!box) return;
+    box.innerHTML = QUICK_GROUPS.map(function (g) {
+      var chips = g.syms.map(function (s) {
+        var picked = slots.some(function (x) { return x === s || x === toApi(s); });
+        var ctag = CRYPTO.indexOf(s) !== -1 ? '<span class="ctag">crypto</span>' : '';
+        return '<button class="gs-pill' + (picked ? ' picked' : '') + '" data-sym="' + s + '">' + s + ctag + '</button>';
+      }).join('');
+      return '<div class="gs-qp-group"><div class="gs-qp-group-lbl">' + g.label + '</div><div class="gs-qp-group-row">' + chips + '</div></div>';
     }).join('');
   }
+
+  function renderSuggestions() {
+    var inp = $('gsSearchInput'), box = $('gsSuggest');
+    if (!inp || !box) return;
+    var q = inp.value.trim().toUpperCase();
+    if (!q) { box.classList.remove('show'); box.innerHTML = ''; return; }
+    var universe = [];
+    QUICK_GROUPS.forEach(function (g) { universe = universe.concat(g.syms); });
+    universe = universe.filter(function (v, i, arr) { return arr.indexOf(v) === i; });
+    var matches = universe.filter(function (u) { return u.indexOf(q) === 0; }).slice(0, 8);
+    if (!matches.length) {
+      box.innerHTML = '<div class="gs-suggest-row" data-sym="' + q + '"><span class="gs-suggest-t">' + q + '</span><span class="gs-suggest-k">search this ticker</span></div>';
+    } else {
+      box.innerHTML = matches.map(function (m) {
+        var k = CRYPTO.indexOf(m) !== -1 ? 'crypto' : 'stock';
+        return '<div class="gs-suggest-row" data-sym="' + m + '"><span class="gs-suggest-t">' + m + '</span><span class="gs-suggest-k">' + k + '</span></div>';
+      }).join('');
+    }
+    box.classList.add('show');
+  }
+
   function renderSlots() {
     [0, 1].forEach(function (i) {
       var el = $('gsSlot' + i), body = $('gsSlot' + i + 'body');
@@ -131,7 +256,7 @@
           '<button class="xbtn" tabindex="-1" data-remove="' + i + '">&times;</button></span>';
       } else {
         el.classList.remove('filled');
-        body.innerHTML = '<span class="gs-slot-empty">Tap a symbol above</span>';
+        body.innerHTML = '<span class="gs-slot-empty">Search or tap a symbol above</span>';
       }
     });
   }
@@ -143,22 +268,32 @@
     else if (n === 1) { btn.disabled = true; btn.textContent = 'Pick one more'; }
     else { btn.disabled = false; btn.textContent = 'Compare ' + disp(slots[0]) + ' vs ' + disp(slots[1]) + ' \u2192'; }
   }
-  function refreshPicker() { renderPills(); renderSlots(); updateBtn(); }
+  function refreshPicker() { renderQuick(); renderSlots(); updateBtn(); }
   function gsErr(t) { var e = $('gsErrMsg'); if (e) e.textContent = t || ''; }
 
+  /* Picking a ticker: if a slot is open, fill it. If both are full, the new
+     pick repopulates Asset A and clears Asset B — no dead-end error. */
   function pick(s) {
-    if (slots.some(function (x) { return x === s || x === toApi(s); })) return;
-    var i = slots.indexOf(null);
-    if (i === -1) { gsErr('Both slots full — remove one first.'); return; }
-    slots[i] = s; gsErr(''); refreshPicker();
+    var t = String(s).trim().toUpperCase();
+    if (!t) return;
+    if (slots.some(function (x) { return x === t || disp(x) === t || x === toApi(t); })) {
+      gsErr(t + ' is already in the comparison.');
+    } else {
+      var i = slots.indexOf(null);
+      if (i !== -1) slots[i] = t;
+      else slots = [t, null];
+      gsErr('');
+    }
+    addToWatchlist(t);
+    var inp = $('gsSearchInput'); if (inp) inp.value = '';
+    var sug = $('gsSuggest'); if (sug) sug.classList.remove('show');
+    refreshPicker();
+    renderWatchlist();
   }
   function addTyped() {
     var inp = $('gsSearchInput'); if (!inp) return;
     var v = inp.value.trim().toUpperCase(); if (!v) return;
-    if (slots.some(function (x) { return x === v || disp(x) === v; })) { gsErr(v + ' already selected.'); return; }
-    var i = slots.indexOf(null);
-    if (i === -1) { gsErr('Both slots full.'); return; }
-    slots[i] = v; inp.value = ''; gsErr(''); refreshPicker();
+    pick(v);
   }
   function removeSlot(i) { slots[i] = null; gsErr(''); refreshPicker(); }
   function clearAll() {
@@ -168,20 +303,80 @@
     gsErr(''); refreshPicker();
   }
 
-  /* ---------- COMPARE ---------- */
+  /* ---------- COMPARE — simple table + expandable full breakdown ---------- */
+  function winCls(x, y, higherIsBetter) {
+    if (higherIsBetter === undefined) higherIsBetter = true;
+    if (x == null || y == null || x === y) return ['', ''];
+    var aWins = higherIsBetter ? x > y : x < y;
+    return aWins ? ['win', ''] : ['', 'win'];
+  }
+  function miniRsi(v, cond) {
+    if (v == null) return '—';
+    var color = rsiColor(v), pct = Math.min(Math.max(v, 0), 100);
+    var out = '<span class="gs-rsi-mini-wrap"><span class="gs-rsi-mini-num" style="color:' + color + '">' + v + '</span>' +
+      '<span class="gs-rsi-mini-bar"><span class="gs-rsi-mini-dot" style="left:' + pct + '%;background:' + color + '"></span></span></span>';
+    if (cond) out += '<div class="gs-rsi-mini-lbl">' + cond + '</div>';
+    return out;
+  }
+  function buildSimpleTable(a, b) {
+    var symA = disp(a.symbol || ''), symB = disp(b.symbol || '');
+    var mv = winCls(a.changePercent, b.changePercent);
+    var sc = winCls(a.gildedScore, b.gildedScore);
+    var rows = [
+      ['Price', 'The current live price.', fmt(a.price), fmt(b.price), '', ''],
+      ["Today's move", "How much it's up or down today.",
+        '<span class="' + pctCls(a.changePercent) + '">' + fmtPct(a.changePercent) + '</span>',
+        '<span class="' + pctCls(b.changePercent) + '">' + fmtPct(b.changePercent) + '</span>', mv[0], mv[1]],
+      ["Today's range", 'The low-to-high price traded today.', fmtRange(a.low, a.high), fmtRange(b.low, b.high), '', ''],
+      ['Volume', 'Total traded volume today — higher means more active interest.', fmtVol(a.volume), fmtVol(b.volume), '', ''],
+      ['Momentum (RSI)', 'Above 70 = hot/overbought, below 30 = cold/oversold.', miniRsi(a.rsi14, rsiCond(a)), miniRsi(b.rsi14, rsiCond(b)), '', ''],
+      ['52-week range', 'The low-to-high price over the last year.', fmtRange(a.week52Low, a.week52High), fmtRange(b.week52Low, b.week52High), '', ''],
+      ['Gilded Score', 'Our overall strength read — higher is stronger.', a.gildedScore != null ? a.gildedScore : '—', b.gildedScore != null ? b.gildedScore : '—', sc[0], sc[1]]
+    ];
+    return '<table class="gs-simple-table"><thead><tr><th></th><th>' + symA + '</th><th>' + symB + '</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        return '<tr><td class="metric">' + r[0] + '<span class="gs-hint" title="' + r[1] + '">?</span></td>' +
+          '<td class="' + r[4] + '">' + r[2] + '</td><td class="' + r[5] + '">' + r[3] + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+  function buildBreakdowns(a, b) {
+    return '<div class="gs-expand-row">' +
+      '<details class="gs-expand"><summary>Full Technical Breakdown — ' + disp(a.symbol || '') + '</summary>' + buildCard(a, false) + '</details>' +
+      '<details class="gs-expand"><summary>Full Technical Breakdown — ' + disp(b.symbol || '') + '</summary>' + buildCard(b, false) + '</details>' +
+      '</div>';
+  }
+
   function runCompare() {
     if (slots.filter(Boolean).length < 2) return;
+    var overlay = $('gsBeamOverlay'), beam = $('gsBeam');
     var load = $('gsCmpLoading'); if (load) load.style.display = 'block';
     var res = $('gsCmpResults'); if (res) res.innerHTML = '';
-    Promise.all([fetchQ(slots[0]), fetchQ(slots[1])]).then(function (r) {
+
+    if (overlay) {
+      overlay.classList.add('active');
+      if (beam) { beam.style.animation = 'none'; void beam.offsetWidth; beam.style.animation = ''; }
+    }
+
+    // Reveal only once BOTH the beam has visually finished AND the data has
+    // actually loaded — whichever takes longer. Keeps the reveal honest
+    // (never shows a verdict before data is really back) while still
+    // guaranteeing the beam plays out fully.
+    var minBeamTime = new Promise(function (resolve) { setTimeout(resolve, BEAM_MS); });
+    var dataLoad = Promise.all([fetchQ(slots[0]), fetchQ(slots[1])]);
+
+    Promise.all([minBeamTime, dataLoad]).then(function (results) {
+      var r = results[1];
+      if (overlay) overlay.classList.remove('active');
       if (load) load.style.display = 'none';
       if (!r[0].ok || !r[1].ok) {
         gsErr('Could not load data for ' + (r[0].ok ? disp(slots[1]) : disp(slots[0])) + '. Try again.');
         return;
       }
       if (res) {
-        res.innerHTML = buildVerdict(r[0].data, r[1].data) + buildCmpCards(r[0].data, r[1].data);
-        try { res.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { res.scrollIntoView(); }
+        res.innerHTML = buildVerdict(r[0].data, r[1].data) + buildSimpleTable(r[0].data, r[1].data) + buildBreakdowns(r[0].data, r[1].data);
+        setTimeout(function () {
+          try { res.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { res.scrollIntoView(); }
+        }, 60);
       }
     });
   }
@@ -203,11 +398,6 @@
       : '';
     return '<div class="gs-verdict"><div class="gs-verdict-lbl">Gilded Verdict</div><div class="gs-verdict-main">' +
       main + '</div><div class="gs-verdict-sub">' + sub + '</div>' + tags + '</div>';
-  }
-  function buildCmpCards(a, b) {
-    var sA = a.gildedScore, sB = b.gildedScore;
-    var aWins = sA != null && sB != null && sA >= sB;
-    return '<div class="gs-cmp-cards">' + buildCard(a, aWins) + buildCard(b, !aWins && sA != null && sB != null) + '</div>';
   }
   /* RSI color: extended (70+) is GOLD when trend supports it (not alarm-red).
      We treat a high RSI as gold/strength rather than red/danger. */
@@ -326,7 +516,7 @@
       '</div>' + updatedHtml + '</div>';
   }
 
-  /* ---------- GRID (bullish-first, clickable) ---------- */
+  /* ---------- GRID (bullish-first, clickable) — unchanged ---------- */
   function gridCard(r, rawSym) {
     if (!r.ok) {
       return '<div class="gs-gc" style="opacity:.4"><div class="gs-gc-head"><div>' +
@@ -416,27 +606,46 @@
     var t = e.target;
     if (!t || !t.closest) return;
 
+    var wlx = t.closest('[data-remove-watch]');
+    if (wlx) { removeFromWatchlist(wlx.getAttribute('data-remove-watch')); return; }
+
     var rem = t.closest('[data-remove]');
     if (rem) { removeSlot(parseInt(rem.getAttribute('data-remove'), 10)); return; }
 
     var card = t.closest('[data-sym]');
     if (card) {
       var sym = card.getAttribute('data-sym');
-      if (sym) { pick(sym); if (card.closest('#homeScannerGrid')) { showPage('scanner'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); } }
+      if (sym) {
+        pick(sym);
+        var sug = $('gsSuggest'); if (sug) sug.classList.remove('show');
+        if (card.closest('#homeScannerGrid')) { showPage('scanner'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      }
       return;
     }
 
-    var add = t.closest('.gs-add-btn'); if (add) { addTyped(); return; }
     var clr = t.closest('.gs-clear-btn'); if (clr) { clearAll(); return; }
     var run = t.closest('#gsRunBtn'); if (run && !run.disabled) { runCompare(); return; }
+    var wlClear = t.closest('#gsWlClearBtn'); if (wlClear) { clearWatchlist(); return; }
+
+    if (!t.closest('.gs-search-shell')) { var sb = $('gsSuggest'); if (sb) sb.classList.remove('show'); }
   });
 
-  /* search box: Enter to add */
+  /* search box: live suggestions as you type, Enter to load (and auto-compare
+     when both boxes are then full), Escape to close the dropdown */
+  document.addEventListener('input', function (e) {
+    if (e.target && e.target.id === 'gsSearchInput') renderSuggestions();
+  });
+  document.addEventListener('focus', function (e) {
+    if (e.target && e.target.id === 'gsSearchInput') renderSuggestions();
+  }, true);
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && e.target && e.target.id === 'gsSearchInput') {
+    if (!e.target || e.target.id !== 'gsSearchInput') return;
+    if (e.key === 'Enter') {
       e.preventDefault();
       addTyped();
       if (slots.filter(Boolean).length === 2) runCompare(); /* gs-uxfix: Enter auto-compares when both boxes full */
+    } else if (e.key === 'Escape') {
+      var box = $('gsSuggest'); if (box) box.classList.remove('show');
     }
   });
 
@@ -444,7 +653,7 @@
   function gsPickerEls() {
     var picker = document.querySelector('.gs-picker');
     if (!picker) return [];
-    var sel = '.gs-pill:not([disabled]), #gsSlot0, #gsSlot1, #gsSearchInput, .gs-add-btn, .gs-clear-btn, #gsRunBtn:not([disabled])';
+    var sel = '.gs-pill, #gsSlot0, #gsSlot1, #gsSearchInput, .gs-clear-btn, #gsRunBtn:not([disabled])';
     return Array.prototype.slice.call(picker.querySelectorAll(sel)).filter(function (el) {
       var r = el.getBoundingClientRect();
       return r.width > 0 && r.height > 0;
@@ -483,7 +692,6 @@
         document.getElementById('gsSlot0'),
         document.getElementById('gsSlot1'),
         document.getElementById('gsSearchInput'),
-        document.querySelector('.gs-add-btn'),
         document.querySelector('.gs-clear-btn'),
         document.getElementById('gsRunBtn')
       ];
@@ -516,6 +724,7 @@
   /* ---------- init ---------- */
   function init() {
     refreshPicker();
+    renderWatchlist();
     if ($('gsGrid')) loadGrid($('gsGrid'), TABS.stocks);
     var home = $('homeScannerGrid');
     if (home) loadGrid(home, HOME);

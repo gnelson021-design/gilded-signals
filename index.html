@@ -585,30 +585,104 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 .gs-gc-footer{padding:9px 16px;display:flex;align-items:center;justify-content:space-between;}
 .gs-gc-hint{font-size:.58rem;color:#7a7770;font-style:italic;}
 @media(max-width:640px){.gs-slots,.gs-cmp-cards{grid-template-columns:1fr;}.gs-actions{flex-direction:column-reverse;}.gs-clear-btn{width:100%;}.gs-grid{grid-template-columns:1fr;}}
+/* ── v2 picker: search/typeahead, grouped quick picks, gold beam, simple table, watchlist ── */
+.gs-search-shell{position:relative;margin-bottom:16px;}
+.gs-suggest{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;background:#0d0d11;border:1px solid rgba(201,162,75,.25);border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.6);overflow:hidden;display:none;}
+.gs-suggest.show{display:block;}
+.gs-suggest-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;transition:.12s;border-bottom:1px solid rgba(255,255,255,.055);}
+.gs-suggest-row:last-child{border-bottom:none;}
+.gs-suggest-row:hover{background:rgba(201,162,75,.1);}
+.gs-suggest-t{font-family:monospace;font-weight:700;color:#e8ca7a;letter-spacing:.04em;}
+.gs-suggest-k{font-size:.66rem;color:#7a7770;font-family:monospace;}
+.gs-quick{max-height:230px;overflow-y:auto;margin-bottom:18px;padding-right:4px;}
+.gs-quick::-webkit-scrollbar{width:6px;}
+.gs-quick::-webkit-scrollbar-thumb{background:rgba(201,162,75,.25);border-radius:3px;}
+.gs-qp-group{margin-bottom:13px;}
+.gs-qp-group:last-child{margin-bottom:0;}
+.gs-qp-group-lbl{font-family:monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:7px;}
+.gs-qp-group-row{display:flex;flex-wrap:wrap;gap:7px;}
+/* Gold beam sweep */
+.gs-beam-overlay{position:fixed;inset:0;pointer-events:none;z-index:999;display:none;overflow:hidden;}
+.gs-beam-overlay.active{display:block;}
+.gs-beam{position:absolute;left:0;right:0;top:-34%;height:34%;background:linear-gradient(180deg,transparent,rgba(201,162,75,0) 10%,rgba(231,200,121,.55) 45%,rgba(201,162,75,.9) 50%,rgba(231,200,121,.55) 55%,rgba(201,162,75,0) 90%,transparent);filter:blur(1px);animation:gsBeamDrop 1.1s cubic-bezier(.4,0,.2,1) forwards;}
+.gs-beam::after{content:'';position:absolute;left:0;right:0;top:50%;height:2px;background:#e8ca7a;box-shadow:0 0 24px 6px rgba(231,200,121,.7);transform:translateY(-50%);}
+@keyframes gsBeamDrop{0%{top:-34%;opacity:0;}8%{opacity:1;}92%{opacity:1;}100%{top:100%;opacity:0;}}
+/* Simple comparison table */
+.gs-simple-table{width:100%;border-collapse:collapse;border:1px solid rgba(255,255,255,.055);border-radius:14px;overflow:hidden;margin-bottom:20px;animation:gsRise .5s .05s ease both;}
+.gs-simple-table th,.gs-simple-table td{padding:13px 15px;text-align:center;border-bottom:1px solid rgba(255,255,255,.055);}
+.gs-simple-table thead th{font-family:monospace;font-size:1rem;font-weight:700;color:#e8ca7a;background:#16161c;}
+.gs-simple-table thead th:first-child{background:transparent;}
+.gs-simple-table .metric{text-align:left;color:#9a9690;font-size:.8rem;font-weight:400;display:flex;align-items:center;gap:7px;}
+.gs-simple-table td{font-family:monospace;font-size:.92rem;color:#f0ece2;}
+.gs-simple-table tr:last-child td{border-bottom:none;}
+.gs-simple-table td.win{color:#e8ca7a;position:relative;}
+.gs-simple-table td.win::after{content:'▲';font-size:.58rem;margin-left:6px;color:var(--gold);vertical-align:middle;}
+.gs-hint{width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,.055);color:#7a7770;font-size:.58rem;display:inline-flex;align-items:center;justify-content:center;cursor:help;flex:0 0 auto;}
+.gs-rsi-mini-wrap{display:inline-flex;align-items:center;gap:8px;}
+.gs-rsi-mini-num{font-weight:700;}
+.gs-rsi-mini-bar{position:relative;width:56px;height:5px;border-radius:3px;background:#1c1c23;}
+.gs-rsi-mini-dot{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;border:1px solid #0b0b0e;transform:translate(-50%,-50%);box-shadow:0 0 6px rgba(231,200,121,.6);}
+.gs-rsi-mini-lbl{font-size:.6rem;color:#7a7770;margin-top:2px;}
+/* Full technical breakdown — collapsible per asset */
+.gs-expand-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;}
+.gs-expand{background:#111115;border:1px solid rgba(255,255,255,.055);border-radius:16px;overflow:hidden;}
+.gs-expand[open]{border-color:rgba(201,162,75,.3);}
+.gs-expand summary{cursor:pointer;list-style:none;padding:14px 18px;font-family:monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);background:linear-gradient(180deg,#16161c,transparent);}
+.gs-expand summary::-webkit-details-marker{display:none;}
+.gs-expand summary::before{content:'▸ ';}
+.gs-expand[open] summary::before{content:'▾ ';}
+.gs-expand .gs-cmp-card{border:none;border-radius:0;}
+/* Watchlist */
+.gs-wl-section{margin-top:36px;}
+.gs-wl-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;}
+.gs-wl-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:#f0ece2;margin:0;}
+.gs-wl-sub{font-family:monospace;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:#7a7770;}
+.gs-wl-empty{border:1px dashed rgba(201,162,75,.15);border-radius:14px;padding:24px;text-align:center;color:#7a7770;font-size:.85rem;font-weight:300;}
+.gs-wl-table{width:100%;border-collapse:collapse;border:1px solid rgba(255,255,255,.055);border-radius:14px;overflow:hidden;}
+.gs-wl-table th{font-family:monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:#7a7770;text-align:left;padding:10px 14px;background:#16161c;border-bottom:1px solid rgba(255,255,255,.055);}
+.gs-wl-table td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.055);font-family:monospace;font-size:.86rem;color:#f0ece2;}
+.gs-wl-type{color:#7a7770;}
+.gs-wl-row{cursor:pointer;transition:.12s;}
+.gs-wl-row:hover{background:rgba(201,162,75,.06);}
+.gs-wl-row:last-child td{border-bottom:none;}
+.gs-wl-tk-cell{display:flex;align-items:center;gap:8px;}
+.gs-wl-tk{color:#e8ca7a;font-weight:700;letter-spacing:.04em;}
+.gs-wl-x{width:20px;height:20px;border-radius:50%;border:1px solid rgba(201,162,75,.2);background:#0d0d11;color:#7a7770;font-size:.7rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:.15s;flex:0 0 auto;}
+.gs-wl-row:hover .gs-wl-x{opacity:1;}
+.gs-wl-x:hover{color:#fff;border-color:#d97a7a;background:rgba(217,122,122,.15);}
+.gs-wl-clear{background:transparent;border:1px solid rgba(255,255,255,.055);color:#9a9690;border-radius:8px;padding:6px 12px;font-family:monospace;font-size:.64rem;letter-spacing:.08em;cursor:pointer;text-transform:uppercase;}
+.gs-wl-clear:hover{color:#f0ece2;border-color:rgba(201,162,75,.2);}
+@media(max-width:640px){.gs-expand-row{grid-template-columns:1fr;}.gs-wl-table th:nth-child(2),.gs-wl-table td:nth-child(2){display:none;}}
 </style>
 <div class="gs-scanner-wrap">
+  <!-- gs-picker-v2 -->
+  <div class="gs-beam-overlay" id="gsBeamOverlay"><div class="gs-beam" id="gsBeam"></div></div>
   <div class="gs-eyebrow">Gilded Signals · Live Market Intelligence</div>
   <h2 class="gs-title">Compare Two Assets</h2>
-  <p class="gs-sub">Pick any two stocks or crypto — see every metric side by side. Price, range, RSI, EMA, MACD, volume, support/resistance, Gilded Score, and live news context.</p>
+  <p class="gs-sub">Search, tap, or type — we'll show you which looks stronger right now, with the full technical breakdown one tap away.</p>
   <div class="gs-picker">
-    <div class="gs-step"><div class="gs-step-num">1</div><div class="gs-step-txt">Tap two to compare <b>or search below</b></div></div>
-    <div class="gs-pills" id="gsPills"></div>
-    <div class="gs-slots">
-      <div class="gs-slot" id="gsSlot0"><div class="gs-slot-lbl">Asset A</div><div id="gsSlot0body"><span class="gs-slot-empty">Tap a symbol above</span></div></div>
-      <div class="gs-slot" id="gsSlot1"><div class="gs-slot-lbl">Asset B</div><div id="gsSlot1body"><span class="gs-slot-empty">Tap a symbol above</span></div></div>
+    <div class="gs-step"><div class="gs-step-num">1</div><div class="gs-step-txt"><b>Type to search</b> — click any result, quick pick, or watchlist row to load it</div></div>
+    <div class="gs-search-shell">
+      <input class="gs-input" id="gsSearchInput" type="text" placeholder="Search any ticker — e.g. NFLX, BTC, AVGO" maxlength="8" autocomplete="off">
+      <div class="gs-suggest" id="gsSuggest"></div>
     </div>
-    <div class="gs-search-row">
-      <input class="gs-input" id="gsSearchInput" type="text" placeholder="Or type any ticker, e.g. NFLX" maxlength="8" onkeydown="if(event.key==='Enter')gsAddTyped()">
-      <button class="gs-add-btn" onclick="gsAddTyped()">ADD</button>
+    <div class="gs-quick" id="gsQuick"></div>
+    <div class="gs-slots">
+      <div class="gs-slot" id="gsSlot0"><div class="gs-slot-lbl">Asset A</div><div id="gsSlot0body"><span class="gs-slot-empty">Search or tap a symbol above</span></div></div>
+      <div class="gs-slot" id="gsSlot1"><div class="gs-slot-lbl">Asset B</div><div id="gsSlot1body"><span class="gs-slot-empty">Search or tap a symbol above</span></div></div>
     </div>
     <div class="gs-actions">
-      <button class="gs-clear-btn" onclick="gsClearAll()">Clear</button>
-      <button class="gs-run-btn" id="gsRunBtn" onclick="gsRunCompare()" disabled>Pick two assets</button>
+      <button class="gs-clear-btn">Clear</button>
+      <button class="gs-run-btn" id="gsRunBtn" disabled>Pick two assets</button>
     </div>
     <div class="gs-errmsg" id="gsErrMsg"></div>
   </div>
   <div class="gs-loading" id="gsCmpLoading">Pulling live data…</div>
   <div id="gsCmpResults"></div>
+  <div class="gs-wl-section">
+    <div class="gs-wl-head"><h3 class="gs-wl-title">Your Watchlist</h3><span class="gs-wl-sub">Built from what you search</span></div>
+    <div id="gsWlBody"></div>
+  </div>
   <div class="gs-grid-section">
     <div class="gs-eyebrow">Market Scanner</div>
     <h2 class="gs-title" style="font-size:1.9rem;">Live Signal Grid</h2>
