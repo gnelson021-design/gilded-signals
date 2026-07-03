@@ -401,7 +401,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
       <div id="homeScannerGrid" class="scanner-all-grid"></div>
     </div>
   </section>
-  <section style="padding:5rem 0;background:var(--charcoal-2);border-top:1px solid var(--border);">
+  <section id="home-newsletter" style="padding:5rem 0;background:var(--charcoal-2);border-top:1px solid var(--border);"><!-- gs-newsletter-fix -->
     <div class="section-inner" style="text-align:center;">
       <div class="section-label" style="justify-content:center;">Free Weekly Brief</div>
       <h2 class="section-title">The Edge Is Already<br><em>Moving.</em></h2>
@@ -1126,7 +1126,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   <div class="footer-inner">
     <div class="footer-brand"><div class="brand">Gilded Signals</div><p>Market intelligence for disciplined investors. Real signals, no noise.</p></div>
     <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showNews('market')">Market News</a></li><li><a onclick="showNews('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('brief')">Weekly Brief</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
-    <div class="footer-col"><h4>Company</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showNews('all')">Newsletter</a></li><li><a href="mailto:gildedsignals.support@gmail.com">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('home');setTimeout(function(){var el=document.getElementById('home-newsletter');if(el){el.scrollIntoView({behavior:'smooth'});}},60)">Newsletter</a></li><li><a href="mailto:gildedsignals.support@gmail.com">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Legal</h4><ul><li><a href="legal.html#terms">Terms of Service</a></li><li><a href="legal.html#privacy">Privacy Policy</a></li><li><a href="legal.html#disclaimer">Disclaimer</a></li></ul></div>
   </div>
   <div class="footer-bottom">
