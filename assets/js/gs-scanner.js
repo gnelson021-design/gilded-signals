@@ -375,7 +375,11 @@
       if (res) {
         res.innerHTML = buildVerdict(r[0].data, r[1].data) + buildSimpleTable(r[0].data, r[1].data) + buildBreakdowns(r[0].data, r[1].data);
         setTimeout(function () {
-          try { res.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { res.scrollIntoView(); }
+          /* gs-scroll-offset-fix: clear fixed nav+ticker so Gilded Verdict headline isn't hidden */
+          var mobile = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+          var off = mobile ? 70 : 90;
+          var y = res.getBoundingClientRect().top + window.pageYOffset - off;
+          window.scrollTo({ top: y, behavior: 'smooth' });
         }, 60);
       }
     });
