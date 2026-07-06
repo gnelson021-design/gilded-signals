@@ -37,6 +37,22 @@
   }
   function setUnlocked() {
     try { localStorage.setItem(LS_UNLOCK, '1'); } catch (e) {}
+    try { document.dispatchEvent(new CustomEvent('gs:unlocked')); } catch (e) {}
+  }
+
+  /* ---------- Stripe success redirect: unlock on return ---------- */
+  function checkCheckoutSuccess() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('checkout') === 'success') {
+        setUnlocked();
+        params.delete('checkout');
+        params.delete('session_id');
+        var qs = params.toString();
+        var cleanUrl = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
+        window.history.replaceState(null, '', cleanUrl);
+      }
+    } catch (e) {}
   }
 
   /* ---------- SHA-256 (Web Crypto) ---------- */
@@ -203,6 +219,7 @@
   /* gsRunCompare is defined by gs-scanner.js; it may load after us.
      Poll briefly until it exists, then wrap once. */
   function init() {
+    checkCheckoutSuccess();
     updateCounters();
     if (installWrapper()) return;
     var tries = 0;
@@ -213,6 +230,8 @@
   }
 
   window.gsGoToStripe = goToStripe;
+  window.gsIsUnlocked = isUnlocked;
+  window.gsShowAccessModal = showModal;
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

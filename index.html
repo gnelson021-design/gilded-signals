@@ -340,14 +340,14 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="wbh-card">
           <div class="wbh-eyebrow">Weekly Intelligence Brief</div>
           <h2 class="wbh-title">The Week <em>Ahead</em></h2>
-          <div class="wbh-dateline">For the week of <b>June 29, 2026</b></div>
+          <div class="wbh-dateline">For the week of <b>July 6, 2026</b></div>
           <div class="wbh-rule"></div>
-          <div class="wbh-lbl">Five Names on My Screen</div>
-          <div class="wbh-pick" onclick="gsPickAndScan('CBRS')"><div class="wbh-rank">01</div><div class="wbh-name"><span class="wbh-ticker">CBRS</span><span class="wbh-company">Cerebras Systems</span></div><span class="wbh-tag">Strong Buy</span></div>
-          <div class="wbh-pick" onclick="gsPickAndScan('RKLB')"><div class="wbh-rank">02</div><div class="wbh-name"><span class="wbh-ticker">RKLB</span><span class="wbh-company">Rocket Lab</span></div><span class="wbh-tag">Buy</span></div>
-          <div class="wbh-pick" onclick="gsPickAndScan('LITE')"><div class="wbh-rank">03</div><div class="wbh-name"><span class="wbh-ticker">LITE</span><span class="wbh-company">Lumentum Holdings</span></div><span class="wbh-tag">Strong Buy</span></div>
+          <div class="wbh-lbl">Five of Fifteen on My Screen</div>
+          <div class="wbh-pick" onclick="gsPickAndScan('NVDA')"><div class="wbh-rank">01</div><div class="wbh-name"><span class="wbh-ticker">NVDA</span><span class="wbh-company">NVIDIA Corporation</span></div><span class="wbh-tag">Strong Buy</span></div>
+          <div class="wbh-pick" onclick="gsPickAndScan('CBRS')"><div class="wbh-rank">02</div><div class="wbh-name"><span class="wbh-ticker">CBRS</span><span class="wbh-company">Cerebras Systems</span></div><span class="wbh-tag">Strong Buy</span></div>
+          <div class="wbh-pick" onclick="gsPickAndScan('TSM')"><div class="wbh-rank">03</div><div class="wbh-name"><span class="wbh-ticker">TSM</span><span class="wbh-company">Taiwan Semiconductor</span></div><span class="wbh-tag">Strong Buy</span></div>
           <div class="wbh-pick" onclick="gsPickAndScan('AVGO')"><div class="wbh-rank">04</div><div class="wbh-name"><span class="wbh-ticker">AVGO</span><span class="wbh-company">Broadcom</span></div><span class="wbh-tag">Strong Buy</span></div>
-          <div class="wbh-pick" onclick="gsPickAndScan('IBM')"><div class="wbh-rank">05</div><div class="wbh-name"><span class="wbh-ticker">IBM</span><span class="wbh-company">International Business Machines</span></div><span class="wbh-tag">Buy</span></div>
+          <div class="wbh-pick" onclick="gsPickAndScan('MU')"><div class="wbh-rank">05</div><div class="wbh-name"><span class="wbh-ticker">MU</span><span class="wbh-company">Micron Technology</span></div><span class="wbh-tag">Strong Buy</span></div>
           <button class="wbh-cta" onclick="showPage('brief')">Read Full Brief</button>
         </div>
       </div>
@@ -848,11 +848,580 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 .gb-bonus-eyebrow{font-family:'DM Sans',sans-serif;font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
 .gb-bonus-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;margin:0 0 14px;color:var(--gold-light);}
 @media(max-width:600px){.gb-title{font-size:2.1rem;}.gb-pick-row,.gb-score{grid-template-columns:38px 1fr;gap:14px;}.gb-rank{font-size:1.6rem;}.gb-conviction{margin-left:0;}.tl-cur,.tl-avg{font-size:1.4rem;}}
+
+.gb-archive-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 0;}
+.gb-archive-lbl{font-family:monospace;font-size:.66rem;letter-spacing:.06em;color:var(--text-muted);}
+.gb-archive-select{background:#111115;border:1px solid rgba(212,175,55,.3);color:var(--text-primary);font-family:monospace;font-size:.72rem;padding:7px 11px;border-radius:6px;cursor:pointer;}
+.gb-archive-select:focus{outline:none;border-color:var(--gold);}
+.gb-teaser{margin:38px 0 34px;padding:28px 24px;border-radius:14px;background:linear-gradient(160deg,rgba(212,175,55,.10),rgba(212,175,55,.02));border:1px solid rgba(212,175,55,.32);text-align:center;}
+.gb-teaser-eyebrow{font-family:'DM Sans',sans-serif;font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.gb-teaser-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;margin:0 0 12px;color:var(--gold-light);}
+.gb-teaser-body{font-size:.9rem;line-height:1.7;color:var(--text-secondary);max-width:520px;margin:0 auto 12px;}
+.gb-teaser-fine{font-size:.72rem;font-style:italic;color:var(--text-muted);max-width:520px;margin:0 auto 20px;line-height:1.6;}
+.gb-teaser-cta{display:inline-block;padding:13px 30px;background:var(--gold);color:#0c0c0c;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:none;border-radius:5px;cursor:pointer;transition:opacity .2s;}
+.gb-teaser-cta:hover{opacity:.88;}
+.gb-locked-wrap{position:relative;}
+.gb-locked-wrap .gb-locked-inner{filter:blur(7px);pointer-events:none;user-select:none;transition:filter .3s;}
+.gb-locked-wrap.unlocked .gb-locked-inner{filter:none;pointer-events:auto;user-select:auto;}
+.gb-lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;padding:20px;}
+.gb-locked-wrap.unlocked .gb-lock-overlay{display:none;}
+.gb-lock-card{background:rgba(10,10,12,.94);border:1px solid rgba(212,175,55,.35);border-radius:14px;padding:30px 32px;text-align:center;max-width:340px;box-shadow:0 30px 70px rgba(0,0,0,.65);}
+.gb-lock-icon{font-size:1.7rem;color:var(--gold);margin-bottom:10px;}
+.gb-lock-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--text-primary);margin-bottom:8px;}
+.gb-lock-sub{font-size:.78rem;color:var(--text-muted);line-height:1.6;margin-bottom:18px;}
+.gb-lock-cta{display:inline-block;padding:11px 26px;background:var(--gold);color:#0c0c0c;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:5px;cursor:pointer;}
 </style>
 <div class="gb-wrap">
   <div class="gb-eyebrow">Weekly Intelligence Brief</div>
   <h1 class="gb-title">The Week <em>Ahead</em></h1>
-  <div class="gb-dateline">For the week of <b>June 29, 2026</b> &middot; Updated Sundays</div>
+  <div class="gb-archive-bar">
+    <span class="gb-archive-lbl">Browse past weeks:</span>
+    <select class="gb-archive-select" onchange="gsBriefArchiveSwitch(this.value)">
+      <option value="2026-07-06">This Week &mdash; July 6, 2026</option>
+      <option value="2026-06-29">June 29, 2026</option>
+    </select>
+  </div>
+
+  <div class="gb-rule"></div>
+
+  <div class="gb-week-panel" id="gb-week-2026-07-06" data-live="true">
+    <div class="gb-dateline">For the week of <b>July 6, 2026</b> &middot; Updated Sundays</div>
+
+  <div class="gb-rule"></div>
+
+  <p class="gb-lead">Last week's concentration call flipped back to green &mdash; three of five closed higher despite a holiday-shortened week. This week the list expands: fifteen names instead of five, because one screen isn't enough right now. TSMC reports in eleven days after raising capex to a record. AMD's Advancing AI summit is two weeks out. Palantir just landed Nvidia and the U.S. Army in the same week. Here's the full board.</p>
+
+  <!-- ============ SCORECARD ============ -->
+  <div class="gb-section-lbl">Results</div>
+  <h2 class="gb-section-title">Last Week&rsquo;s Scorecard</h2>
+  <p class="gb-scorenote">Week of June 29 &middot; trailing 4 sessions through Thu July 2 close (market closed Fri July 3 for Independence Day) &middot; <span class="up">3 of 5 green</span> &middot; avg <span class="up">+9.62%</span></p>
+
+  <div class="gb-score">
+    <div class="gb-rank">01</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">CBRS</span><span class="gb-company">Cerebras Systems</span></div>
+        <span class="gb-scorepct up">+26.21%</span>
+      </div>
+      <div class="gb-scoreline">closed $204.86 &middot; sharp recovery off the post-earnings low, AWS partnership and ARK buying held the floor</div>
+    </div>
+  </div>
+
+  <div class="gb-score">
+    <div class="gb-rank">02</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">RKLB</span><span class="gb-company">Rocket Lab Corporation</span></div>
+        <span class="gb-scorepct up">+24.07%</span>
+      </div>
+      <div class="gb-scoreline">closed $100.51 &middot; the Iridium-deal pop mostly held after the initial spike faded</div>
+    </div>
+  </div>
+
+  <div class="gb-score">
+    <div class="gb-rank">03</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">IBM</span><span class="gb-company">International Business Machines</span></div>
+        <span class="gb-scorepct up">+11.68%</span>
+      </div>
+      <div class="gb-scoreline">closed $289.24 &middot; steady grind higher &mdash; the sub-1nm story keeps working</div>
+    </div>
+  </div>
+
+  <div class="gb-score">
+    <div class="gb-rank">04</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span></div>
+        <span class="gb-scorepct dn">&minus;2.74%</span>
+      </div>
+      <div class="gb-scoreline">closed $360.30 &middot; roughly flat, chopped around the Jalape&ntilde;o headline</div>
+    </div>
+  </div>
+
+  <div class="gb-score">
+    <div class="gb-rank">05</div>
+    <div>
+      <div class="gb-scoretop">
+        <div class="gb-pick-head"><span class="gb-ticker">LITE</span><span class="gb-company">Lumentum Holdings</span></div>
+        <span class="gb-scorepct dn">&minus;11.12%</span>
+      </div>
+      <div class="gb-scoreline">closed $728.81 &middot; gave back the AI-optics bid into the broader chip-sector pullback</div>
+    </div>
+  </div>
+
+  <p class="gb-scorefoot">Scored on the trailing move through Thursday&rsquo;s close &mdash; four sessions this week, not five, with markets closed Friday for Independence Day. A winning week net of the pullback in LITE and AVGO.</p>
+
+  <!-- ============ THIS WEEK'S PICKS ============ -->
+  <div class="gb-section-lbl">This Week &middot; Ranked by Conviction</div>
+  <h2 class="gb-section-title">Fifteen Names on My Screen</h2>
+  <p class="gb-section-sub">The list is bigger this week &mdash; fifteen names instead of five, each carrying the full 1-year analyst target range. The first five are open to everyone. The next ten, where I see the bigger upside, are for subscribers. This is where my attention is, not a recommendation to buy or sell.</p>
+
+  <!-- NVDA -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">01</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">NVDA</span><span class="gb-company">NVIDIA Corporation</span></div>
+          <span class="gb-conviction strong">Strong Buy</span>
+        </div>
+        <p class="gb-thesis">The anchor of the list. Foxconn says AI-rack shipments and accelerator demand are staying strong into Q3 &mdash; exactly the read-through the whole sector is watching for. Fifty-five of fifty-seven covering analysts rate it Strong Buy, the least controversial demand story on this screen.</p>
+        <div class="gb-catalyst"><b>Catalyst:</b> Foxconn commentary reaffirming continued AI-rack and accelerator shipment strength, reinforcing that hyperscaler orders aren&rsquo;t slowing into the back half of the year.</div>
+        <div class="tl" id="tl-NVDA" data-symbol="NVDA" data-min="180.00" data-max="743.10">
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$194.83</div></div>
+            <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$313.39</div><div class="tl-curlabel up">+60.85%</div></div>
+          </div>
+          <div class="tl-track">
+            <div class="tl-cur-marker" style="left:2.6%"><span class="tl-cur-marker-live">$194.83</span></div>
+            <div class="tl-dot" style="left:23.7%"><span class="tl-dot-lbl">Avg</span></div>
+          </div>
+          <div class="tl-ends"><span>Min <span class="v dn">$180.00 &middot; &minus;7.61%</span></span><span>Max <span class="v up">$743.10 &middot; +281.41%</span></span></div>
+          <div class="tl-foot">57 analysts &middot; consensus as of Jul 2, 2026</div>
+        </div>
+        <div class="gb-dip">Where I&rsquo;m buying: <b>steady, adding on any broad red day.</b> This is the position-size anchor for the whole list &mdash; if the AI trade doesn&rsquo;t work, nothing else here does either.</div>
+        <div class="gb-watch">Watching: <b>hyperscaler capex commentary into earnings season</b> &middot; Vera Rubin ramp updates</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CBRS -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">02</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">CBRS</span><span class="gb-company">Cerebras Systems</span></div>
+          <span class="gb-conviction strong">Strong Buy</span>
+        </div>
+        <p class="gb-thesis">Carrying this one forward. The post-earnings crash bottomed near $161 and the stock has ripped back into the mid-$200s &mdash; and even after the bounce, the entire analyst range now sits at or above today&rsquo;s price.</p>
+        <div class="gb-catalyst"><b>Catalyst:</b> Freedom Capital initiated at Hold &mdash; the one dissenting voice &mdash; but Morgan Stanley, UBS, and Needham stayed bullish through the move, and the AWS Trainium 3 + CS-3 partnership remains the core of the story.</div>
+        <div class="tl" id="tl-CBRS" data-symbol="CBRS" data-min="209.00" data-max="340.00">
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$204.86</div></div>
+            <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$291.09</div><div class="tl-curlabel up">+42.09%</div></div>
+          </div>
+          <div class="tl-track">
+            <div class="tl-cur-marker" style="left:0%"><span class="tl-cur-marker-live">$204.86</span></div>
+            <div class="tl-dot" style="left:62.7%"><span class="tl-dot-lbl">Avg</span></div>
+          </div>
+          <div class="tl-ends"><span>Min <span class="v up">$209.00 &middot; +2.02%</span></span><span>Max <span class="v up">$340.00 &middot; +65.97%</span></span></div>
+          <div class="tl-foot">11 analysts &middot; consensus as of Jul 2, 2026 &middot; price sits just below the entire target range</div>
+        </div>
+        <div class="gb-dip">Where I&rsquo;m buying: <b>still buying, sized for volatility.</b> This name moves 10%+ in a session &mdash; the setup hasn&rsquo;t changed, just the entry point.</div>
+        <div class="gb-watch">Watching: <b>OpenAI revenue concentration</b> &middot; whether analyst coverage broadens past 11 names</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TSM -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">03</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">TSM</span><span class="gb-company">Taiwan Semiconductor</span></div>
+          <span class="gb-conviction strong">Strong Buy</span>
+        </div>
+        <p class="gb-thesis">The best-timed name on the board. TSMC reports Q2 earnings July 16 &mdash; eleven days out &mdash; and just raised full-year 2026 capex guidance to a record $52&ndash;56B, with more than 70% earmarked for advanced nodes.</p>
+        <div class="gb-catalyst"><b>Catalyst:</b> The record capex raise confirms hyperscaler AI orders aren&rsquo;t slowing, even as sentiment elsewhere in the chip complex got shaky this week. TSMC enters its earnings quiet period July 6 &mdash; no fresh commentary expected before the print.</div>
+        <div class="tl" id="tl-TSM" data-symbol="TSM" data-min="354.00" data-max="625.00">
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$434.16</div></div>
+            <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$478.59</div><div class="tl-curlabel up">+10.23%</div></div>
+          </div>
+          <div class="tl-track">
+            <div class="tl-cur-marker" style="left:29.6%"><span class="tl-cur-marker-live">$434.16</span></div>
+            <div class="tl-dot" style="left:46.0%"><span class="tl-dot-lbl">Avg</span></div>
+          </div>
+          <div class="tl-ends"><span>Min <span class="v dn">$354.00 &middot; &minus;18.46%</span></span><span>Max <span class="v up">$625.00 &middot; +43.96%</span></span></div>
+          <div class="tl-foot">17 analysts &middot; consensus as of Jul 2, 2026</div>
+        </div>
+        <div class="gb-dip">Where I&rsquo;m buying: <b>building into the print, smaller size.</b> This is the &ldquo;own the foundry, not just the customers&rdquo; trade &mdash; lower beta than the names it supplies.</div>
+        <div class="gb-watch">Watching: <b>Q2 earnings July 16</b> &middot; N2 node ramp commentary</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVGO -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">04</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span></div>
+          <span class="gb-conviction strong">Strong Buy</span>
+        </div>
+        <p class="gb-thesis">Still the name that started this whole sector&rsquo;s selloff back in June &mdash; and still working through it. Shares slipped again this week even as the Jalape&ntilde;o custom-chip story with OpenAI keeps developing.</p>
+        <div class="gb-catalyst"><b>Catalyst:</b> No fresh company-specific news this week; the drop tracked the broader chip-sector pullback rather than anything Broadcom-specific. Bernstein&rsquo;s &ldquo;absurdly cheap&rdquo; valuation call from two weeks ago hasn&rsquo;t been challenged by anything since.</div>
+        <div class="tl" id="tl-AVGO" data-symbol="AVGO" data-min="215.88" data-max="671.00">
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$360.30</div></div>
+            <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$525.71</div><div class="tl-curlabel up">+45.91%</div></div>
+          </div>
+          <div class="tl-track">
+            <div class="tl-cur-marker" style="left:31.7%"><span class="tl-cur-marker-live">$360.30</span></div>
+            <div class="tl-dot" style="left:68.1%"><span class="tl-dot-lbl">Avg</span></div>
+          </div>
+          <div class="tl-ends"><span>Min <span class="v dn">$215.88 &middot; &minus;40.09%</span></span><span>Max <span class="v up">$671.00 &middot; +86.24%</span></span></div>
+          <div class="tl-foot">49 analysts &middot; consensus as of Jul 2, 2026</div>
+        </div>
+        <div class="gb-dip">Where I&rsquo;m buying: <b>scaling in on red days, same as last week.</b> The floor sits 40% under today&rsquo;s price &mdash; that&rsquo;s the size of the cushion if the bear case shows up.</div>
+        <div class="gb-watch">Watching: <b>hyperscaler capex commentary</b> &middot; whether it reclaims the pre-guidance range</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MU -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">05</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">MU</span><span class="gb-company">Micron Technology</span></div>
+          <span class="gb-conviction strong">Strong Buy</span>
+        </div>
+        <p class="gb-thesis">Got caught in this week&rsquo;s broad chip-sector selloff, giving back some of its post-earnings run. The fundamentals didn&rsquo;t move &mdash; the Y1.5T Hiroshima fab expansion for AI-grade DRAM and HBM is still on track for 2028 shipments.</p>
+        <div class="gb-catalyst"><b>Catalyst:</b> A broad semiconductor sell-off, not a Micron-specific problem &mdash; the stock traded down alongside the rest of the group. Japan is reportedly weighing a subsidy of up to &yen;500B for the Hiroshima expansion.</div>
+        <div class="tl" id="tl-MU" data-symbol="MU" data-min="470.00" data-max="2200.00">
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$975.56</div></div>
+            <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$1,574.41</div><div class="tl-curlabel up">+61.39%</div></div>
+          </div>
+          <div class="tl-track">
+            <div class="tl-cur-marker" style="left:29.2%"><span class="tl-cur-marker-live">$975.56</span></div>
+            <div class="tl-dot" style="left:63.8%"><span class="tl-dot-lbl">Avg</span></div>
+          </div>
+          <div class="tl-ends"><span>Min <span class="v dn">$470.00 &middot; &minus;51.82%</span></span><span>Max <span class="v up">$2,200.00 &middot; +125.51%</span></span></div>
+          <div class="tl-foot">44 analysts &middot; consensus as of Jul 2, 2026</div>
+        </div>
+        <div class="gb-dip">Where I&rsquo;m buying: <b>buying the pullback.</b> Same trade as two weeks ago &mdash; the memory/HBM supply story hasn&rsquo;t changed, only the price.</div>
+        <div class="gb-watch">Watching: <b>DRAM/HBM pricing trends</b> &middot; capacity timeline updates out of Japan</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TEASER ============ -->
+  <div class="gb-teaser">
+    <div class="gb-teaser-eyebrow">Subscribers Only</div>
+    <h3 class="gb-teaser-title">10 More Names on My Screen</h3>
+    <p class="gb-teaser-body">The five above are where I&rsquo;d start. Based on this week&rsquo;s research, I believe several of the next ten carry even more upside potential &mdash; including the name I&rsquo;m sizing heaviest this week. Full theses, catalysts, and target ranges are reserved for subscribers.</p>
+    <p class="gb-teaser-fine">As always, this reflects my own research and positioning &mdash; not a guarantee, and not personalized investment advice.</p>
+    <button class="gb-teaser-cta" onclick="gsBriefUnlock()">Unlock All 15 Picks &middot; $29.99/mo</button>
+  </div>
+
+  <div class="gb-locked-wrap">
+    <div class="gb-locked-inner">
+
+      <!-- LITE -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">06</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">LITE</span><span class="gb-company">Lumentum Holdings</span></div>
+              <span class="gb-conviction strong">Strong Buy</span>
+            </div>
+            <p class="gb-thesis">Fell harder than almost anything else on this list this week &mdash; down over 11% with no company-specific bad news, pure sector rotation out of optics and photonics names. The floor still sits well above today&rsquo;s price.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> No fresh headline this week; the drop tracked the broader AI-hardware pullback. Nvidia&rsquo;s $2B equity stake and the photonics buildout thesis are unchanged.</div>
+            <div class="tl" id="tl-LITE" data-symbol="LITE" data-min="900.00" data-max="1400.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$728.81</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$1,132.81</div><div class="tl-curlabel up">+55.43%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:0%"><span class="tl-cur-marker-live">$728.81</span></div>
+                <div class="tl-dot" style="left:46.6%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v up">$900.00 &middot; +23.49%</span></span><span>Max <span class="v up">$1,400.00 &middot; +92.11%</span></span></div>
+              <div class="tl-foot">25 analysts &middot; consensus as of Jul 2, 2026 &middot; price below the entire target range</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>this is now one of my favorite dips on the entire list.</b> Bigger discount, same thesis, same floor.</div>
+            <div class="gb-watch">Watching: <b>whether the optics complex (LITE, COHR) bounces together</b> &middot; fiscal Q4 earnings mid-August</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MSTR -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">07</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">MSTR</span><span class="gb-company">Strategy</span></div>
+              <span class="gb-conviction strong">Strong Buy</span>
+            </div>
+            <p class="gb-thesis">My highest-conviction, highest-risk call. The Digital Credit Capital Framework from last week &mdash; preferred and common buybacks, a bigger USD reserve, a dividend hike &mdash; directly targets the NAV-discount problem that&rsquo;s had this stock trading below its own Bitcoin holdings.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> Bitcoin sits well below Strategy&rsquo;s own average cost basis of ~$75,651/BTC. The framework is real, but the stock&rsquo;s near-term fate still rides on Bitcoin&rsquo;s price, not company execution.</div>
+            <div class="tl" id="tl-MSTR" data-symbol="MSTR" data-min="130.00" data-max="570.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$100.77</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$309.87</div><div class="tl-curlabel up">+207.50%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:0%"><span class="tl-cur-marker-live">$100.77</span></div>
+                <div class="tl-dot" style="left:40.9%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v up">$130.00 &middot; +29.01%</span></span><span>Max <span class="v up">$570.00 &middot; +465.67%</span></span></div>
+              <div class="tl-foot">15 analysts &middot; consensus as of Jul 2, 2026 &middot; tracks Bitcoin, not company fundamentals</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>still buying heavy here.</b> Size it knowing the drawdown risk is as real as the upside case.</div>
+            <div class="gb-watch">Watching: <b>Bitcoin reclaiming the ~$73,900 technical level</b> &middot; STRC dividend change effective July 1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AMD -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">08</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">AMD</span><span class="gb-company">Advanced Micro Devices</span></div>
+              <span class="gb-conviction buy">Buy</span>
+            </div>
+            <p class="gb-thesis">A great business trading like it. AMD is up huge this year and the average analyst target has basically caught up to the stock &mdash; near-term upside from here depends on the next catalyst, not the target catching up to the price.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> The Advancing AI 2026 summit lands July 22&ndash;23; Citi believes a major new chip-customer announcement is possible. Wells Fargo just raised its target to $615 on EPYC server-CPU demand &mdash; the Street isn&rsquo;t uniformly cautious, just split.</div>
+            <div class="tl" id="tl-AMD" data-symbol="AMD" data-min="320.00" data-max="700.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$517.82</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg dn">$511.76</div><div class="tl-curlabel dn">&minus;1.17%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:52.1%"><span class="tl-cur-marker-live">$517.82</span></div>
+                <div class="tl-dot" style="left:50.5%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v dn">$320.00 &middot; &minus;38.20%</span></span><span>Max <span class="v up">$700.00 &middot; +35.18%</span></span></div>
+              <div class="tl-foot">51 analysts &middot; consensus as of Jul 2, 2026 &middot; price sits just above the average target</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>small position, adding into the summit.</b> This is a &ldquo;let the news come to you&rdquo; name, not a blind dip-buy &mdash; valuation is stretched enough that a miss would hurt.</div>
+            <div class="gb-watch">Watching: <b>Advancing AI summit, July 22&ndash;23</b> &middot; any new hyperscaler customer disclosure</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GOOG -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">09</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">GOOG</span><span class="gb-company">Alphabet Inc.</span></div>
+              <span class="gb-conviction strong">Strong Buy</span>
+            </div>
+            <p class="gb-thesis">The steadiest mega-cap on this list &mdash; the most analyst coverage of anything here, and the least controversial thesis. Cloud growth and the Gemini build-out keep grinding higher without needing a single headline to justify the position.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> No fresh company-specific news this week &mdash; this is an &ldquo;own the compounder&rdquo; slot, not a news-driven trade.</div>
+            <div class="tl" id="tl-GOOG" data-symbol="GOOG" data-min="340.00" data-max="550.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$356.18</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$435.23</div><div class="tl-curlabel up">+22.19%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:7.7%"><span class="tl-cur-marker-live">$356.18</span></div>
+                <div class="tl-dot" style="left:45.4%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v dn">$340.00 &middot; &minus;4.54%</span></span><span>Max <span class="v up">$550.00 &middot; +54.42%</span></span></div>
+              <div class="tl-foot">60 analysts &middot; consensus as of Jul 2, 2026</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>steady accumulation regardless of the day.</b> Same role IBM played on last week&rsquo;s list.</div>
+            <div class="gb-watch">Watching: <b>Cloud backlog disclosure at next earnings</b> &middot; capex guidance trajectory</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MSFT -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">10</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">MSFT</span><span class="gb-company">Microsoft Corp.</span></div>
+              <span class="gb-conviction strong">Strong Buy</span>
+            </div>
+            <p class="gb-thesis">High-quality, high-conviction, and quiet this week &mdash; which is the point. No single headline moved this one; it just kept compounding while noisier AI names whipsawed.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> Nothing ticker-specific this week &mdash; the case is the one that&rsquo;s worked all year: Azure growth, the OpenAI relationship, and Copilot attach rate.</div>
+            <div class="tl" id="tl-MSFT" data-symbol="MSFT" data-min="400.00" data-max="870.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$390.49</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$559.02</div><div class="tl-curlabel up">+43.16%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:0%"><span class="tl-cur-marker-live">$390.49</span></div>
+                <div class="tl-dot" style="left:33.8%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v up">$400.00 &middot; +2.44%</span></span><span>Max <span class="v up">$870.00 &middot; +122.80%</span></span></div>
+              <div class="tl-foot">54 analysts &middot; consensus as of Jul 2, 2026 &middot; price sits just below the entire target range</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>steady accumulation.</b> Lower-beta ballast for a list with several high-volatility names on it.</div>
+            <div class="gb-watch">Watching: <b>Azure growth rate at next earnings</b> &middot; capex guidance</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AMZN -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">11</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">AMZN</span><span class="gb-company">Amazon.com Inc.</span></div>
+              <span class="gb-conviction strong">Strong Buy</span>
+            </div>
+            <p class="gb-thesis">AWS&rsquo;s Trainium buildout keeps this one in the AI conversation, but the more interesting story this week is the growing local pushback against new data-center construction in several markets.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> Rising community opposition to data-center buildouts is a real headline risk to watch &mdash; a sentiment and permitting-timeline risk right now, not yet a fundamentals one.</div>
+            <div class="tl" id="tl-AMZN" data-symbol="AMZN" data-min="230.00" data-max="370.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$242.67</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$317.30</div><div class="tl-curlabel up">+30.75%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:9.1%"><span class="tl-cur-marker-live">$242.67</span></div>
+                <div class="tl-dot" style="left:62.4%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v dn">$230.00 &middot; &minus;5.22%</span></span><span>Max <span class="v up">$370.00 &middot; +52.47%</span></span></div>
+              <div class="tl-foot">61 analysts &middot; consensus as of Jul 2, 2026</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>standard accumulation, no change in sizing.</b> Watching the data-center backlash story more closely than the stock price this week.</div>
+            <div class="gb-watch">Watching: <b>local data-center permitting fights</b> &middot; AWS Trainium 3 adoption updates</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOW -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">12</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">NOW</span><span class="gb-company">ServiceNow, Inc.</span></div>
+              <span class="gb-conviction strong">Strong Buy</span>
+            </div>
+            <p class="gb-thesis">A quality enterprise-software name with a wide analyst-implied range. This week&rsquo;s news is modest &mdash; a regional automation partnership &mdash; but the setup underneath it is clean.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> BARQ Systems partnership to accelerate enterprise digital transformation and automation &mdash; a real but incremental deal, not a re-rating event on its own.</div>
+            <div class="tl" id="tl-NOW" data-symbol="NOW" data-min="85.00" data-max="236.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$106.32</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$140.38</div><div class="tl-curlabel up">+32.04%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:14.1%"><span class="tl-cur-marker-live">$106.32</span></div>
+                <div class="tl-dot" style="left:36.7%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v dn">$85.00 &middot; &minus;20.05%</span></span><span>Max <span class="v up">$236.00 &middot; +121.97%</span></span></div>
+              <div class="tl-foot">42 analysts &middot; consensus as of Jul 2, 2026</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>standard-size accumulation.</b> Earnings land July 22 &mdash; a real catalyst is closer than the current news flow suggests.</div>
+            <div class="gb-watch">Watching: <b>earnings July 22</b> &middot; Now Assist (AI Platform) adoption commentary</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHOP -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">13</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">SHOP</span><span class="gb-company">Shopify Inc.</span></div>
+              <span class="gb-conviction buy">Buy</span>
+            </div>
+            <p class="gb-thesis">The only name on this list where the analyst floor sits below today&rsquo;s price &mdash; worth sizing accordingly. A board-level governance change this week isn&rsquo;t a growth catalyst, just noise worth knowing about.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> Prashanth Mahendra-Rajah resigned from the board; Joe Natale takes over chairing the Audit Committee. No operational impact disclosed.</div>
+            <div class="tl" id="tl-SHOP" data-symbol="SHOP" data-min="105.07" data-max="191.97">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$119.46</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$145.35</div><div class="tl-curlabel up">+21.67%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:16.6%"><span class="tl-cur-marker-live">$119.46</span></div>
+                <div class="tl-dot" style="left:46.4%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v dn">$105.07 &middot; &minus;12.05%</span></span><span>Max <span class="v up">$191.97 &middot; +60.70%</span></span></div>
+              <div class="tl-foot">44 analysts &middot; consensus as of Jul 2, 2026</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>smaller position given the softer floor.</b> Earnings land July 29 &mdash; that&rsquo;s the real test, not this week&rsquo;s board news.</div>
+            <div class="gb-watch">Watching: <b>earnings July 29</b> &middot; GMV growth trend into holiday-season guidance</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COHR -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">14</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">COHR</span><span class="gb-company">Coherent Corp.</span></div>
+              <span class="gb-conviction buy">Buy</span>
+            </div>
+            <p class="gb-thesis">Last week&rsquo;s steadiest performer &mdash; down just 4.56% in a red week &mdash; gets a fresh vote of confidence this week.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> Raymond James reiterated its Strong Buy rating on Coherent three days ago, keeping the optics/photonics bull case alive even as LITE sold off harder this week.</div>
+            <div class="tl" id="tl-COHR" data-symbol="COHR" data-min="230.00" data-max="465.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$333.36</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$391.00</div><div class="tl-curlabel up">+17.29%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:44.0%"><span class="tl-cur-marker-live">$333.36</span></div>
+                <div class="tl-dot" style="left:68.5%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v dn">$230.00 &middot; &minus;31.01%</span></span><span>Max <span class="v up">$465.00 &middot; +39.49%</span></span></div>
+              <div class="tl-foot">22 analysts &middot; consensus as of Jul 2, 2026</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>standard accumulation,</b> tracking alongside LITE as the optics-complex pair trade.</div>
+            <div class="gb-watch">Watching: <b>whether the optics complex (LITE, COHR) bounces together</b> &middot; next earnings date</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLTR -->
+      <div class="gb-pick">
+        <div class="gb-pick-row">
+          <div class="gb-rank">15</div>
+          <div>
+            <div class="gb-scoretop">
+              <div class="gb-pick-head"><span class="gb-ticker">PLTR</span><span class="gb-company">Palantir Technologies</span></div>
+              <span class="gb-conviction buy">Buy</span>
+            </div>
+            <p class="gb-thesis">The widest range on this list &mdash; and the most binary. A new Nvidia partnership for sovereign AI deployment plus a fresh U.S. Army Foundry contract reignited the bull case this week, but the daily chart is still technically bearish, sitting below all three major moving averages.</p>
+            <div class="gb-catalyst"><b>Catalyst:</b> Palantir and Nvidia launched a joint engine for deploying Nemotron open models in secure government environments; separately, the U.S. Army selected Palantir Foundry for its NGC2 modernization program.</div>
+            <div class="tl" id="tl-PLTR" data-symbol="PLTR" data-min="70.00" data-max="255.00">
+              <div class="tl-head">
+                <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 5</span></div><div class="tl-cur">$129.30</div></div>
+                <div class="tl-avgwrap"><div class="tl-avglabel">Avg Target</div><div class="tl-avg up">$190.30</div><div class="tl-curlabel up">+47.18%</div></div>
+              </div>
+              <div class="tl-track">
+                <div class="tl-cur-marker" style="left:32.1%"><span class="tl-cur-marker-live">$129.30</span></div>
+                <div class="tl-dot" style="left:65.0%"><span class="tl-dot-lbl">Avg</span></div>
+              </div>
+              <div class="tl-ends"><span>Min <span class="v dn">$70.00 &middot; &minus;45.86%</span></span><span>Max <span class="v up">$255.00 &middot; +97.22%</span></span></div>
+              <div class="tl-foot">23 analysts &middot; consensus as of Jul 2, 2026</div>
+            </div>
+            <div class="gb-dip">Where I&rsquo;m buying: <b>smaller position, momentum-driven.</b> A &ldquo;ride the news, respect the chart&rdquo; name, not a set-and-forget accumulation.</div>
+            <div class="gb-watch">Watching: <b>follow-through above the $128&ndash;$133 zone</b> &middot; any new hyperscaler or government contract disclosure</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="gb-lock-overlay">
+      <div class="gb-lock-card">
+        <div class="gb-lock-icon">&#128274;</div>
+        <div class="gb-lock-title">10 More Picks Await</div>
+        <div class="gb-lock-sub">Subscribe to unlock the full list, every target range, and where I&rsquo;m putting capital this week.</div>
+        <button class="gb-lock-cta" onclick="gsBriefUnlock()">Unlock &middot; $29.99/mo</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="gb-close">Fifteen names, four sessions of real recovery behind us, and three real catalysts already on the calendar &mdash; TSMC's print, AMD's summit, and Palantir's momentum. I'll keep showing the full range on every one, so you're never seeing only the upside.</p>
+  <div class="gb-sign">&mdash; Gilded Signals</div>
+  </div>
+
+  <div class="gb-week-panel" id="gb-week-2026-06-29" data-live="false" style="display:none;">
+    <div class="gb-dateline">For the week of <b>June 29, 2026</b> &middot; Updated Sundays</div>
 
   <div class="gb-rule"></div>
 
@@ -1098,6 +1667,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 
   <p class="gb-close">A red week I called in advance doesn&rsquo;t change the plan &mdash; it sets the entries. I&rsquo;ll keep showing you the full range, floor and ceiling, so you&rsquo;re never seeing only the upside.</p>
   <div class="gb-sign">&mdash; Gilded Signals</div>
+  </div>
 
   <div class="gb-disclaimer">
     <strong>Market Research Only &middot; Not Financial Advice.</strong><br/>
@@ -1106,6 +1676,28 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 </div>
 </div>
 <!-- gs-footer-fix -->
+<!-- gs-brief-v2 -->
+
+<script>
+function gsBriefArchiveSwitch(id){
+  document.querySelectorAll(".gb-week-panel").forEach(function(p){p.style.display="none";});
+  var el=document.getElementById("gb-week-"+id);
+  if(el)el.style.display="block";
+}
+(function(){
+  function applyLock(){
+    var unlocked=(typeof window.gsIsUnlocked==="function")&&window.gsIsUnlocked();
+    document.querySelectorAll(".gb-locked-wrap").forEach(function(el){el.classList.toggle("unlocked",!!unlocked);});
+  }
+  document.addEventListener("gs:unlocked",applyLock);
+  document.addEventListener("DOMContentLoaded",applyLock);
+  window.gsApplyBriefLock=applyLock;
+  applyLock();
+})();
+function gsBriefUnlock(){
+  if(typeof window.gsShowAccessModal==="function"){window.gsShowAccessModal();}
+}
+</script>
 
 <!-- ABOUT -->
 <div id="page-about" class="page">

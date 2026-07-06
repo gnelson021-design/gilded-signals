@@ -61,7 +61,7 @@
   }
 
   function loadAll() {
-    var blocks = document.querySelectorAll('.tl[data-symbol]');
+    var blocks = document.querySelectorAll('[data-live="true"] .tl[data-symbol]');
     blocks.forEach(function (el) {
       var sym = el.getAttribute('data-symbol');
       if (!sym) return;
