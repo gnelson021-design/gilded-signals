@@ -331,7 +331,7 @@
       ['Volume', 'Total traded volume today — higher means more active interest.', fmtVol(a.volume), fmtVol(b.volume), '', ''],
       ['Momentum (RSI)', 'Above 70 = hot/overbought, below 30 = cold/oversold.', miniRsi(a.rsi14, rsiCond(a)), miniRsi(b.rsi14, rsiCond(b)), '', ''],
       ['52-week range', 'The low-to-high price over the last year.', fmtRange(a.week52Low, a.week52High), fmtRange(b.week52Low, b.week52High), '', ''],
-      ['Gilded Score', 'Our overall strength read — higher is stronger.', a.gildedScore != null ? a.gildedScore : '—', b.gildedScore != null ? b.gildedScore : '—', sc[0], sc[1]]
+      ['Technical Strength Score', 'Momentum and technical conditions over ~1–20 sessions — not a probability of profit.', a.gildedScore != null ? a.gildedScore : '—', b.gildedScore != null ? b.gildedScore : '—', sc[0], sc[1]]
     ];
     return '<table class="gs-simple-table"><thead><tr><th></th><th>' + symA + '</th><th>' + symB + '</th></tr></thead><tbody>' +
       rows.map(function (r) {
@@ -388,12 +388,12 @@
     var sA = a.gildedScore, sB = b.gildedScore;
     var nA = disp(a.symbol || slots[0]), nB = disp(b.symbol || slots[1]);
     var main, sub;
-    if (sA == null || sB == null) { main = 'Live signals loaded'; sub = 'Both assets pulled from your live API.'; }
-    else if (sA === sB) { main = nA + ' and ' + nB + ' are evenly matched'; sub = 'Both score ' + sA + '/100 on the Gilded Scale.'; }
+    if (sA == null || sB == null) { main = 'Technical score unavailable'; sub = 'Not enough price history for one or both assets right now — raw metrics are shown below.'; }
+    else if (sA === sB) { main = nA + ' and ' + nB + ' are evenly matched'; sub = 'Both score ' + sA + '/100 on the Technical Strength Scale.'; }
     else {
       var win = sA > sB ? nA : nB, lose = sA > sB ? nB : nA, hi = Math.max(sA, sB), lo = Math.min(sA, sB);
-      main = '<b>' + win + '</b> looks stronger right now';
-      sub = hi + '/100 vs ' + lo + '/100 — ' + lose + ' worth monitoring.';
+      main = '<b>' + win + '</b> has stronger technical conditions right now';
+      sub = hi + '/100 vs ' + lo + '/100 over the next 1–20 trading sessions — not a guaranteed buy.';
     }
     var winData = (sA == null || sA >= sB) ? a : b;
     var reasons = (winData.gildedReasons || []).slice(0, 4);
@@ -445,8 +445,8 @@
     var score = d.gildedScore;
     var scoreHtml = score != null
       ? '<div class="gs-score-block"><div class="gs-score-num">' + score +
-        '</div><div style="flex:1"><div class="gs-score-bar-lbl">Gilded Score / 100' +
-        '<span class="gs-score-info">i<span class="gs-tip">Score uses trend, momentum, RSI, MACD, volume, range position, recent performance, and analyst sentiment when available.</span></span>' +
+        '</div><div style="flex:1"><div class="gs-score-bar-lbl">Technical Strength Score / 100' +
+        '<span class="gs-score-info">i<span class="gs-tip">Measures current momentum and technical conditions over approximately 1–20 trading sessions. It is not a probability of profit.</span></span>' +
         '</div>' +
         '<div class="gs-score-track"><div class="gs-score-fill" style="width:' + score + '%"></div></div></div>' +
         sigBadge(sig) + '</div>'
