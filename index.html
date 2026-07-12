@@ -279,7 +279,8 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
     <li><a id="nav-ai" onclick="showNews('ai')">AI Infrastructure</a></li>
     <li><a id="nav-world" onclick="showNews('world')">World News</a></li>
     <li><a id="nav-scanner" onclick="showPage('scanner')">Scanner</a></li>
-    <li><a id="nav-brief" onclick="showPage('brief')">Weekly Brief</a></li>
+    <li><a id="nav-brief" onclick="showPage('brief')">Weekly Briefings</a></li>
+    <li><a id="nav-results" onclick="showPage('results')">Weekly Results</a></li>
     <li><a id="nav-pricing" onclick="showPage('pricing')">Pricing</a></li>
   </ul>
   <div class="nav-right">
@@ -336,9 +337,19 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         .wbh-tag{font-family:monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid rgba(212,175,55,.28);color:var(--gold);background:rgba(212,175,55,.06);white-space:nowrap;}
         .wbh-cta{display:flex;align-items:center;justify-content:center;width:100%;margin-top:18px;padding:11px;background:var(--gold);color:#0c0c0c;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer;transition:opacity .2s;}
         .wbh-cta:hover{opacity:.88;}
+        .hero-right-stack{display:flex;flex-direction:column;gap:16px;}
+        .wrh-card{position:relative;background:linear-gradient(180deg,var(--charcoal-2),var(--charcoal));border:1px solid var(--border);border-radius:8px;padding:20px 24px;box-shadow:0 20px 48px -26px rgba(0,0,0,.8);transition:transform .3s ease,border-color .3s ease;cursor:pointer;}
+        .wrh-card:hover{transform:translateY(-3px);border-color:var(--border-hover);}
+        .wrh-eyebrow{font-family:'DM Sans',sans-serif;font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:8px;}
+        .wrh-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--text-primary);margin:0 0 10px;}
+        .wrh-stats{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:12px;}
+        .wrh-stat-num{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;line-height:1;}
+        .wrh-stat-lbl{font-family:monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:3px;}
+        .wrh-link{font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);}
         </style>
+        <div class="hero-right-stack">
         <div class="wbh-card">
-          <div class="wbh-eyebrow">Weekly Intelligence Brief</div>
+          <div class="wbh-eyebrow">Weekly Briefing</div>
           <h2 class="wbh-title">The Week <em>Ahead</em></h2>
           <div class="wbh-dateline">For the week of <b>July 6, 2026</b></div>
           <div class="wbh-rule"></div>
@@ -349,6 +360,17 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="wbh-pick" onclick="gsPickAndScan('AVGO')"><div class="wbh-rank">04</div><div class="wbh-name"><span class="wbh-ticker">AVGO</span><span class="wbh-company">Broadcom</span></div><span class="wbh-tag">Strong Buy</span></div>
           <div class="wbh-pick" onclick="gsPickAndScan('MU')"><div class="wbh-rank">05</div><div class="wbh-name"><span class="wbh-ticker">MU</span><span class="wbh-company">Micron Technology</span></div><span class="wbh-tag">Strong Buy</span></div>
           <button class="wbh-cta" onclick="showPage('brief')">Read Full Brief</button>
+        </div>
+        <div class="wrh-card" onclick="gsGoToResults('2026-07-10')">
+          <div class="wrh-eyebrow">Weekly Results</div>
+          <h3 class="wrh-title">Week Ending <em>July 10</em></h3>
+          <div class="wrh-stats">
+            <div><div class="wrh-stat-num up">+1.36%</div><div class="wrh-stat-lbl">Avg Return</div></div>
+            <div><div class="wrh-stat-num" style="color:var(--text-primary);">8&ndash;7</div><div class="wrh-stat-lbl">Win&ndash;Loss</div></div>
+            <div><div class="wrh-stat-num up">+1.3%</div><div class="wrh-stat-lbl">S&amp;P 500</div></div>
+          </div>
+          <span class="wrh-link">View Full Scorecard &rarr;</span>
+        </div>
         </div>
       </div>
     </div>
@@ -388,7 +410,8 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="everything-card" onclick="showPage('scanner')"><div class="ec-icon">◎</div><div class="ec-title">Stock Scanner</div><p class="ec-desc">Search any ticker. Get RSI, volume, EMA, momentum, risk level, and signal strength in seconds.</p></div>
         <div class="everything-card" onclick="showNews('world')"><div class="ec-icon">◯</div><div class="ec-title">World News</div><p class="ec-desc">Geopolitical and macro events that move markets — filtered for relevance, not clicks.</p></div>
         <div class="everything-card" onclick="showBullishSignals()"><div class="ec-icon">▲</div><div class="ec-title">Watchlist Signals</div><p class="ec-desc">Bullish, Watch, and Neutral signal labels across tracked assets updated throughout the session.</p></div>
-        <div class="everything-card" onclick="showPage('brief')"><div class="ec-icon">✦</div><div class="ec-title">Weekly Briefs</div><p class="ec-desc">A weekly intelligence brief covering what mattered, what's next, and the market themes worth watching.</p></div>
+        <div class="everything-card" onclick="showPage('brief')"><div class="ec-icon">✦</div><div class="ec-title">Weekly Briefings</div><p class="ec-desc">Published Sundays &mdash; primary picks, watchlist names, catalysts, and the setups worth watching this week.</p></div>
+        <div class="everything-card" onclick="showPage('results')"><div class="ec-icon">◆</div><div class="ec-title">Weekly Results</div><p class="ec-desc">Published Fridays &mdash; the completed week graded in full, with every pick's entry, close, and outcome on record.</p></div>
       </div>
     </div>
   </section>
@@ -862,6 +885,11 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 .gb-teaser-cta{display:inline-block;padding:13px 30px;background:var(--gold);color:#0c0c0c;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:none;border-radius:5px;cursor:pointer;transition:opacity .2s;}
 .gb-teaser-cta:hover{opacity:.88;}
 .gb-locked-wrap{position:relative;}
+.gb-crosslink{margin:28px 0;padding:16px 20px;border-radius:10px;background:rgba(212,175,55,.05);border:1px solid rgba(212,175,55,.22);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+.gb-crosslink-lbl{font-family:monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
+.gb-crosslink a{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;color:var(--gold-light);cursor:pointer;}
+.gb-crosslink a:hover{text-decoration:underline;}
+.gb-pending{font-family:monospace;font-size:.72rem;color:var(--text-muted);font-style:italic;}
 .gb-locked-wrap .gb-locked-inner{filter:blur(7px);pointer-events:none;user-select:none;transition:filter .3s;}
 .gb-locked-wrap.unlocked .gb-locked-inner{filter:none;pointer-events:auto;user-select:auto;}
 .gb-lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;padding:20px;}
@@ -892,67 +920,11 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 
   <p class="gb-lead">Last week's concentration call flipped back to green &mdash; three of five closed higher despite a holiday-shortened week. This week the list expands: fifteen names instead of five, because one screen isn't enough right now. TSMC reports in eleven days after raising capex to a record. AMD's Advancing AI summit is two weeks out. Palantir just landed Nvidia and the U.S. Army in the same week. Here's the full board.</p>
 
-  <!-- ============ SCORECARD ============ -->
-  <div class="gb-section-lbl">Results</div>
-  <h2 class="gb-section-title">Last Week&rsquo;s Scorecard</h2>
-  <p class="gb-scorenote">Week of June 29 &middot; trailing 4 sessions through Thu July 2 close (market closed Fri July 3 for Independence Day) &middot; <span class="up">3 of 5 green</span> &middot; avg <span class="up">+9.62%</span></p>
-
-  <div class="gb-score">
-    <div class="gb-rank">01</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">CBRS</span><span class="gb-company">Cerebras Systems</span></div>
-        <span class="gb-scorepct up">+26.21%</span>
-      </div>
-      <div class="gb-scoreline">closed $204.86 &middot; sharp recovery off the post-earnings low, AWS partnership and ARK buying held the floor</div>
-    </div>
+  <!-- ============ RESULTS CROSSLINK ============ -->
+  <div class="gb-crosslink">
+    <span class="gb-crosslink-lbl">Last Week&rsquo;s Results</span>
+    <a onclick="gsGoToResults('2026-07-02')">Week Ending July 2, 2026 &middot; avg <span class="up">+9.62%</span> &middot; Full Scorecard &rarr;</a>
   </div>
-
-  <div class="gb-score">
-    <div class="gb-rank">02</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">RKLB</span><span class="gb-company">Rocket Lab Corporation</span></div>
-        <span class="gb-scorepct up">+24.07%</span>
-      </div>
-      <div class="gb-scoreline">closed $100.51 &middot; the Iridium-deal pop mostly held after the initial spike faded</div>
-    </div>
-  </div>
-
-  <div class="gb-score">
-    <div class="gb-rank">03</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">IBM</span><span class="gb-company">International Business Machines</span></div>
-        <span class="gb-scorepct up">+11.68%</span>
-      </div>
-      <div class="gb-scoreline">closed $289.24 &middot; steady grind higher &mdash; the sub-1nm story keeps working</div>
-    </div>
-  </div>
-
-  <div class="gb-score">
-    <div class="gb-rank">04</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span></div>
-        <span class="gb-scorepct dn">&minus;2.74%</span>
-      </div>
-      <div class="gb-scoreline">closed $360.30 &middot; roughly flat, chopped around the Jalape&ntilde;o headline</div>
-    </div>
-  </div>
-
-  <div class="gb-score">
-    <div class="gb-rank">05</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">LITE</span><span class="gb-company">Lumentum Holdings</span></div>
-        <span class="gb-scorepct dn">&minus;11.12%</span>
-      </div>
-      <div class="gb-scoreline">closed $728.81 &middot; gave back the AI-optics bid into the broader chip-sector pullback</div>
-    </div>
-  </div>
-
-  <p class="gb-scorefoot">Scored on the trailing move through Thursday&rsquo;s close &mdash; four sessions this week, not five, with markets closed Friday for Independence Day. <b>A winning week net of the pullback in LITE and AVGO.</b></p>
 
   <!-- ============ THIS WEEK'S PICKS ============ -->
   <div class="gb-section-lbl">This Week &middot; Ranked by Conviction</div>
@@ -1431,68 +1403,11 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
     <p>The AI-infrastructure complex had its sharpest week of selling in months, triggered by cautious guidance out of Broadcom and unwound positioning across the board. Since then the picture has shifted: Micron's blowout earnings reignited the AI-demand story, Broadcom unveiled a new custom chip with OpenAI, IBM posted a real chip breakthrough, and Rocket Lab dropped the biggest deal of the year. This week's list leans into that &mdash; where I see real upside, and where I'm buying weakness rather than waiting for it to pass.</p>
   </div>
 
-  <!-- ============ SCORECARD ============ -->
-  <div class="gb-section-lbl">Results</div>
-  <h2 class="gb-section-title">Last Week&rsquo;s Scorecard</h2>
-  <p class="gb-scorenote">Week of June 22 &middot; trailing 5 sessions through Fri June 26 close &middot; <span class="dn">0 of 5 green</span> &middot; avg <span class="dn">&minus;10.63%</span> &middot; the concentration call held</p>
-
-  <div class="gb-score">
-    <div class="gb-rank">01</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">MU</span><span class="gb-company">Micron Technology</span></div>
-        <span class="gb-scorepct dn">&minus;5.73%</span>
-      </div>
-      <div class="gb-scoreline">closed $1,132.33 &middot; ran to ~$1,240 post-earnings, gave it back into the sector selloff</div>
-    </div>
+  <!-- ============ RESULTS CROSSLINK ============ -->
+  <div class="gb-crosslink">
+    <span class="gb-crosslink-lbl">Last Week&rsquo;s Results</span>
+    <a onclick="gsGoToResults('2026-06-26')">Week Ending June 26, 2026 &middot; avg <span class="dn">&minus;10.63%</span> &middot; Full Scorecard &rarr;</a>
   </div>
-
-  <div class="gb-score">
-    <div class="gb-rank">02</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">NBIS</span><span class="gb-company">Nebius Group</span></div>
-        <span class="gb-scorepct dn">&minus;17.30%</span>
-      </div>
-      <div class="gb-scoreline">closed $240.30 &middot; the index-inclusion pop fully round-tripped</div>
-      <div class="gb-scorecontext">Tagged Speculative going in &mdash; highest potential, highest risk, and the risk won this week.</div>
-    </div>
-  </div>
-
-  <div class="gb-score">
-    <div class="gb-rank">03</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">MRVL</span><span class="gb-company">Marvell Technology</span></div>
-        <span class="gb-scorepct dn">&minus;15.22%</span>
-      </div>
-      <div class="gb-scoreline">closed $266.77 &middot; lost the $300 round number it was watching</div>
-    </div>
-  </div>
-
-  <div class="gb-score">
-    <div class="gb-rank">04</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">VRT</span><span class="gb-company">Vertiv Holdings</span></div>
-        <span class="gb-scorepct dn">&minus;10.34%</span>
-      </div>
-      <div class="gb-scoreline">closed $303.95 &middot; the &ldquo;anchor&rdquo; name held up best, relatively</div>
-    </div>
-  </div>
-
-  <div class="gb-score">
-    <div class="gb-rank">05</div>
-    <div>
-      <div class="gb-scoretop">
-        <div class="gb-pick-head"><span class="gb-ticker">COHR</span><span class="gb-company">Coherent Corp.</span></div>
-        <span class="gb-scorepct dn">&minus;4.56%</span>
-      </div>
-      <div class="gb-scoreline">closed $380.56 &middot; the &ldquo;accumulate on weakness&rdquo; name held up best of all five</div>
-    </div>
-  </div>
-
-  <p class="gb-scorefoot">Scored on the trailing 5-session move through Friday&rsquo;s close. <b>A red week, called in advance &mdash; the discipline is owning it, not hiding it.</b></p>
 
   <!-- ============ THIS WEEK'S PICKS ============ -->
   <div class="gb-section-lbl">This Week &middot; Ranked by Upside</div>
@@ -1700,6 +1615,138 @@ function gsBriefUnlock(){
 }
 </script>
 
+<!-- WEEKLY RESULTS -->
+<div id="page-results" class="page">
+<style>
+.gr-stats{display:flex;gap:32px;flex-wrap:wrap;margin:18px 0 28px;padding:20px 22px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.16);}
+.gb-conviction.win{color:#3ECA7A;border:1px solid rgba(62,202,122,.4);background:rgba(62,202,122,.08);}
+.gb-conviction.loss{color:#E85555;border:1px solid rgba(232,85,85,.4);background:rgba(232,85,85,.08);}
+</style>
+<div class="gb-wrap">
+  <div class="gb-eyebrow">Weekly Results</div>
+  <h1 class="gb-title">The Week <em>Graded</em></h1>
+  <div class="gb-archive-bar">
+    <span class="gb-archive-lbl">Browse past weeks:</span>
+    <select class="gb-archive-select" onchange="gsResultsArchiveSwitch(this.value)">
+      <option value="2026-07-10">This Week &mdash; Ending July 10, 2026</option>
+      <option value="2026-07-02">Week Ending July 2, 2026</option>
+      <option value="2026-06-26">Week Ending June 26, 2026</option>
+    </select>
+  </div>
+
+  <div class="gb-rule"></div>
+
+  <div class="gr-week-panel" id="gr-week-2026-07-10">
+    <div class="gb-dateline">Week Ending <b>July 10, 2026</b></div>
+    <div class="gb-rule"></div>
+    <p class="gb-lead">Fifteen names on the board, eight closed green. The mega-cap AI/semi leaders did the heavy lifting; the chip-adjacent names gave back ground into a volatile week for the sector.</p>
+
+    <div class="gr-stats">
+      <div><div class="wrh-stat-num up">+1.36%</div><div class="wrh-stat-lbl">Average Return</div></div>
+      <div><div class="wrh-stat-num" style="color:#3ECA7A;">8</div><div class="wrh-stat-lbl">Winners</div></div>
+      <div><div class="wrh-stat-num" style="color:#E85555;">7</div><div class="wrh-stat-lbl">Losers</div></div>
+      <div><div class="wrh-stat-num up">+1.3%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
+    </div>
+
+    <div class="gb-section-lbl">Full Scorecard</div>
+    <h2 class="gb-section-title">15 Picks, Graded</h2>
+
+    <div class="gb-score"><div class="gb-rank">01</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span></div><span class="gb-scorepct up">+7.60%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">02</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">NVDA</span><span class="gb-company">NVIDIA Corporation</span></div><span class="gb-scorepct up">+7.01%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">03</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">CBRS</span><span class="gb-company">Cerebras Systems</span></div><span class="gb-scorepct up">+4.74%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">04</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">NOW</span><span class="gb-company">ServiceNow</span></div><span class="gb-scorepct up">+3.47%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">05</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">SHOP</span><span class="gb-company">Shopify</span></div><span class="gb-scorepct up">+3.45%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">06</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">LITE</span><span class="gb-company">Lumentum Holdings</span></div><span class="gb-scorepct up">+3.14%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">07</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AMD</span><span class="gb-company">Advanced Micro Devices</span></div><span class="gb-scorepct up">+3.01%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">08</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AMZN</span><span class="gb-company">Amazon.com</span></div><span class="gb-scorepct up">+0.56%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">09</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">PLTR</span><span class="gb-company">Palantir Technologies</span></div><span class="gb-scorepct dn">&minus;0.35%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">10</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MSFT</span><span class="gb-company">Microsoft</span></div><span class="gb-scorepct dn">&minus;0.66%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">11</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MSTR</span><span class="gb-company">Strategy (MicroStrategy)</span></div><span class="gb-scorepct dn">&minus;1.41%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">12</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">GOOGL</span><span class="gb-company">Alphabet</span></div><span class="gb-scorepct dn">&minus;1.69%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">13</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">COHR</span><span class="gb-company">Coherent Corp.</span></div><span class="gb-scorepct dn">&minus;2.61%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">14</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MU</span><span class="gb-company">Micron Technology</span></div><span class="gb-scorepct dn">&minus;2.75%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">15</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">TSM</span><span class="gb-company">Taiwan Semiconductor</span></div><span class="gb-scorepct dn">&minus;3.04%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+
+    <p class="gb-scorefoot">8 of 15 winners, avg <b>+1.36%</b> vs. the S&amp;P 500&rsquo;s +1.3% &mdash; essentially in-line with the index. <b>The mega-caps and infrastructure leaders (AVGO, NVDA, CBRS) carried the week; chip-adjacent names (TSM, MU, COHR) gave back ground into a volatile week for the semiconductor complex.</b></p>
+
+    <div class="gb-crosslink">
+      <span class="gb-crosslink-lbl">Next Up</span>
+      <span class="gb-pending">Upcoming Weekly Briefing posts Sunday around 7:00 PM ET &middot; new picks for the week ahead.</span>
+    </div>
+  </div>
+
+  <div class="gr-week-panel" id="gr-week-2026-07-02" style="display:none;">
+    <div class="gb-dateline">Week Ending <b>July 2, 2026</b> &middot; trailing 4 sessions (market closed Fri July 3 for Independence Day)</div>
+    <div class="gb-rule"></div>
+    <div class="gr-stats">
+      <div><div class="wrh-stat-num up">+9.62%</div><div class="wrh-stat-lbl">Average Return</div></div>
+      <div><div class="wrh-stat-num" style="color:#3ECA7A;">3</div><div class="wrh-stat-lbl">Winners</div></div>
+      <div><div class="wrh-stat-num" style="color:#E85555;">2</div><div class="wrh-stat-lbl">Losers</div></div>
+      <div><div class="wrh-stat-num up">+1.8%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
+    </div>
+    <div class="gb-section-lbl">Full Scorecard</div>
+    <h2 class="gb-section-title">5 Picks, Graded</h2>
+    <div class="gb-score"><div class="gb-rank">01</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">CBRS</span><span class="gb-company">Cerebras Systems</span></div><span class="gb-scorepct up">+26.21%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; closed $204.86 &middot; sharp recovery off the post-earnings low, AWS partnership and ARK buying held the floor</div></div></div>
+    <div class="gb-score"><div class="gb-rank">02</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">RKLB</span><span class="gb-company">Rocket Lab Corporation</span></div><span class="gb-scorepct up">+24.07%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; closed $100.51 &middot; the Iridium-deal pop mostly held after the initial spike faded</div></div></div>
+    <div class="gb-score"><div class="gb-rank">03</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">IBM</span><span class="gb-company">International Business Machines</span></div><span class="gb-scorepct up">+11.68%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; closed $289.24 &middot; steady grind higher &mdash; the sub-1nm story keeps working</div></div></div>
+    <div class="gb-score"><div class="gb-rank">04</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span></div><span class="gb-scorepct dn">&minus;2.74%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; closed $360.30 &middot; roughly flat, chopped around the Jalape&ntilde;o headline</div></div></div>
+    <div class="gb-score"><div class="gb-rank">05</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">LITE</span><span class="gb-company">Lumentum Holdings</span></div><span class="gb-scorepct dn">&minus;11.12%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; closed $728.81 &middot; gave back the AI-optics bid into the broader chip-sector pullback</div></div></div>
+    <p class="gb-scorefoot">Scored on the trailing move through Thursday&rsquo;s close &mdash; four sessions this week, not five, with markets closed Friday for Independence Day. <b>A winning week net of the pullback in LITE and AVGO.</b></p>
+    <div class="gb-crosslink">
+      <span class="gb-crosslink-lbl">This Week&rsquo;s Picks</span>
+      <a onclick="gsGoToBriefing('2026-07-06')">Week of July 6, 2026 &middot; 15 Names on My Screen &rarr;</a>
+    </div>
+  </div>
+
+  <div class="gr-week-panel" id="gr-week-2026-06-26" style="display:none;">
+    <div class="gb-dateline">Week Ending <b>June 26, 2026</b> &middot; trailing 5 sessions</div>
+    <div class="gb-rule"></div>
+    <div class="gr-stats">
+      <div><div class="wrh-stat-num dn">&minus;10.63%</div><div class="wrh-stat-lbl">Average Return</div></div>
+      <div><div class="wrh-stat-num" style="color:#3ECA7A;">0</div><div class="wrh-stat-lbl">Winners</div></div>
+      <div><div class="wrh-stat-num" style="color:#E85555;">5</div><div class="wrh-stat-lbl">Losers</div></div>
+      <div><div class="wrh-stat-num dn">&minus;2.0%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
+    </div>
+    <div class="gb-section-lbl">Full Scorecard</div>
+    <h2 class="gb-section-title">5 Picks, Graded</h2>
+    <div class="gb-score"><div class="gb-rank">01</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MU</span><span class="gb-company">Micron Technology</span></div><span class="gb-scorepct dn">&minus;5.73%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; closed $1,132.33 &middot; ran to ~$1,240 post-earnings, gave it back into the sector selloff</div></div></div>
+    <div class="gb-score"><div class="gb-rank">02</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">NBIS</span><span class="gb-company">Nebius Group</span></div><span class="gb-scorepct dn">&minus;17.30%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; closed $240.30 &middot; the index-inclusion pop fully round-tripped. Tagged Speculative going in &mdash; the risk won this week.</div></div></div>
+    <div class="gb-score"><div class="gb-rank">03</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MRVL</span><span class="gb-company">Marvell Technology</span></div><span class="gb-scorepct dn">&minus;15.22%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; closed $266.77 &middot; lost the $300 round number it was watching</div></div></div>
+    <div class="gb-score"><div class="gb-rank">04</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">VRT</span><span class="gb-company">Vertiv Holdings</span></div><span class="gb-scorepct dn">&minus;10.34%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; closed $303.95 &middot; the &ldquo;anchor&rdquo; name held up best, relatively</div></div></div>
+    <div class="gb-score"><div class="gb-rank">05</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">COHR</span><span class="gb-company">Coherent Corp.</span></div><span class="gb-scorepct dn">&minus;4.56%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; closed $380.56 &middot; the &ldquo;accumulate on weakness&rdquo; name held up best of all five</div></div></div>
+    <p class="gb-scorefoot">Scored on the trailing 5-session move through Friday&rsquo;s close. <b>A red week, called in advance &mdash; the discipline is owning it, not hiding it.</b></p>
+    <div class="gb-crosslink">
+      <span class="gb-crosslink-lbl">This Week&rsquo;s Picks</span>
+      <a onclick="gsGoToBriefing('2026-06-29')">Week of June 29, 2026 &middot; Five Names on My Screen &rarr;</a>
+    </div>
+  </div>
+
+  <div class="gb-disclaimer">
+    <strong>Performance disclosure:</strong> Results are graded close-to-close against the week's opening levels using Gilded Signals' own market data. Past performance does not guarantee future results. Nothing here is a recommendation to buy or sell any security.
+  </div>
+</div>
+</div>
+
+<script>
+function gsResultsArchiveSwitch(id){
+  document.querySelectorAll(".gr-week-panel").forEach(function(p){p.style.display="none";});
+  var el=document.getElementById("gr-week-"+id);
+  if(el)el.style.display="block";
+}
+function gsGoToResults(id){
+  showPage('results');
+  var sel=document.querySelector('#page-results .gb-archive-select');
+  if(sel)sel.value=id;
+  gsResultsArchiveSwitch(id);
+}
+function gsGoToBriefing(id){
+  showPage('brief');
+  var sel=document.querySelector('#page-brief .gb-archive-select');
+  if(sel)sel.value=id;
+  gsBriefArchiveSwitch(id);
+}
+</script>
+
 <!-- ABOUT -->
 <div id="page-about" class="page">
   <div class="section-inner news-page" style="max-width:820px;">
@@ -1718,7 +1765,7 @@ function gsBriefUnlock(){
 <footer>
   <div class="footer-inner">
     <div class="footer-brand"><div class="brand">Gilded Signals</div><p>Market intelligence for disciplined investors. Real signals, no noise.</p></div>
-    <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showNews('market')">Market News</a></li><li><a onclick="showNews('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('brief')">Weekly Brief</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
+    <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showNews('market')">Market News</a></li><li><a onclick="showNews('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('brief')">Weekly Briefings</a></li><li><a onclick="showPage('results')">Weekly Results</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
     <div class="footer-col"><h4>Company</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('home');setTimeout(function(){var el=document.getElementById('home-newsletter');if(el){el.scrollIntoView({behavior:'smooth'});}},60)">Newsletter</a></li><li><a href="mailto:gildedsignals.support@gmail.com">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Legal</h4><ul><li><a href="legal.html#terms">Terms of Service</a></li><li><a href="legal.html#privacy">Privacy Policy</a></li><li><a href="legal.html#disclaimer">Disclaimer</a></li></ul></div>
   </div>
