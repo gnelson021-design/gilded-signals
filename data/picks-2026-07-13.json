@@ -1,0 +1,231 @@
+{
+  "weekOf": "2026-07-13",
+  "briefPublishedAt": "2026-07-13T00:00:00-04:00",
+  "resultsGradeDate": "2026-07-17",
+  "methodologyVersion": "v2-staged-entry",
+  "benchmarkIndex": "SPY",
+  "picks": [
+    {
+      "rank": 1,
+      "ticker": "AVGO",
+      "company": "Broadcom",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 395.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 370.00, "weight": 0.60 },
+        { "price": 340.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 2,
+      "ticker": "CRDO",
+      "company": "Credo Technology",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 238.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 252.00, "weight": 0.60 },
+        { "price": 225.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already trading in the $248-252 zone at publish time."
+    },
+    {
+      "rank": 3,
+      "ticker": "MRVL",
+      "company": "Marvell Technology",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 235.81,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 220.00, "weight": 0.60 },
+        { "price": 205.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 4,
+      "ticker": "LITE",
+      "company": "Lumentum Holdings",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 773.04,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 760.00, "weight": 0.60 },
+        { "price": 700.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 5,
+      "ticker": "CBRS",
+      "company": "Cerebras Systems",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 205.87,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 195.00, "weight": 0.55 },
+        { "price": 170.00, "weight": 0.45 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 6,
+      "ticker": "VRT",
+      "company": "Vertiv Holdings",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 311.47,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 295.00, "weight": 0.60 },
+        { "price": 260.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 7,
+      "ticker": "NVDA",
+      "company": "NVIDIA Corporation",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 194.83,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 195.00, "weight": 0.65 },
+        { "price": 180.00, "weight": 0.35 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 8,
+      "ticker": "AMZN",
+      "company": "Amazon.com",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 244.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 230.00, "weight": 0.60 },
+        { "price": 215.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 9,
+      "ticker": "MSFT",
+      "company": "Microsoft",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 385.10,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 375.00, "weight": 0.65 },
+        { "price": 355.00, "weight": 0.35 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 10,
+      "ticker": "META",
+      "company": "Meta Platforms",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 630.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 600.00, "weight": 0.60 },
+        { "price": 560.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 11,
+      "ticker": "MU",
+      "company": "Micron Technology",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 928.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 900.00, "weight": 0.60 },
+        { "price": 860.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 12,
+      "ticker": "COHR",
+      "company": "Coherent Corp.",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 308.78,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 290.00, "weight": 0.60 },
+        { "price": 265.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 13,
+      "ticker": "SATS",
+      "company": "EchoStar Corporation",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 92.82,
+      "entryType": "no_entry",
+      "zones": [],
+      "status": "no_entry_this_week",
+      "note": "Technical data was too inconsistent to publish a reliable zone following the SATS\u2192ECHO ticker change on June 24, 2026."
+    },
+    {
+      "rank": 14,
+      "ticker": "NFLX",
+      "company": "Netflix",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 73.40,
+      "entryType": "no_entry",
+      "zones": [],
+      "status": "no_entry_this_week",
+      "note": "Earnings Thursday July 16, after close. Not adding into the print."
+    },
+    {
+      "rank": 15,
+      "ticker": "MSTR",
+      "company": "Strategy (MicroStrategy)",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 90.54,
+      "entryType": "breakout",
+      "zones": [
+        { "price": 100.00, "condition": "confirmed_daily_close_above" }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Founder holds a separate personal high-conviction position sized independently of this trigger; tracked only in the Founder's Personal Results card, never in this scorecard."
+    }
+  ]
+}
