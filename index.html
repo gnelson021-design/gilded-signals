@@ -2144,6 +2144,15 @@ function gsBriefUnlock(){
 .gr-stats{display:flex;gap:32px;flex-wrap:wrap;margin:18px 0 28px;padding:20px 22px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.16);}
 .gb-conviction.win{color:#3ECA7A;border:1px solid rgba(62,202,122,.4);background:rgba(62,202,122,.08);}
 .gb-conviction.loss{color:#E85555;border:1px solid rgba(232,85,85,.4);background:rgba(232,85,85,.08);}
+.gr-live-pill{font-family:monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:999px;color:#e8ca7a;background:rgba(212,175,55,.14);border:1px solid rgba(212,175,55,.3);}
+.gr-live-pill.graded{color:#3ECA7A;background:rgba(62,202,122,.1);border-color:rgba(62,202,122,.35);}
+.gr-live-loading{color:var(--text-muted);font-family:monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 0;}
+.gr-live-meta{margin:14px 0;font-size:.72rem;color:var(--text-muted);}
+.gr-live-badge.waiting{color:#9a9690;}
+.gr-live-badge.triggered{color:#e8ca7a;}
+.gr-live-badge.no-entry{color:#7a7770;}
+.gr-live-badge.breakout-pending{color:#7ba7c9;}
+.gr-live-badge.breakout-triggered{color:#5eb3e8;}
 </style>
 <div class="gb-wrap">
   <div class="gb-eyebrow">Weekly Results</div>
@@ -2151,6 +2160,7 @@ function gsBriefUnlock(){
   <div class="gb-archive-bar">
     <span class="gb-archive-lbl">Browse past weeks:</span>
     <select class="gb-archive-select" onchange="gsResultsArchiveSwitch(this.value)">
+      <option value="2026-07-13">This Week (Live) &mdash; July 13&ndash;17, 2026</option>
       <option value="2026-07-10">Most Recent &mdash; July 6&ndash;10, 2026</option>
       <option value="2026-07-02">June 29&ndash;July 2, 2026</option>
       <option value="2026-06-26">June 22&ndash;26, 2026</option>
@@ -2159,7 +2169,32 @@ function gsBriefUnlock(){
 
   <div class="gb-rule"></div>
 
-  <div class="gr-week-panel" id="gr-week-2026-07-10">
+    <div class="gr-week-panel" id="gr-week-2026-07-13" data-live="true" data-week="2026-07-13">
+    <div class="gb-dateline">Week of <b>July 13&ndash;17, 2026</b> &middot; <span class="gr-live-pill" id="gr-live-pill">Live</span></div>
+    <div class="gb-rule"></div>
+    <p class="gb-lead">This week is still in progress. Every number below comes from the same engine that grades the final scorecard Friday after close &mdash; nothing here is final until the week closes.</p>
+
+    <div class="gr-stats" id="gr-live-stats">
+      <div class="gr-live-loading">Loading live scorecard&hellip;</div>
+    </div>
+
+    <div class="gb-section-lbl">Live Scorecard</div>
+    <h2 class="gb-section-title">15 Picks, Tracked Live</h2>
+
+    <div id="gr-live-scorelist">
+      <div class="gr-live-loading">Loading&hellip;</div>
+    </div>
+
+    <p class="gb-scorefoot" id="gr-live-scorefoot"></p>
+    <div class="gr-live-meta" id="gr-live-meta"></div>
+
+    <div class="gb-crosslink">
+      <span class="gb-crosslink-lbl">This Week&rsquo;s Picks</span>
+      <a onclick="gsGoToBriefing('2026-07-13')">Week of July 13&ndash;17, 2026 &middot; 15 Names, 3 Tiers &rarr;</a>
+    </div>
+  </div>
+
+<div class="gr-week-panel" id="gr-week-2026-07-10" style="display:none;">
     <div class="gb-dateline">Week of <b>July 6&ndash;10, 2026</b></div>
     <div class="gb-rule"></div>
     <p class="gb-lead">Fifteen names on the board, eight closed green. The mega-cap AI/semi leaders did the heavy lifting; the chip-adjacent names gave back ground into a volatile week for the sector.</p>

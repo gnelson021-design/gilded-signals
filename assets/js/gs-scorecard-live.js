@@ -1,42 +1,52 @@
 /* =====================================================================
-   GILDED SIGNALS — LIVE SCORECARD STATUS STRIP
+   GILDED SIGNALS — LIVE SCORECARD ENGINE FRONTEND
    ------------------------------------------------------------------------
-   Renders each of this week's picks' live status by calling the
-   scorecard engine (netlify/functions/scorecard.js) directly. Purely
-   additive: this never touches the pick cards, their copy, or any
-   existing element on the page.
+   Two renderers, both driven by the same scorecard.js API call:
 
-   Status labels (v2 — renamed 2026-07-13 for precision):
-     Triggered           — a published dip-entry zone has been reached.
-                            Describes an EVENT (entry happened), not a
-                            current recommendation to buy.
-     Waiting for Entry    — no published zone reached yet.
-     No Setup This Week   — no entry was planned this week at all.
-     Breakout Pending /
-     Breakout Triggered   — MSTR-only. Kept visually and verbally
-                            distinct from the dip-zone language above,
-                            since it's a different mechanic (confirmed
-                            close above a level, not a pullback zone).
+   1. Briefings compact grid (#gs-live-status-grid) — one badge per pick,
+      unchanged from the original build.
+   2. Results full scorecard panel (#gr-live-stats / #gr-live-scorelist)
+      — NEW. Renders the same live data as an actual scorecard: stat
+      box, per-pick rows, methodology + timestamp, all from one fetch.
 
-   The week it asks for comes from data-week on the wrapping element,
-   not hardcoded here, so this file doesn't need to change week to week.
+   Both a page's containers can exist in the DOM at once (single-page
+   app, all .page sections are always present, just hidden), so this
+   file fetches each requested week only ONCE per page load and shares
+   the result between both renderers if both are present.
 
-   Honesty rule, same as gs-brief-live.js: if the fetch fails or the API
-   returns an error, the strip says so plainly. It never fabricates a
-   status or leaves stale data displayed as if it were current.
+   The Results panel is adaptive: while a week is in progress
+   (completedTriggered === 0) it shows Triggered / Waiting for Entry /
+   No Entry This Week / S&P 500 Week-to-Date. The moment Friday's
+   grading produces at least one closed pick, it automatically switches
+   to the standard Average Return / Winners / Losers / S&P 500
+   Benchmark format — no manual rebuild needed when that happens.
+
+   Honesty rule, unchanged: if a fetch fails or the API returns an
+   error, every affected element says so plainly. Nothing here ever
+   fabricates a status, a price, or a return.
    ===================================================================== */
 (function () {
   'use strict';
   var API = '/api/scorecard?week=';
+  var pending = {}; // week -> Promise, so both renderers share one fetch
 
   function fmtPct(v) {
     if (v == null || isNaN(v)) return '\u2014';
     return (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2) + '%';
   }
 
+  function fetchScorecard(week) {
+    if (!pending[week]) {
+      pending[week] = fetch(API + encodeURIComponent(week)).then(function (r) {
+        return r.json();
+      });
+    }
+    return pending[week];
+  }
+
   // Label + badge class depend on BOTH status and entryType, since MSTR's
   // breakout mechanic gets its own language rather than being lumped in
-  // with the dip-zone picks.
+  // with the dip-zone picks. Shared by both renderers.
   function statusInfo(p) {
     var isBreakout = p.entryType === 'breakout';
 
@@ -65,7 +75,10 @@
     }
   }
 
-  function renderItem(p) {
+  // ---------------------------------------------------------------------
+  // Briefings compact grid
+  // ---------------------------------------------------------------------
+  function renderGridItem(p) {
     var info = statusInfo(p);
     var detail = '';
     if (
@@ -73,8 +86,7 @@
       p.returnPct != null
     ) {
       var cls = p.returnPct >= 0 ? 'up' : 'dn';
-      detail =
-        '<span class="gs-live-status-ret ' + cls + '">' + fmtPct(p.returnPct) + '</span>';
+      detail = '<span class="gs-live-status-ret ' + cls + '">' + fmtPct(p.returnPct) + '</span>';
     }
     return (
       '<div class="gs-live-status-item">' +
@@ -85,29 +97,152 @@
     );
   }
 
-  function load() {
+  function loadBriefGrid() {
     var grid = document.getElementById('gs-live-status-grid');
     if (!grid) return;
     var wrap = grid.closest('[data-live="true"]');
     var week = wrap ? wrap.getAttribute('data-week') : null;
     if (!week) return;
 
-    fetch(API + encodeURIComponent(week))
-      .then(function (r) { return r.json(); })
+    fetchScorecard(week)
       .then(function (d) {
         if (!d || d.error || !Array.isArray(d.picks) || !d.picks.length) {
-          grid.innerHTML =
-            '<div class="gs-live-status-loading">Live status unavailable right now.</div>';
+          grid.innerHTML = '<div class="gs-live-status-loading">Live status unavailable right now.</div>';
           return;
         }
-        grid.innerHTML = d.picks.map(renderItem).join('');
+        grid.innerHTML = d.picks.map(renderGridItem).join('');
       })
       .catch(function () {
-        grid.innerHTML =
-          '<div class="gs-live-status-loading">Live status unavailable right now.</div>';
+        grid.innerHTML = '<div class="gs-live-status-loading">Live status unavailable right now.</div>';
       });
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', load);
-  else load();
+  // ---------------------------------------------------------------------
+  // Results full scorecard panel
+  // ---------------------------------------------------------------------
+  function renderScoreRow(p) {
+    var info = statusInfo(p);
+    var rankStr = (p.rank < 10 ? '0' : '') + p.rank;
+
+    var pctHtml = '<span class="gb-scorepct" style="color:var(--text-muted);">&mdash;</span>';
+    if (
+      (p.status === 'active' || p.status === 'closed_win' || p.status === 'closed_loss') &&
+      p.returnPct != null
+    ) {
+      var cls = p.returnPct >= 0 ? 'up' : 'dn';
+      pctHtml = '<span class="gb-scorepct ' + cls + '">' + fmtPct(p.returnPct) + '</span>';
+    }
+
+    var label = p.entryType === 'breakout' ? 'Official entry trigger' : 'Status';
+    var line = label + ': <b class="gr-live-badge ' + info.cls + '">' + info.label + '</b>';
+    if (p.entryDate) line += ' &middot; entered ' + p.entryDate;
+    if (p.note) line += ' &middot; ' + p.note;
+
+    return (
+      '<div class="gb-score">' +
+      '<div class="gb-rank">' + rankStr + '</div>' +
+      '<div>' +
+      '<div class="gb-scoretop">' +
+      '<div class="gb-pick-head"><span class="gb-ticker">' + p.ticker + '</span>' +
+      '<span class="gb-company">' + p.company + '</span></div>' +
+      pctHtml +
+      '</div>' +
+      '<div class="gb-scoreline">' + line + '</div>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function statBox(value, label, colorStyle) {
+    return (
+      '<div><div class="wrh-stat-num"' + (colorStyle ? ' style="' + colorStyle + '"' : '') + '>' +
+      value + '</div><div class="wrh-stat-lbl">' + label + '</div></div>'
+    );
+  }
+
+  function loadResultsPanel() {
+    var statsEl = document.getElementById('gr-live-stats');
+    if (!statsEl) return;
+    var wrap = statsEl.closest('[data-live="true"]');
+    var week = wrap ? wrap.getAttribute('data-week') : null;
+    if (!week) return;
+
+    var listEl = document.getElementById('gr-live-scorelist');
+    var footEl = document.getElementById('gr-live-scorefoot');
+    var metaEl = document.getElementById('gr-live-meta');
+    var pillEl = document.getElementById('gr-live-pill');
+
+    fetchScorecard(week)
+      .then(function (d) {
+        if (!d || d.error || !Array.isArray(d.picks) || !d.picks.length) {
+          statsEl.innerHTML = '<div class="gr-live-loading">Live scorecard unavailable right now.</div>';
+          if (listEl) listEl.innerHTML = '';
+          return;
+        }
+
+        var s = d.summary;
+        var spCls = d.benchmark.returnPct != null && d.benchmark.returnPct >= 0 ? 'up' : 'dn';
+
+        if (s.completedTriggered > 0) {
+          // Grading has produced at least one final result -> standard
+          // graded-week format, same as the archived weeks below it.
+          var avgCls = s.modelReturnPct != null && s.modelReturnPct >= 0 ? 'up' : 'dn';
+          statsEl.className = 'gr-stats ' + avgCls;
+          statsEl.innerHTML =
+            statBox('<span class="' + avgCls + '">' + fmtPct(s.modelReturnPct) + '</span>', 'Average Return') +
+            statBox(s.profitable, 'Winners', 'color:#3ECA7A;') +
+            statBox(s.unprofitable, 'Losers', 'color:#E85555;') +
+            statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500 Benchmark');
+        } else {
+          // Still in progress -> status counts, not a fabricated average.
+          var triggeredTotal = s.active + s.profitable + s.unprofitable;
+          statsEl.innerHTML =
+            statBox(triggeredTotal, 'Triggered', 'color:#e8ca7a;') +
+            statBox(s.waitingForEntry, 'Waiting for Entry', 'color:#9a9690;') +
+            statBox(s.noEntryThisWeek, 'No Entry This Week', 'color:#7a7770;') +
+            statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500, Week-to-Date');
+        }
+
+        if (listEl) listEl.innerHTML = d.picks.map(renderScoreRow).join('');
+
+        if (pillEl) {
+          pillEl.textContent = d.gradingComplete ? 'Graded' : 'Live \u2014 Grading Completes Friday';
+          pillEl.className = 'gr-live-pill' + (d.gradingComplete ? ' graded' : '');
+        }
+
+        if (footEl) {
+          var ts = new Date(d.dataTimestamp);
+          var tsStr = ts.toLocaleString('en-US', {
+            timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', month: 'short', day: 'numeric',
+          });
+          footEl.textContent = d.gradingComplete
+            ? 'Graded as of ' + tsStr + ' ET.'
+            : 'Live as of ' + tsStr + ' ET. Nothing here is final until grading completes Friday after close.';
+        }
+
+        if (metaEl) {
+          metaEl.innerHTML =
+            'Methodology <b>' + d.methodologyVersion + '</b> &middot; data via ' + d.dataSource;
+        }
+      })
+      .catch(function () {
+        statsEl.innerHTML = '<div class="gr-live-loading">Live scorecard unavailable right now.</div>';
+      });
+  }
+
+  function load() {
+    loadBriefGrid();
+    loadResultsPanel();
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', load);
+    else load();
+  }
+
+  // Test-only export — never runs in the browser (module is undefined
+  // there), lets the render logic be unit-tested with synthetic data.
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { statusInfo: statusInfo, renderScoreRow: renderScoreRow, statBox: statBox, fmtPct: fmtPct };
+  }
 })();
