@@ -44,8 +44,20 @@
 
 'use strict';
 
-const FETCH_TIMEOUT_MS = 8000;
+const FETCH_TIMEOUT_MS = 12000;
 const BARS_LOOKBACK_DAYS = 14; // plenty of buffer before/after a single scored week
+
+// Warm-container cache, same convention as quote.js: a full computed
+// response is reused for CACHE_TTL_MS before recomputing. This is the fix
+// for the 2026-07-13 incident — without it, every single page load fired
+// 13 fresh Alpaca calls simultaneously (12 picks + SPY), stacked on top of
+// the ticker tape's own ~14 calls, which could exhaust rate limits or time
+// out under repeated reloads. A response is only cached if every ticker's
+// data came back clean (see the dataUnavailable check near the bottom) —
+// a transient Alpaca failure retries fresh on the very next request rather
+// than getting locked in as the answer for everyone for two minutes.
+const CACHE_TTL_MS = 2 * 60 * 1000;
+const scorecardCache = new Map(); // week -> { expires, data }
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -230,6 +242,13 @@ exports.handler = async (event) => {
     return fail('Missing or invalid required parameter: week (expected YYYY-MM-DD)');
   }
 
+  // Serve from warm-container cache when fresh — skips the picks-data fetch
+  // and every Alpaca call entirely.
+  const cachedEntry = scorecardCache.get(week);
+  if (cachedEntry && cachedEntry.expires > Date.now()) {
+    return ok({ ...cachedEntry.data, cached: true });
+  }
+
   let picksData;
   try {
     picksData = await loadPicksData(week);
@@ -286,7 +305,7 @@ exports.handler = async (event) => {
   const vsBenchmark =
     modelReturn != null && benchmarkReturn != null ? round(modelReturn - benchmarkReturn, 2) : null;
 
-  return ok({
+  const responseBody = {
     week,
     methodologyVersion: picksData.methodologyVersion,
     dataSource: 'Alpaca (' + (process.env.ALPACA_FEED || 'iex') + ' feed)',
@@ -308,7 +327,16 @@ exports.handler = async (event) => {
       vsBenchmarkPct: vsBenchmark,
     },
     picks: gradedPicks,
-  });
+  };
+
+  // Only cache a clean result. If any ticker came back data_unavailable,
+  // that's exactly the kind of transient failure that should retry fresh
+  // next time, not get locked in as the cached answer for two minutes.
+  if (dataUnavailable === 0) {
+    scorecardCache.set(week, { expires: Date.now() + CACHE_TTL_MS, data: responseBody });
+  }
+
+  return ok({ ...responseBody, cached: false });
 };
 
 // Exported alongside the handler so the pure entry/grading logic can be
