@@ -948,8 +948,12 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   .gs-live-status-sym{font-family:monospace;font-weight:700;font-size:.82rem;color:var(--text-primary);}
   .gs-live-status-badge{font-family:monospace;font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap;}
   .gs-live-status-badge.waiting{color:#9a9690;background:rgba(154,150,144,.12);}
-  .gs-live-status-badge.active{color:#e8ca7a;background:rgba(212,175,55,.14);}
+  .gs-live-status-badge.triggered{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.no-entry{color:#7a7770;background:rgba(122,119,112,.1);}
+  .gs-live-status-badge.breakout-pending{color:#7ba7c9;background:rgba(94,150,196,.12);}
+  .gs-live-status-badge.breakout-triggered{color:#5eb3e8;background:rgba(94,179,232,.18);}
+  .gs-live-status-legend{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:.72rem;line-height:1.6;color:var(--text-muted);}
+  .gs-live-status-legend b{color:var(--text-secondary);font-weight:600;}
   .gs-live-status-ret{font-family:monospace;font-size:.76rem;font-weight:600;}
   .gs-live-status-loading{grid-column:1/-1;color:var(--text-muted);font-family:monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 0;}
   </style>
@@ -961,6 +965,12 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
     <p class="gs-live-status-sub">Where each pick actually stands &mdash; entry zones triggered, still waiting, or off the table this week. This is the same engine that grades the Friday scorecard; nothing here is estimated.</p>
     <div class="gs-live-status-grid" id="gs-live-status-grid">
       <div class="gs-live-status-loading">Loading live status&hellip;</div>
+    </div>
+    <div class="gs-live-status-legend" id="gs-live-status-legend">
+      <b>Triggered</b> &mdash; a published entry zone has been reached. Return shown is measured from that entry, not from today&rsquo;s price &mdash; it does not imply the stock remains a buy at the current level.<br>
+      <b>Waiting for Entry</b> &mdash; no published zone has been reached yet this week.<br>
+      <b>Breakout Pending / Breakout Triggered</b> &mdash; MSTR only. Tracks a confirmed close above a published level, a different mechanic from the dip-entry zones above.<br>
+      <b>No Setup This Week</b> &mdash; no entry was planned this week (earnings risk, unreliable data, etc.) &mdash; never a fabricated zone.
     </div>
   </div>
 
