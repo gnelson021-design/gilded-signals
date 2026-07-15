@@ -2169,6 +2169,13 @@ function gsBriefUnlock(){
 .gr-info-dot{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;border:1px solid var(--text-muted);color:var(--text-muted);font-size:.5rem;cursor:help;flex-shrink:0;}
 .gr-info-dot:hover{border-color:var(--gold);color:var(--gold);}
 @media(max-width:600px){#page-results .gr-stat-box{flex:1 1 45%;border-right:none;border-bottom:1px solid rgba(212,175,55,.1);}}
+.gb-trust-section{margin:32px 0 44px;}
+.gb-trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;}
+.gb-trust-item{padding:16px 18px;border-radius:10px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.14);}
+.gb-trust-head{font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.02em;color:var(--gold-light);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.gb-trust-head::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.gb-trust-body{font-family:'DM Sans',sans-serif;font-size:.78rem;line-height:1.6;color:var(--text-secondary);}
+@media(max-width:700px){.gb-trust-grid{grid-template-columns:1fr;}}
 </style>
 <div class="gb-wrap">
   <div class="gb-eyebrow">Weekly Results</div>
@@ -2184,6 +2191,41 @@ function gsBriefUnlock(){
   </div>
 
   <div class="gb-rule"></div>
+
+  <div class="gb-trust-section">
+    <div class="gb-section-lbl">Transparency</div>
+    <h2 class="gb-section-title">Why You Can Trust This Scorecard</h2>
+    <div class="gb-trust-grid">
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Published Before the Move</div>
+        <div class="gb-trust-body">Every pick goes live in the Sunday briefing before the market moves &mdash; nothing is added after the fact.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Entry Zones Locked in Advance</div>
+        <div class="gb-trust-body">Buy zones and trigger levels are set the moment the brief publishes and never adjusted afterward.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Calculated Automatically</div>
+        <div class="gb-trust-body">Every result comes from the same grading engine, run against real historical market data &mdash; no manual scoring.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Winners and Losers, Both Visible</div>
+        <div class="gb-trust-body">Every graded week stays in the permanent archive &mdash; wins and losses alike, never removed.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Linked to the Source</div>
+        <div class="gb-trust-body">Every scorecard links directly back to the original weekly briefing that published the picks.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Methodology, Versioned</div>
+        <div class="gb-trust-body">Grading logic changes are versioned, so every scorecard is graded by the rules that were live at the time.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">No Hindsight Edits</div>
+        <div class="gb-trust-body">Once a week publishes, its picks and entry zones are locked. Nothing is rewritten after the fact.</div>
+      </div>
+    </div>
+  </div>
 
     <div class="gr-week-panel" id="gr-week-2026-07-13" data-live="true" data-week="2026-07-13">
     <div class="gb-dateline">Week of <b>July 13&ndash;17, 2026</b></div>
