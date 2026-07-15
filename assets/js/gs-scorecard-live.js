@@ -153,10 +153,13 @@
     );
   }
 
-  function statBox(value, label, colorStyle) {
+  function statBox(value, label, colorStyle, tooltip) {
+    var lbl = tooltip
+      ? label + ' <span class="gr-info-dot" title="' + tooltip.replace(/"/g, '&quot;') + '">i</span>'
+      : label;
     return (
-      '<div><div class="wrh-stat-num"' + (colorStyle ? ' style="' + colorStyle + '"' : '') + '>' +
-      value + '</div><div class="wrh-stat-lbl">' + label + '</div></div>'
+      '<div class="gr-stat-box"><div class="wrh-stat-num"' + (colorStyle ? ' style="' + colorStyle + '"' : '') + '>' +
+      value + '</div><div class="wrh-stat-lbl">' + lbl + '</div></div>'
     );
   }
 
@@ -170,7 +173,9 @@
     var listEl = document.getElementById('gr-live-scorelist');
     var footEl = document.getElementById('gr-live-scorefoot');
     var metaEl = document.getElementById('gr-live-meta');
-    var pillEl = document.getElementById('gr-live-pill');
+    var bannerEl = document.getElementById('gr-status-banner');
+    var statusLabelEl = document.getElementById('gr-status-label');
+    var statusSubEl = document.getElementById('gr-status-sub');
 
     fetchScorecard(week)
       .then(function (d) {
@@ -183,12 +188,22 @@
         var s = d.summary;
         var spCls = d.benchmark.returnPct != null && d.benchmark.returnPct >= 0 ? 'up' : 'dn';
 
+        // Breakout Pending is derived here, client-side, from fields the
+        // API already sends per pick (entryType + status) -- no backend
+        // or scoring change, just a more specific label for a subset of
+        // the existing "waiting for entry" picks.
+        var breakoutPending = d.picks.filter(function (p) {
+          return p.entryType === 'breakout' && p.status === 'waiting_for_entry';
+        }).length;
+        var dipWaiting = s.waitingForEntry - breakoutPending;
+
         if (s.completedTriggered > 0) {
           // Grading has produced at least one final result -> standard
           // graded-week format, same as the archived weeks below it.
           var avgCls = s.modelReturnPct != null && s.modelReturnPct >= 0 ? 'up' : 'dn';
-          statsEl.className = 'gr-stats ' + avgCls;
+          statsEl.className = 'gr-stats-v2';
           statsEl.innerHTML =
+            statBox(s.totalPublished, 'Total Published') +
             statBox('<span class="' + avgCls + '">' + fmtPct(s.modelReturnPct) + '</span>', 'Average Return') +
             statBox(s.profitable, 'Winners', 'color:#3ECA7A;') +
             statBox(s.unprofitable, 'Losers', 'color:#E85555;') +
@@ -196,18 +211,26 @@
         } else {
           // Still in progress -> status counts, not a fabricated average.
           var triggeredTotal = s.active + s.profitable + s.unprofitable;
+          statsEl.className = 'gr-stats-v2';
           statsEl.innerHTML =
-            statBox(triggeredTotal, 'Triggered', 'color:#e8ca7a;') +
-            statBox(s.waitingForEntry, 'Waiting for Entry', 'color:#9a9690;') +
-            statBox(s.noEntryThisWeek, 'No Entry This Week', 'color:#7a7770;') +
-            statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500, Week-to-Date');
+            statBox(s.totalPublished, 'Total Published', null, "Every pick published in this week's briefing, across all three tiers.") +
+            statBox(triggeredTotal, 'Triggered', 'color:#e8ca7a;', 'Published entry condition occurred. This does not mean the stock is still a buy.') +
+            statBox(dipWaiting, 'Waiting for Entry', 'color:#9a9690;', "Price hasn't reached the published entry zone yet.") +
+            statBox(breakoutPending, 'Breakout Pending', 'color:#7ba7c9;', "Breakout-type entries only. Price hasn't cleared the published trigger level yet.") +
+            statBox(s.noEntryThisWeek, 'No Setup This Week', 'color:#7a7770;', 'No actionable entry was published for this pick this week.') +
+            statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500, WTD', null, 'Week-to-date S&P 500 return, same date range as the picks.');
         }
 
         if (listEl) listEl.innerHTML = d.picks.map(renderScoreRow).join('');
 
-        if (pillEl) {
-          pillEl.textContent = d.gradingComplete ? 'Graded' : 'Live \u2014 Grading Completes Friday';
-          pillEl.className = 'gr-live-pill' + (d.gradingComplete ? ' graded' : '');
+        if (bannerEl) {
+          bannerEl.className = 'gr-status-banner' + (d.gradingComplete ? ' graded' : ' live');
+          if (statusLabelEl) statusLabelEl.textContent = d.gradingComplete ? 'Graded \u2014 Week Closed' : 'Live';
+          if (statusSubEl) {
+            statusSubEl.textContent = d.gradingComplete
+              ? 'Final scorecard, graded close-to-close through Friday.'
+              : 'Grading completes Friday after close \u2014 nothing below is final.';
+          }
         }
 
         if (footEl) {

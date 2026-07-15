@@ -2153,6 +2153,22 @@ function gsBriefUnlock(){
 .gr-live-badge.no-entry{color:#7a7770;}
 .gr-live-badge.breakout-pending{color:#7ba7c9;}
 .gr-live-badge.breakout-triggered{color:#5eb3e8;}
+.gr-status-banner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:14px 20px;border-radius:10px;margin:16px 0 22px;font-family:'DM Sans',sans-serif;}
+.gr-status-banner.live{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);}
+.gr-status-banner.graded{background:rgba(62,202,122,.07);border:1px solid rgba(62,202,122,.3);}
+.gr-status-main{display:flex;align-items:center;gap:9px;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
+.gr-status-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(212,175,55,.8);animation:gsStatusPulse 1.8s ease-in-out infinite;}
+.gr-status-banner.graded .gr-status-dot{background:var(--green);box-shadow:0 0 8px rgba(62,202,122,.8);animation:none;}
+@keyframes gsStatusPulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.gr-status-sub{font-family:monospace;font-size:.68rem;color:var(--text-muted);letter-spacing:.03em;}
+.gr-stats-v2{display:flex;gap:0;flex-wrap:wrap;margin:0 0 24px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.16);overflow:hidden;}
+.gr-stat-box{flex:1 1 130px;padding:18px 16px;border-right:1px solid rgba(212,175,55,.1);}
+.gr-stat-box:last-child{border-right:none;}
+.gr-stat-box .wrh-stat-num{font-size:1.5rem;}
+.gr-stat-box .wrh-stat-lbl{display:flex;align-items:center;gap:5px;}
+.gr-info-dot{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;border:1px solid var(--text-muted);color:var(--text-muted);font-size:.5rem;cursor:help;flex-shrink:0;}
+.gr-info-dot:hover{border-color:var(--gold);color:var(--gold);}
+@media(max-width:600px){#page-results .gr-stat-box{flex:1 1 45%;border-right:none;border-bottom:1px solid rgba(212,175,55,.1);}}
 </style>
 <div class="gb-wrap">
   <div class="gb-eyebrow">Weekly Results</div>
@@ -2170,11 +2186,17 @@ function gsBriefUnlock(){
   <div class="gb-rule"></div>
 
     <div class="gr-week-panel" id="gr-week-2026-07-13" data-live="true" data-week="2026-07-13">
-    <div class="gb-dateline">Week of <b>July 13&ndash;17, 2026</b> &middot; <span class="gr-live-pill" id="gr-live-pill">Live</span></div>
+    <div class="gb-dateline">Week of <b>July 13&ndash;17, 2026</b></div>
     <div class="gb-rule"></div>
+
+    <div class="gr-status-banner live" id="gr-status-banner">
+      <div class="gr-status-main"><span class="gr-status-dot"></span> <span id="gr-status-label">Live</span></div>
+      <div class="gr-status-sub" id="gr-status-sub">Grading completes Friday after close &middot; nothing below is final</div>
+    </div>
+
     <p class="gb-lead">This week is still in progress. Every number below comes from the same engine that grades the final scorecard Friday after close &mdash; nothing here is final until the week closes.</p>
 
-    <div class="gr-stats" id="gr-live-stats">
+    <div class="gr-stats-v2" id="gr-live-stats">
       <div class="gr-live-loading">Loading live scorecard&hellip;</div>
     </div>
 
@@ -2199,11 +2221,12 @@ function gsBriefUnlock(){
     <div class="gb-rule"></div>
     <p class="gb-lead">Fifteen names on the board, eight closed green. The mega-cap AI/semi leaders did the heavy lifting; the chip-adjacent names gave back ground into a volatile week for the sector.</p>
 
-    <div class="gr-stats">
-      <div><div class="wrh-stat-num up">+1.36%</div><div class="wrh-stat-lbl">Average Return</div></div>
-      <div><div class="wrh-stat-num" style="color:#3ECA7A;">8</div><div class="wrh-stat-lbl">Winners</div></div>
-      <div><div class="wrh-stat-num" style="color:#E85555;">7</div><div class="wrh-stat-lbl">Losers</div></div>
-      <div><div class="wrh-stat-num up">+1.3%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
+    <div class="gr-stats-v2">
+      <div class="gr-stat-box"><div class="wrh-stat-num">15</div><div class="wrh-stat-lbl">Total Published</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num up">+1.36%</div><div class="wrh-stat-lbl">Average Return</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#3ECA7A;">8</div><div class="wrh-stat-lbl">Winners</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#E85555;">7</div><div class="wrh-stat-lbl">Losers</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num up">+1.3%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
     </div>
 
     <div class="gb-section-lbl">Full Scorecard</div>
@@ -2236,11 +2259,12 @@ function gsBriefUnlock(){
   <div class="gr-week-panel" id="gr-week-2026-07-02" style="display:none;">
     <div class="gb-dateline">Week of <b>June 29&ndash;July 2, 2026</b> &middot; trailing 4 sessions (market closed Fri July 3 for Independence Day)</div>
     <div class="gb-rule"></div>
-    <div class="gr-stats">
-      <div><div class="wrh-stat-num up">+9.62%</div><div class="wrh-stat-lbl">Average Return</div></div>
-      <div><div class="wrh-stat-num" style="color:#3ECA7A;">3</div><div class="wrh-stat-lbl">Winners</div></div>
-      <div><div class="wrh-stat-num" style="color:#E85555;">2</div><div class="wrh-stat-lbl">Losers</div></div>
-      <div><div class="wrh-stat-num up">+1.8%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
+    <div class="gr-stats-v2">
+      <div class="gr-stat-box"><div class="wrh-stat-num">5</div><div class="wrh-stat-lbl">Total Published</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num up">+9.62%</div><div class="wrh-stat-lbl">Average Return</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#3ECA7A;">3</div><div class="wrh-stat-lbl">Winners</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#E85555;">2</div><div class="wrh-stat-lbl">Losers</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num up">+1.8%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
     </div>
     <div class="gb-section-lbl">Full Scorecard</div>
     <h2 class="gb-section-title">5 Picks, Graded</h2>
@@ -2259,11 +2283,12 @@ function gsBriefUnlock(){
   <div class="gr-week-panel" id="gr-week-2026-06-26" style="display:none;">
     <div class="gb-dateline">Week of <b>June 22&ndash;26, 2026</b> &middot; trailing 5 sessions</div>
     <div class="gb-rule"></div>
-    <div class="gr-stats">
-      <div><div class="wrh-stat-num dn">&minus;10.63%</div><div class="wrh-stat-lbl">Average Return</div></div>
-      <div><div class="wrh-stat-num" style="color:#3ECA7A;">0</div><div class="wrh-stat-lbl">Winners</div></div>
-      <div><div class="wrh-stat-num" style="color:#E85555;">5</div><div class="wrh-stat-lbl">Losers</div></div>
-      <div><div class="wrh-stat-num dn">&minus;2.0%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
+    <div class="gr-stats-v2">
+      <div class="gr-stat-box"><div class="wrh-stat-num">5</div><div class="wrh-stat-lbl">Total Published</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num dn">&minus;10.63%</div><div class="wrh-stat-lbl">Average Return</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#3ECA7A;">0</div><div class="wrh-stat-lbl">Winners</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#E85555;">5</div><div class="wrh-stat-lbl">Losers</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num dn">&minus;2.0%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
     </div>
     <div class="gb-section-lbl">Full Scorecard</div>
     <h2 class="gb-section-title">5 Picks, Graded</h2>
