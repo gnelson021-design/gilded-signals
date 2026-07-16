@@ -47,25 +47,39 @@
   // Label + badge class depend on BOTH status and entryType, since MSTR's
   // breakout mechanic gets its own language rather than being lumped in
   // with the dip-zone picks. Shared by both renderers.
+  // Tooltip copy, keyed by badge class. Shared by every renderer so the
+  // wording never drifts between the compact grid and the full panel.
+  var STATUS_TOOLTIPS = {
+    waiting: "Price hasn't reached the published buy zone yet.",
+    'watch-closely': "Price is approaching the published buy zone \u2014 nothing has happened yet, just worth watching closely.",
+    'buy-zone': "Price is inside the published buy zone. This is where I'm personally looking to accumulate \u2014 not a signal that it's still a fresh buy.",
+    'breakout-pending': "Waiting for a confirmed daily close above the published breakout level.",
+    'breakout-triggered': "Price closed above the published breakout level. This does not mean the stock is still a buy today.",
+    'no-entry': 'No actionable entry was published this week, or market data was unavailable for this pick.',
+    completed: 'Week finished and graded. The return shown is final for this pick.',
+  };
+
   function statusInfo(p) {
     var isBreakout = p.entryType === 'breakout';
 
     if (isBreakout) {
       if (p.status === 'waiting_for_entry') return { label: 'Breakout Pending', cls: 'breakout-pending' };
       if (p.status === 'active') return { label: 'Breakout Triggered', cls: 'breakout-triggered' };
-      if (p.status === 'closed_win') return { label: 'Closed \u2014 Win', cls: 'breakout-triggered' };
-      if (p.status === 'closed_loss') return { label: 'Closed \u2014 Loss', cls: 'breakout-triggered' };
+      if (p.status === 'closed_win') return { label: 'Completed', cls: 'completed' };
+      if (p.status === 'closed_loss') return { label: 'Completed', cls: 'completed' };
     }
 
     switch (p.status) {
       case 'waiting_for_entry':
-        return { label: 'Waiting for Entry', cls: 'waiting' };
+        return p.watchClose
+          ? { label: 'Triggered (Watch Closely)', cls: 'watch-closely' }
+          : { label: 'Waiting for Entry', cls: 'waiting' };
       case 'active':
-        return { label: 'Triggered', cls: 'triggered' };
+        return { label: 'Buy Zone', cls: 'buy-zone' };
       case 'closed_win':
-        return { label: 'Closed \u2014 Win', cls: 'triggered' };
+        return { label: 'Completed', cls: 'completed' };
       case 'closed_loss':
-        return { label: 'Closed \u2014 Loss', cls: 'triggered' };
+        return { label: 'Completed', cls: 'completed' };
       case 'no_entry_this_week':
         return { label: 'No Setup This Week', cls: 'no-entry' };
       case 'data_unavailable':
@@ -134,7 +148,9 @@
     }
 
     var label = p.entryType === 'breakout' ? 'Official entry trigger' : 'Status';
-    var line = label + ': <b class="gr-live-badge ' + info.cls + '">' + info.label + '</b>';
+    var tip = STATUS_TOOLTIPS[info.cls];
+    var dot = tip ? ' <span class="gr-info-dot" title="' + tip.replace(/"/g, '&quot;') + '">i</span>' : '';
+    var line = label + ': <b class="gr-live-badge ' + info.cls + '">' + info.label + '</b>' + dot;
     if (p.entryDate) line += ' &middot; entered ' + p.entryDate;
     if (p.note) line += ' &middot; ' + p.note;
 
@@ -210,13 +226,18 @@
             statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500 Benchmark');
         } else {
           // Still in progress -> status counts, not a fabricated average.
-          var triggeredTotal = s.active + s.profitable + s.unprofitable;
+          var buyZoneTotal = s.active + s.profitable + s.unprofitable;
+          var watchCloseTotal = d.picks.filter(function (p) {
+            return p.status === 'waiting_for_entry' && p.entryType !== 'breakout' && p.watchClose;
+          }).length;
+          var waitingOnly = dipWaiting - watchCloseTotal;
           statsEl.className = 'gr-stats-v2';
           statsEl.innerHTML =
             statBox(s.totalPublished, 'Total Published', null, "Every pick published in this week's briefing, across all three tiers.") +
-            statBox(triggeredTotal, 'Triggered', 'color:#e8ca7a;', 'Published entry condition occurred. This does not mean the stock is still a buy.') +
-            statBox(dipWaiting, 'Waiting for Entry', 'color:#9a9690;', "Price hasn't reached the published entry zone yet.") +
-            statBox(breakoutPending, 'Breakout Pending', 'color:#7ba7c9;', "Breakout-type entries only. Price hasn't cleared the published trigger level yet.") +
+            statBox(buyZoneTotal, 'Buy Zone', 'color:#3ECA7A;', STATUS_TOOLTIPS['buy-zone']) +
+            statBox(watchCloseTotal, 'Triggered (Watch Closely)', 'color:#e8ca7a;', STATUS_TOOLTIPS['watch-closely']) +
+            statBox(waitingOnly, 'Waiting for Entry', 'color:#9a9690;', STATUS_TOOLTIPS['waiting']) +
+            statBox(breakoutPending, 'Breakout Pending', 'color:#7ba7c9;', STATUS_TOOLTIPS['breakout-pending']) +
             statBox(s.noEntryThisWeek, 'No Setup This Week', 'color:#7a7770;', 'No actionable entry was published for this pick this week.') +
             statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500, WTD', null, 'Week-to-date S&P 500 return, same date range as the picks.');
         }

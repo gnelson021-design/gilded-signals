@@ -182,6 +182,29 @@ function detectBreakoutEntry(bars, zone) {
 }
 
 // ---------------------------------------------------------------------------
+// Purely observational "approaching the published zone" flag for picks that
+// are still waiting_for_entry. Read-only -- never changes status, never
+// touches grading. Deterministic and derived only from already-published
+// data: the pick's own zone prices and the same daily bar already fetched
+// for grading. Watch band = one zone-width above the top published zone
+// price, where zone width comes from the pick's own levels (not a fixed
+// global percentage). A single-level zone has no width, so it gets no
+// watch band -- there's nothing published to derive one from.
+// ---------------------------------------------------------------------------
+function buildWatchInfo(pick, bars) {
+  if (pick.entryType !== 'dip_zone' || !Array.isArray(pick.zones) || !pick.zones.length || !bars || !bars.length) {
+    return {};
+  }
+  const prices = pick.zones.map((z) => z.price);
+  const zoneHigh = Math.max(...prices);
+  const zoneLow = Math.min(...prices);
+  const zoneWidth = zoneHigh - zoneLow;
+  const markPrice = bars[bars.length - 1].close;
+  const watchClose = zoneWidth > 0 && markPrice > zoneHigh && markPrice <= zoneHigh + zoneWidth;
+  return { markPrice, zoneHigh, zoneLow, watchClose };
+}
+
+// ---------------------------------------------------------------------------
 // Grade a single pick against its bars.
 // ---------------------------------------------------------------------------
 function gradePick(pick, bars, gradingComplete) {
@@ -210,7 +233,7 @@ function gradePick(pick, bars, gradingComplete) {
       : { status: 'unsupported_entry_type', entryPrice: null, entryDate: null, triggeredZones: [] };
 
   if (detection.status === 'waiting_for_entry' || detection.status === 'unsupported_entry_type') {
-    return { ...base, status: 'waiting_for_entry', triggeredZones: [] };
+    return { ...base, status: 'waiting_for_entry', triggeredZones: [], ...buildWatchInfo(pick, bars) };
   }
 
   const lastBar = bars[bars.length - 1];
