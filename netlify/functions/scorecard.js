@@ -205,6 +205,31 @@ function buildWatchInfo(pick, bars) {
 }
 
 // ---------------------------------------------------------------------------
+// Grading is only "complete" once the market has actually closed on the
+// results-grade date. A same-day date match alone is not enough -- that
+// would mark the week graded before the session even opens.
+// ---------------------------------------------------------------------------
+function isGradingComplete(resultsGradeDate) {
+  const MARKET_CLOSE_MINUTES = 16 * 60; // 4:00 PM ET
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/New_York',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).formatToParts(new Date());
+
+  const map = {};
+  parts.forEach((p) => { map[p.type] = p.value; });
+  const etDate = map.year + '-' + map.month + '-' + map.day;
+  let etHour = parseInt(map.hour, 10);
+  if (etHour === 24) etHour = 0; // ICU midnight quirk guard
+  const etMinutes = etHour * 60 + parseInt(map.minute, 10);
+
+  if (etDate > resultsGradeDate) return true;
+  if (etDate < resultsGradeDate) return false;
+  return etMinutes >= MARKET_CLOSE_MINUTES;
+}
+
+// ---------------------------------------------------------------------------
 // Grade a single pick against its bars.
 // ---------------------------------------------------------------------------
 function gradePick(pick, bars, gradingComplete) {
@@ -279,8 +304,7 @@ exports.handler = async (event) => {
     return fail(e.message, { week });
   }
 
-  const today = new Date().toISOString().slice(0, 10);
-  const gradingComplete = today >= picksData.resultsGradeDate;
+  const gradingComplete = isGradingComplete(picksData.resultsGradeDate);
   const startDateStr = picksData.briefPublishedAt.slice(0, 10);
 
   const gradable = picksData.picks.filter((p) => p.entryType !== 'no_entry');
