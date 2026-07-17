@@ -149,7 +149,7 @@
 
     var label = p.entryType === 'breakout' ? 'Official entry trigger' : 'Status';
     var tip = STATUS_TOOLTIPS[info.cls];
-    var dot = tip ? ' <span class="gr-info-dot" title="' + tip.replace(/"/g, '&quot;') + '">i</span>' : '';
+    var dot = tip ? ' <span class="gs-term-icon" data-tip="' + tip.replace(/"/g, '&quot;') + '" tabindex="0" role="button">i</span>' : '';
     var line = label + ': <b class="gr-live-badge ' + info.cls + '">' + info.label + '</b>' + dot;
     if (p.entryDate) line += ' &middot; entered ' + p.entryDate;
     if (p.note) line += ' &middot; ' + p.note;
@@ -171,7 +171,7 @@
 
   function statBox(value, label, colorStyle, tooltip) {
     var lbl = tooltip
-      ? label + ' <span class="gr-info-dot" title="' + tooltip.replace(/"/g, '&quot;') + '">i</span>'
+      ? label + ' <span class="gs-term-icon" data-tip="' + tooltip.replace(/"/g, '&quot;') + '" tabindex="0" role="button">i</span>'
       : label;
     return (
       '<div class="gr-stat-box"><div class="wrh-stat-num"' + (colorStyle ? ' style="' + colorStyle + '"' : '') + '>' +

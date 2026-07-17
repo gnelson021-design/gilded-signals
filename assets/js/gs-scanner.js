@@ -446,7 +446,7 @@
     var scoreHtml = score != null
       ? '<div class="gs-score-block"><div class="gs-score-num">' + score +
         '</div><div style="flex:1"><div class="gs-score-bar-lbl">Technical Strength Score / 100' +
-        '<span class="gs-score-info">i<span class="gs-tip">Measures current momentum and technical conditions over approximately 1–20 trading sessions. It is not a probability of profit.</span></span>' +
+        '<span class="gs-term-icon" data-term="signal-strength" tabindex="0" role="button">i</span>' +
         '</div>' +
         '<div class="gs-score-track"><div class="gs-score-fill" style="width:' + score + '%"></div></div></div>' +
         sigBadge(sig) + '</div>'
@@ -498,8 +498,8 @@
       rangeBar(d.week52Low, d.week52High, d.price, '52-Week Range') +
       '</div>' +
       '<div class="gs-metric-sec"><div class="gs-metric-sec-lbl">Momentum &amp; Technicals</div>' +
-      '<div class="gs-mrow"><span class="gs-mlbl">RSI (14)</span>' + rsiHtml + '</div>' +
-      '<div class="gs-mrow"><span class="gs-mlbl">EMA Trend</span><span class="gs-mval ' + emaCls + '">' + emaStatus + '</span></div>' +
+      '<div class="gs-mrow"><span class="gs-mlbl">RSI (14)<span class="gs-term-icon" data-term="rsi" tabindex="0" role="button">i</span></span>' + rsiHtml + '</div>' +
+      '<div class="gs-mrow"><span class="gs-mlbl">EMA Trend<span class="gs-term-icon" data-term="ema" tabindex="0" role="button">i</span></span><span class="gs-mval ' + emaCls + '">' + emaStatus + '</span></div>' +
       '<div class="gs-mrow"><span class="gs-mlbl">EMA 20</span><span class="gs-mval muted">' + fmt(d.ema20) + '</span></div>' +
       '<div class="gs-mrow"><span class="gs-mlbl">EMA 50</span><span class="gs-mval muted">' + fmt(d.ema50) + '</span></div>' +
       '<div class="gs-mrow"><span class="gs-mlbl">EMA 200</span><span class="gs-mval muted">' + fmt(d.ema200) + '</span></div>' +
@@ -515,7 +515,7 @@
       buildLevels(d) +
       '<div class="gs-metric-sec"><div class="gs-metric-sec-lbl">Performance</div>' + retRows +
       (d.analystRating ? '<div class="gs-mrow"><span class="gs-mlbl">Analyst</span><span class="gs-mval gold">' + d.analystRating + '</span></div>' : '') +
-      (d.peRatio != null ? '<div class="gs-mrow"><span class="gs-mlbl">P/E Ratio</span><span class="gs-mval">' + Number(d.peRatio).toFixed(1) + '</span></div>' : '') +
+      (d.peRatio != null ? '<div class="gs-mrow"><span class="gs-mlbl">P/E Ratio<span class="gs-term-icon" data-term="pe" tabindex="0" role="button">i</span></span><span class="gs-mval">' + Number(d.peRatio).toFixed(1) + '</span></div>' : '') +
       '</div>' +
       '</div>' + updatedHtml + '</div>';
   }
@@ -546,10 +546,10 @@
       '<div class="gs-gc-head"><div><div class="gs-gc-sym">' + sym + '</div><div class="gs-gc-name">' + (d.name || sym) +
       '</div></div><div><div class="gs-gc-price">' + fmt(d.price) + '</div><div class="gs-gc-chg ' + pctCls(chg) + '">' + chgStr + '</div></div></div>' +
       '<div class="gs-gc-metrics">' +
-      '<div class="gs-gc-m"><div class="gs-gc-ml">RSI (14)</div><div class="gs-gc-mv" style="color:' + rc + '">' + (d.rsi14 != null ? d.rsi14 : '—') + '</div></div>' +
+      '<div class="gs-gc-m"><div class="gs-gc-ml">RSI (14)<span class="gs-term-icon" data-term="rsi" tabindex="0" role="button">i</span></div><div class="gs-gc-mv" style="color:' + rc + '">' + (d.rsi14 != null ? d.rsi14 : '—') + '</div></div>' +
       '<div class="gs-gc-m"><div class="gs-gc-ml">Rel. Vol</div><div class="gs-gc-mv ' + (d.rvol != null && d.rvol > 1.3 ? 'up' : d.rvol != null && d.rvol < 0.7 ? 'dn' : '') + '">' + (d.rvol != null ? Number(d.rvol).toFixed(2) + 'x' : '—') + '</div></div>' +
       '<div class="gs-gc-m"><div class="gs-gc-ml">Volume</div><div class="gs-gc-mv">' + fmtVol(d.volume) + '</div></div>' +
-      '<div class="gs-gc-m"><div class="gs-gc-ml">EMA</div><div class="gs-gc-mv ' + (d.emaStatus && d.emaStatus.toLowerCase().indexOf('above') !== -1 ? 'up' : d.emaStatus ? 'dn' : 'muted') + '">' + (d.emaStatus ? d.emaStatus.charAt(0).toUpperCase() + d.emaStatus.slice(1) : '—') + '</div></div>' +
+      '<div class="gs-gc-m"><div class="gs-gc-ml">EMA<span class="gs-term-icon" data-term="ema" tabindex="0" role="button">i</span></div><div class="gs-gc-mv ' + (d.emaStatus && d.emaStatus.toLowerCase().indexOf('above') !== -1 ? 'up' : d.emaStatus ? 'dn' : 'muted') + '">' + (d.emaStatus ? d.emaStatus.charAt(0).toUpperCase() + d.emaStatus.slice(1) : '—') + '</div></div>' +
       '<div class="gs-gc-m"><div class="gs-gc-ml">Today High</div><div class="gs-gc-mv up">' + fmt(d.high) + '</div></div>' +
       '<div class="gs-gc-m"><div class="gs-gc-ml">Today Low</div><div class="gs-gc-mv dn">' + fmt(d.low) + '</div></div>' +
       '<div class="gs-gc-m"><div class="gs-gc-ml">52W High</div><div class="gs-gc-mv gold">' + fmt(d.week52High) + '</div></div>' +
