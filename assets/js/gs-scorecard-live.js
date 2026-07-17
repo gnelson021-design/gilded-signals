@@ -192,6 +192,7 @@
     var bannerEl = document.getElementById('gr-status-banner');
     var statusLabelEl = document.getElementById('gr-status-label');
     var statusSubEl = document.getElementById('gr-status-sub');
+    var leadEl = document.getElementById('gr-status-lead');
 
     fetchScorecard(week)
       .then(function (d) {
@@ -252,6 +253,12 @@
               ? 'Final scorecard, graded close-to-close through Friday.'
               : 'Grading completes Friday after close \u2014 nothing below is final.';
           }
+        }
+
+        if (leadEl) {
+          leadEl.textContent = d.gradingComplete
+            ? 'This week is complete and graded close-to-close through Friday. Every number below comes from the same engine that grades every scorecard \u2014 locked as final, no hindsight edits.'
+            : 'This week is still in progress. Every number below comes from the same engine that grades the final scorecard Friday after close \u2014 nothing here is final until the week closes.';
         }
 
         if (footEl) {
