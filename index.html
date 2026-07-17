@@ -206,7 +206,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,0.97)
 .pricing-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:860px;margin:0 auto;}
 .pricing-card{background:var(--charcoal-2);border:1px solid var(--border);border-radius:6px;padding:2.5rem;transition:border-color 0.25s;}
 .pricing-card:hover{border-color:var(--border-hover);}
-.pricing-card.featured{border-color:var(--gold);background:var(--charcoal-3);position:relative;}
+.pricing-card.featured{border-color:var(--gold);background:var(--charcoal-3);position:relative;box-shadow:0 0 8px rgba(212,175,55,0.08),0 0 40px rgba(212,175,55,0.10),inset 0 0 24px rgba(212,175,55,0.03);}
 .pricing-card.featured::before{content:'Most Popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;padding:4px 14px;border-radius:2px;white-space:nowrap;}
 .plan-name{font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1.25rem;font-family:'DM Sans',sans-serif;}
 .plan-price{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:400;line-height:1;margin-bottom:0.25rem;}
@@ -219,6 +219,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,0.97)
 .plan-features li.muted{color:var(--text-muted);text-decoration:line-through;}
 .plan-note{font-size:0.63rem;color:var(--text-muted);text-align:center;margin-top:1.25rem;letter-spacing:0.05em;}
 .pricing-disclaimer{text-align:center;font-size:0.67rem;color:var(--text-muted);max-width:520px;margin:3rem auto 0;line-height:1.6;border-top:1px solid var(--border);padding-top:2rem;}
+.compare-table{width:100%;max-width:640px;margin:0 auto;border-collapse:collapse;font-size:0.78rem;}
+.compare-table th{font-family:'DM Sans',sans-serif;font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);text-align:center;padding:12px 8px;border-bottom:1px solid var(--border);}
+.compare-table th:first-child{text-align:left;color:var(--text-muted);}
+.compare-table td{text-align:center;padding:12px 8px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-secondary);}
+.compare-table td:first-child{text-align:left;color:var(--text-primary);}
+.compare-table .yes{color:var(--gold);}
+.compare-table .no{color:var(--text-muted);}
+.pricing-trust{text-align:center;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text-secondary);line-height:1.6;max-width:440px;margin:0 auto 2rem;}
 .faq{max-width:700px;margin:4rem auto 0;}
 .faq-item{border-bottom:1px solid var(--border);padding:1.25rem 0;cursor:pointer;}
 .faq-q{font-size:0.85rem;font-weight:500;color:var(--text-primary);display:flex;justify-content:space-between;align-items:center;gap:1rem;letter-spacing:0.02em;}
@@ -747,7 +755,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   <div class="section-inner pricing-page">
     <div class="pricing-header">
       <div class="section-label" style="justify-content:center;">Simple Pricing</div>
-      <h2 class="section-title" style="text-align:center;">Intelligence Without the<br><em>Wall Street Price Tag.</em></h2>
+      <h2 class="section-title" style="text-align:center;">One Subscription.<br><em>Better Market Decisions.</em></h2>
       <p class="section-desc" style="text-align:center;margin:0 auto;">One plan. Everything you need. No hidden fees.</p>
       <div style="max-width:560px;margin:1.5rem auto 0;padding:0.85rem 1.25rem;border:1px solid var(--border);border-radius:4px;background:rgba(212,175,55,0.05);"><p style="font-size:0.78rem;line-height:1.6;color:var(--text-secondary);margin:0;text-align:center;"><span class="live-dot"></span>Checkout is live. Subscribe in seconds — secured by Stripe.</p></div>
     </div>
@@ -758,36 +766,44 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="plan-period">Forever free</div>
         <ul class="plan-features">
           <li>5 free scanner searches</li>
-          <li>Market news headlines</li>
-          <li>AI infrastructure news feed</li>
-          <li>World news feed</li>
-          <li>Weekly newsletter</li>
-          <li class="muted">Unlimited scanner access</li>
-          <li class="muted">Stock comparison tool</li>
-          <li class="muted">Watchlist signals</li>
-          <li class="muted">Premium news dashboard</li>
+          <li>Daily market news</li>
+          <li>Weekly market brief</li>
+          <li>AI infrastructure news</li>
+          <li>World market news</li>
+          <li>Educational content &amp; glossary</li>
         </ul>
-        <button class="btn-ghost" style="width:100%;" onclick="showPage('scanner')">Start Free</button>
+        <button class="btn-ghost" style="width:100%;" onclick="showPage('scanner')">Try Free</button>
       </div>
       <div class="pricing-card featured">
-        <div class="plan-name">Gilded Scanner Access</div>
+        <div class="plan-name">Gilded Signals Premium</div>
         <div class="plan-price"><sup>$</sup>29.99</div>
         <div class="plan-period">per month · cancel anytime</div>
+        <p style="font-size:0.72rem;color:var(--text-secondary);line-height:1.55;margin:0 0 1.5rem;">Built for investors who want deeper research, unlimited scanner access, and transparent weekly scorecards.</p>
         <ul class="plan-features">
-          <li>Unlimited stock scans</li>
-          <li>Stock comparison tool</li>
-          <li>Watchlist intelligence</li>
-          <li>Market signal summaries</li>
-          <li>Premium news dashboard</li>
-          <li>AI infrastructure deep dives</li>
-          <li>Weekly intelligence brief &amp; newsletter</li>
-          <li>Early access to new features</li>
+          <li>Unlimited scanner searches</li>
+          <li>Full stock comparison tool</li>
+          <li>Buy zone &amp; trigger signals</li>
+          <li>Weekly premium briefings</li>
+          <li>Performance scorecards</li>
+          <li>Priority feature updates</li>
+          <li>Full news dashboard</li>
         </ul>
         <button class="btn-primary" style="width:100%;" onclick="gsGoToStripe()">Subscribe — $29.99/mo</button>
         <div class="plan-note">Stripe-powered · Secure checkout</div>
         <div style="font-size:0.6rem;color:var(--text-muted);text-align:center;margin-top:0.6rem;line-height:1.5;">Live market data · Refreshed continuously</div>
       </div>
     </div>
+    <table class="compare-table">
+      <tr><th>Feature</th><th>Free</th><th>Premium</th></tr>
+      <tr><td>Scanner Searches</td><td>5</td><td class="yes">Unlimited</td></tr>
+      <tr><td>Weekly Brief</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      <tr><td>Daily News</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      <tr><td>Stock Comparison</td><td class="no">—</td><td class="yes">✓</td></tr>
+      <tr><td>Buy Zone Signals</td><td class="no">—</td><td class="yes">✓</td></tr>
+      <tr><td>Performance History</td><td class="no">—</td><td class="yes">✓</td></tr>
+      <tr><td>New Features First</td><td class="no">—</td><td class="yes">✓</td></tr>
+    </table>
+    <div class="pricing-trust">“No hype. No guaranteed returns. Just disciplined research, transparent results, and tools built to help investors make better-informed decisions.”</div>
     <div class="pricing-disclaimer">
       <strong style="color:var(--text-secondary);">Market Research Only · Not Financial Advice</strong><br/>
       Gilded Signals provides market research, news aggregation, and scanner tools for informational purposes only. Nothing on this site constitutes financial advice, investment recommendations, or solicitation to buy or sell any security.
