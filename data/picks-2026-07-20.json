@@ -1,0 +1,242 @@
+{
+  "weekOf": "2026-07-20",
+  "briefPublishedAt": "2026-07-20T00:00:00-04:00",
+  "resultsGradeDate": "2026-07-24",
+  "methodologyVersion": "v2-staged-entry",
+  "benchmarkIndex": "SPY",
+  "picks": [
+    {
+      "rank": 1,
+      "ticker": "NVDA",
+      "company": "Nvidia",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 202.55,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 203.00, "weight": 0.60 },
+        { "price": 195.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already at the top of this zone at publish time."
+    },
+    {
+      "rank": 2,
+      "ticker": "AVGO",
+      "company": "Broadcom",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 370.16,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 365.00, "weight": 0.60 },
+        { "price": 345.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 3,
+      "ticker": "AMD",
+      "company": "Advanced Micro Devices",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 497.63,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 495.00, "weight": 0.60 },
+        { "price": 475.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 4,
+      "ticker": "TSM",
+      "company": "Taiwan Semiconductor",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 419.48,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 420.00, "weight": 0.60 },
+        { "price": 400.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already at the top of this zone at publish time."
+    },
+    {
+      "rank": 5,
+      "ticker": "MRVL",
+      "company": "Marvell Technology",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 235.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 250.00, "weight": 0.60 },
+        { "price": 220.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already trading between the two published zones at publish time."
+    },
+    {
+      "rank": 6,
+      "ticker": "LITE",
+      "company": "Lumentum Holdings",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 750.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 750.00, "weight": 0.60 },
+        { "price": 700.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already at the top of this zone at publish time."
+    },
+    {
+      "rank": 7,
+      "ticker": "NOW",
+      "company": "ServiceNow",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 111.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 111.00, "weight": 0.60 },
+        { "price": 105.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already at the top of this zone at publish time. Earnings Wednesday could create a materially different entry."
+    },
+    {
+      "rank": 8,
+      "ticker": "ASML",
+      "company": "ASML Holding",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 1800.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 1800.00, "weight": 0.60 },
+        { "price": 1750.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already at the top of this zone at publish time."
+    },
+    {
+      "rank": 9,
+      "ticker": "MSFT",
+      "company": "Microsoft",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 393.82,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 390.00, "weight": 0.60 },
+        { "price": 375.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 10,
+      "ticker": "VRT",
+      "company": "Vertiv Holdings",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 289.56,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 290.00, "weight": 0.60 },
+        { "price": 275.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 11,
+      "ticker": "RKLB",
+      "company": "Rocket Lab",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 67.62,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 68.00, "weight": 0.60 },
+        { "price": 60.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already at the top of this zone at publish time."
+    },
+    {
+      "rank": 12,
+      "ticker": "GOOG",
+      "company": "Alphabet",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 346.12,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 348.00, "weight": 0.60 },
+        { "price": 335.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already inside this zone at publish time. Earnings Wednesday could create a materially different entry."
+    },
+    {
+      "rank": 13,
+      "ticker": "ORA",
+      "company": "Ormat Technologies",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 108.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 110.00, "weight": 0.60 },
+        { "price": 100.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already trading just inside this zone at publish time."
+    },
+    {
+      "rank": 14,
+      "ticker": "FRVO",
+      "company": "Fervo Energy",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 25.00,
+      "entryType": "dip_zone",
+      "zones": [
+        { "price": 26.00, "weight": 0.60 },
+        { "price": 23.00, "weight": 0.40 }
+      ],
+      "status": "waiting_for_entry",
+      "note": "Live price was already inside this zone at publish time. Very young, volatile stock -- size accordingly."
+    },
+    {
+      "rank": 15,
+      "ticker": "BE",
+      "company": "Bloom Energy",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 271.00,
+      "entryType": "no_entry",
+      "zones": [],
+      "status": "no_entry_this_week",
+      "note": "Average analyst target ($236) sits below today's price, and two live negative catalysts -- Oracle's Project Jupiter rejection and New York's data-center moratorium -- argue against a disciplined entry this week."
+    }
+  ]
+}
