@@ -356,26 +356,24 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         .wrh-link{font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);}
         </style>
         <div class="hero-right-stack">
-        <div class="wbh-card">
+        <div class="wbh-card" id="gs-home-brief-card">
           <div class="wbh-eyebrow">Weekly Briefing</div>
           <h2 class="wbh-title">The Week <em>Ahead</em></h2>
-          <div class="wbh-dateline">For the week of <b>July 20, 2026</b></div>
+          <div class="wbh-dateline" id="gs-home-brief-dateline">For the week of <b>July 20, 2026</b></div>
           <div class="wbh-rule"></div>
           <div class="wbh-lbl">Five of Fifteen on My Screen</div>
-          <div class="wbh-pick" onclick="gsPickAndScan('AVGO')"><div class="wbh-rank">01</div><div class="wbh-name"><span class="wbh-ticker">AVGO</span><span class="wbh-company">Broadcom</span></div><span class="wbh-tag">Strong Buy</span></div>
-          <div class="wbh-pick" onclick="gsPickAndScan('CRDO')"><div class="wbh-rank">02</div><div class="wbh-name"><span class="wbh-ticker">CRDO</span><span class="wbh-company">Credo Technology</span></div><span class="wbh-tag">Strong Buy</span></div>
-          <div class="wbh-pick" onclick="gsPickAndScan('MRVL')"><div class="wbh-rank">03</div><div class="wbh-name"><span class="wbh-ticker">MRVL</span><span class="wbh-company">Marvell Technology</span></div><span class="wbh-tag">Strong Buy</span></div>
-          <div class="wbh-pick" onclick="gsPickAndScan('LITE')"><div class="wbh-rank">04</div><div class="wbh-name"><span class="wbh-ticker">LITE</span><span class="wbh-company">Lumentum Holdings</span></div><span class="wbh-tag">Strong Buy</span></div>
-          <div class="wbh-pick" onclick="gsPickAndScan('CBRS')"><div class="wbh-rank">05</div><div class="wbh-name"><span class="wbh-ticker">CBRS</span><span class="wbh-company">Cerebras Systems</span></div><span class="wbh-tag">Strong Buy</span></div>
+          <div id="gs-home-brief-picks">
+          <div class="wbh-pick" onclick="gsPickAndScan('NVDA')"><div class="wbh-rank">01</div><div class="wbh-name"><span class="wbh-ticker">NVDA</span><span class="wbh-company">Nvidia</span></div><span class="wbh-tag">Strong Buy</span></div>
+          </div>
           <button class="wbh-cta" onclick="showPage('brief')">Read Full Brief</button>
         </div>
-        <div class="wrh-card" onclick="gsGoToResults('2026-07-10')">
+        <div class="wrh-card" id="gs-home-results-card">
           <div class="wrh-eyebrow">Weekly Results</div>
-          <h3 class="wrh-title">Week Ending <em>July 10</em></h3>
+          <h3 class="wrh-title" id="gs-home-results-title">Week Ending <em>July 17</em></h3>
           <div class="wrh-stats">
-            <div><div class="wrh-stat-num up">+1.36%</div><div class="wrh-stat-lbl">Avg Return</div></div>
-            <div><div class="wrh-stat-num" style="color:var(--text-primary);">8&ndash;7</div><div class="wrh-stat-lbl">Win&ndash;Loss</div></div>
-            <div><div class="wrh-stat-num up">+1.3%</div><div class="wrh-stat-lbl">S&amp;P 500</div></div>
+            <div><div class="wrh-stat-num dn" id="gs-home-results-avg">&minus;6.93%</div><div class="wrh-stat-lbl">Avg Return</div></div>
+            <div><div class="wrh-stat-num" id="gs-home-results-wl" style="color:var(--text-primary);">3&ndash;11</div><div class="wrh-stat-lbl">Win&ndash;Loss</div></div>
+            <div><div class="wrh-stat-num dn" id="gs-home-results-sp">&minus;1.2%</div><div class="wrh-stat-lbl">S&amp;P 500</div></div>
           </div>
           <span class="wrh-link">View Full Scorecard &rarr;</span>
         </div>
@@ -970,7 +968,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   <!-- ============ RESULTS CROSSLINK ============ -->
   <div class="gb-crosslink">
     <span class="gb-crosslink-lbl">Last Week&rsquo;s Results</span>
-    <a onclick="gsGoToResults('2026-07-17')">Week of July 13&ndash;17, 2026 &middot; Full Scorecard &rarr;</a>
+    <a id="gb-lastweek-link" onclick="gsGoToResults('2026-07-17')">Week of July 13&ndash;17, 2026 &middot; Full Scorecard &rarr;</a>
   </div>
   <style>
   .gs-live-status{margin:24px 0 36px;padding:20px 22px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.16);}
@@ -2737,7 +2735,8 @@ function gsBriefUnlock(){
     <span class="gb-archive-lbl">Browse past weeks:</span>
     <select class="gb-archive-select" onchange="gsResultsArchiveSwitch(this.value)">
       <option value="2026-07-20">This Week (Live) &mdash; July 20&ndash;24, 2026</option>
-      <option value="2026-07-10">Most Recent &mdash; July 6&ndash;10, 2026</option>
+      <option value="2026-07-17">Most Recent &mdash; July 13&ndash;17, 2026</option>
+      <option value="2026-07-10">July 6&ndash;10, 2026</option>
       <option value="2026-07-02">June 29&ndash;July 2, 2026</option>
       <option value="2026-06-26">June 22&ndash;26, 2026</option>
     </select>
@@ -2811,7 +2810,47 @@ function gsBriefUnlock(){
     </div>
   </div>
 
-<div class="gr-week-panel" id="gr-week-2026-07-10" style="display:none;">
+<div class="gr-week-panel" id="gr-week-2026-07-17" data-week="2026-07-17" style="display:none;">
+    <div class="gb-dateline">Week of <b>July 13&ndash;17, 2026</b></div>
+    <div class="gb-rule"></div>
+    <p class="gb-lead">Fifteen names on the board, three closed green. The AI-infrastructure trade hit its worst stretch in over a year this week &mdash; chip, memory, and optical names gave back a broad swath of June&rsquo;s gains, and this list was concentrated exactly where the selling was heaviest.</p>
+
+    <div class="gr-stats-v2">
+      <div class="gr-stat-box"><div class="wrh-stat-num">15</div><div class="wrh-stat-lbl">Total Published</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num dn">&minus;6.93%</div><div class="wrh-stat-lbl">Average Return</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#3ECA7A;">3</div><div class="wrh-stat-lbl">Winners</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#E85555;">11</div><div class="wrh-stat-lbl">Losers</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num dn">&minus;1.22%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
+    </div>
+
+    <div class="gb-section-lbl">Full Scorecard</div>
+    <h2 class="gb-section-title">15 Picks, Graded</h2>
+
+    <div class="gb-score"><div class="gb-rank">01</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MSTR</span><span class="gb-company">Strategy (MicroStrategy)</span></div><span class="gb-scorepct up">+3.67%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">02</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MSFT</span><span class="gb-company">Microsoft</span></div><span class="gb-scorepct up">+1.57%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">03</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AMZN</span><span class="gb-company">Amazon.com</span></div><span class="gb-scorepct up">+1.04%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">04</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">META</span><span class="gb-company">Meta Platforms</span></div><span class="gb-scorepct dn">&minus;2.32%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">05</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">NVDA</span><span class="gb-company">NVIDIA Corporation</span></div><span class="gb-scorepct dn">&minus;2.75%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">06</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span></div><span class="gb-scorepct dn">&minus;5.76%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">07</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">LITE</span><span class="gb-company">Lumentum Holdings</span></div><span class="gb-scorepct dn">&minus;5.85%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">08</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">NFLX</span><span class="gb-company">Netflix</span></div><span class="gb-scorepct dn">&minus;6.70%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">09</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">VRT</span><span class="gb-company">Vertiv Holdings</span></div><span class="gb-scorepct dn">&minus;7.17%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">10</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MU</span><span class="gb-company">Micron Technology</span></div><span class="gb-scorepct dn">&minus;8.62%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">11</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">COHR</span><span class="gb-company">Coherent Corp.</span></div><span class="gb-scorepct dn">&minus;11.59%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">12</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">CBRS</span><span class="gb-company">Cerebras Systems</span></div><span class="gb-scorepct dn">&minus;16.58%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">13</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MRVL</span><span class="gb-company">Marvell Technology</span></div><span class="gb-scorepct dn">&minus;17.53%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">14</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">CRDO</span><span class="gb-company">Credo Technology</span></div><span class="gb-scorepct dn">&minus;18.44%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; Monday open &rarr; Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">15</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">SATS / ECHO</span><span class="gb-company">EchoStar Corporation</span></div><span class="gb-scorepct" style="color:var(--text-muted);font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;">Not Scored</span></div><div class="gb-scoreline gb-pending">Excluded from Winners / Losers / Average Return: reliable historical open-to-close data could not be confirmed following the SATS&rarr;ECHO ticker change, the same reason no entry zone was published for this name. Shown here for the permanent record; not counted in the week&rsquo;s statistics.</div></div></div>
+
+    <p class="gb-scorefoot">3 of 14 scored names closed green, avg <b>&minus;6.93%</b> vs. the S&amp;P 500&rsquo;s &minus;1.22% &mdash; a rough week, called in advance. <b>Mega-cap names (MSFT, AMZN) and the MSTR breakout held up; the semiconductor, memory, and optics names (CRDO, MRVL, CBRS, COHR, MU) took the brunt of a sector-wide correction.</b></p>
+
+    <div class="gb-crosslink">
+      <span class="gb-crosslink-lbl">This Week&rsquo;s Picks</span>
+      <a onclick="gsGoToBriefing('2026-07-13')">Week of July 13, 2026 &middot; 15 Names, 3 Tiers &rarr;</a>
+    </div>
+  </div>
+
+  <div class="gr-week-panel" id="gr-week-2026-07-10" data-week="2026-07-10" style="display:none;">
     <div class="gb-dateline">Week of <b>July 6&ndash;10, 2026</b></div>
     <div class="gb-rule"></div>
     <p class="gb-lead">Fifteen names on the board, eight closed green. The mega-cap AI/semi leaders did the heavy lifting; the chip-adjacent names gave back ground into a volatile week for the sector.</p>
@@ -2851,7 +2890,7 @@ function gsBriefUnlock(){
     </div>
   </div>
 
-  <div class="gr-week-panel" id="gr-week-2026-07-02" style="display:none;">
+  <div class="gr-week-panel" id="gr-week-2026-07-02" data-week="2026-07-02" style="display:none;">
     <div class="gb-dateline">Week of <b>June 29&ndash;July 2, 2026</b> &middot; trailing 4 sessions (market closed Fri July 3 for Independence Day)</div>
     <div class="gb-rule"></div>
     <div class="gr-stats-v2">
@@ -2875,7 +2914,7 @@ function gsBriefUnlock(){
     </div>
   </div>
 
-  <div class="gr-week-panel" id="gr-week-2026-06-26" style="display:none;">
+  <div class="gr-week-panel" id="gr-week-2026-06-26" data-week="2026-06-26" style="display:none;">
     <div class="gb-dateline">Week of <b>June 22&ndash;26, 2026</b> &middot; trailing 5 sessions</div>
     <div class="gb-rule"></div>
     <div class="gr-stats-v2">
@@ -3197,6 +3236,98 @@ function gsToggleNav(){
     });
     var logo=document.querySelector('.nav-logo');
     if(logo){logo.setAttribute('tabindex','0');logo.setAttribute('role','link');key(logo);}
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+})();
+</script>
+<script>
+(function(){
+  function fmtShort(iso){
+    var p=iso.split('-');
+    var d=new Date(Date.UTC(+p[0],+p[1]-1,+p[2]));
+    var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return months[d.getUTCMonth()]+' '+d.getUTCDate();
+  }
+  function statNum(panel,labelStart){
+    var boxes=panel.querySelectorAll('.gr-stat-box');
+    for(var i=0;i<boxes.length;i++){
+      var lbl=boxes[i].querySelector('.wrh-stat-lbl');
+      if(lbl && lbl.textContent.trim().indexOf(labelStart)===0){
+        return boxes[i].querySelector('.wrh-stat-num');
+      }
+    }
+    return null;
+  }
+  function latestGradedPanel(){
+    var panels=document.querySelectorAll('.gr-week-panel[data-week]');
+    var best=null;
+    panels.forEach(function(p){
+      if(p.getAttribute('data-live')==='true'){return;}
+      var w=p.getAttribute('data-week');
+      if(!best || w>best.getAttribute('data-week')){best=p;}
+    });
+    return best;
+  }
+  function applyStatClass(el,box){
+    if(!el||!box){return;}
+    el.textContent=box.textContent.trim();
+    el.className='wrh-stat-num'+(box.classList.contains('up')?' up':box.classList.contains('dn')?' dn':'');
+  }
+  function syncResultsCard(){
+    var panel=latestGradedPanel();
+    if(!panel){return;}
+    var week=panel.getAttribute('data-week');
+    var titleEl=document.getElementById('gs-home-results-title');
+    if(titleEl){titleEl.innerHTML='Week Ending <em>'+fmtShort(week)+'</em>';}
+    applyStatClass(document.getElementById('gs-home-results-avg'),statNum(panel,'Average Return'));
+    applyStatClass(document.getElementById('gs-home-results-sp'),statNum(panel,'S&P 500'));
+    var winBox=statNum(panel,'Winners'),lossBox=statNum(panel,'Losers');
+    var wlEl=document.getElementById('gs-home-results-wl');
+    if(wlEl && winBox && lossBox){wlEl.innerHTML=winBox.textContent.trim()+'–'+lossBox.textContent.trim();}
+    var card=document.getElementById('gs-home-results-card');
+    if(card){card.onclick=function(){gsGoToResults(week);};card.style.cursor='pointer';}
+    var lwLink=document.getElementById('gb-lastweek-link');
+    if(lwLink){
+      var dateline=panel.querySelector('.gb-dateline');
+      var label=dateline?dateline.textContent.trim().replace(/^Week of /,''):week;
+      lwLink.textContent='Week of '+label+' · Full Scorecard →';
+      lwLink.onclick=function(){gsGoToResults(week);};
+    }
+  }
+  function syncBriefCard(){
+    var live=document.querySelector('.gb-week-panel[data-live="true"]');
+    if(!live){return;}
+    var dateline=live.querySelector('.gb-dateline');
+    var dlEl=document.getElementById('gs-home-brief-dateline');
+    if(dlEl && dateline){
+      var m=dateline.textContent.match(/([A-Z][a-z]+ \d+)/);
+      var yr=(live.getAttribute('data-week')||'').slice(0,4);
+      dlEl.innerHTML='For the week of <b>'+(m?m[1]:dateline.textContent.trim())+(yr?', '+yr:'')+'</b>';
+    }
+    var tierHead=live.querySelector('.gb-tier-head');
+    if(!tierHead){return;}
+    var picks=[];
+    var node=tierHead.nextElementSibling;
+    while(node && picks.length<5){
+      if(node.classList && node.classList.contains('gb-tier-head')){break;}
+      if(node.classList && node.classList.contains('gb-pick')){
+        var t=node.querySelector('.gb-ticker'),c=node.querySelector('.gb-company'),cv=node.querySelector('.gb-conviction');
+        if(t && c){picks.push({ticker:t.textContent.trim(),company:c.textContent.trim(),tag:cv?cv.textContent.trim():'Strong Buy'});}
+      }
+      node=node.nextElementSibling;
+    }
+    if(!picks.length){return;}
+    var html='';
+    picks.forEach(function(p,i){
+      var rank=(i+1<10?'0':'')+(i+1);
+      html+='<div class="wbh-pick" onclick="gsPickAndScan(\''+p.ticker+'\')"><div class="wbh-rank">'+rank+'</div><div class="wbh-name"><span class="wbh-ticker">'+p.ticker+'</span><span class="wbh-company">'+p.company+'</span></div><span class="wbh-tag">'+p.tag+'</span></div>';
+    });
+    var container=document.getElementById('gs-home-brief-picks');
+    if(container){container.innerHTML=html;}
+  }
+  function init(){
+    syncResultsCard();
+    syncBriefCard();
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
