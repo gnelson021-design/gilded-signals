@@ -240,6 +240,10 @@ function gradePick(pick, bars, gradingComplete) {
     tier: pick.tier,
     entryType: pick.entryType,
     priceAtPublish: pick.priceAtPublish,
+    // Personal posture, set only by the weekly picks JSON -- never
+    // computed here. Passed straight through so the front end can
+    // combine it with the objectively-computed status below.
+    actionStatus: pick.actionStatus || null,
   };
 
   if (pick.entryType === 'no_entry') {

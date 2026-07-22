@@ -976,9 +976,10 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   .gs-live-status-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--text-primary);margin:6px 0 4px;}
   .gs-live-status-sub{font-size:.8rem;color:var(--text-secondary);margin-bottom:16px;max-width:620px;}
   .gs-live-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
-  .gs-live-status-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
+  .gs-live-status-item{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
   .gs-live-status-sym{font-family:monospace;font-weight:700;font-size:.82rem;color:var(--text-primary);}
   .gs-live-status-badge{font-family:monospace;font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap;}
+  .gs-live-status-action{flex-basis:100%;font-family:'DM Sans',sans-serif;font-size:.66rem;letter-spacing:.02em;color:var(--text-muted);line-height:1.3;}
   .gs-live-status-badge.waiting{color:#9a9690;background:rgba(154,150,144,.12);}
   .gs-live-status-badge.triggered{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.watch-closely{color:#e8ca7a;background:rgba(212,175,55,.14);}
@@ -1002,7 +1003,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
       <div class="gs-live-status-loading">Loading live status&hellip;</div>
     </div>
     <div class="gs-live-status-legend" id="gs-live-status-legend">
-      <b>Buy Zone</b> &mdash; price is currently inside a published entry range. Same accumulation zones described in each pick&rsquo;s write-up below.<br>
+      <b>Buy Zone</b> &mdash; the price is currently inside a published entry range. The accompanying action label shows my current posture &mdash; whether I&rsquo;m accumulating, holding, waiting for further downside, adding on weakness, or simply monitoring the setup. These labels describe my personal approach and are not automatic buy recommendations.<br>
       <b>Triggered</b> &mdash; a published entry zone has been reached. Return shown is measured from that entry, not from today&rsquo;s price &mdash; it does not imply the stock remains a buy at the current level.<br>
       <b>Waiting for Entry</b> &mdash; no published zone has been reached yet this week.<br>
       <b>Breakout Pending / Breakout Triggered</b> &mdash; MSTR only. Tracks a confirmed close above a published level, a different mechanic from the dip-entry zones above.<br>
@@ -1486,9 +1487,10 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   .gs-live-status-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--text-primary);margin:6px 0 4px;}
   .gs-live-status-sub{font-size:.8rem;color:var(--text-secondary);margin-bottom:16px;max-width:620px;}
   .gs-live-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
-  .gs-live-status-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
+  .gs-live-status-item{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
   .gs-live-status-sym{font-family:monospace;font-weight:700;font-size:.82rem;color:var(--text-primary);}
   .gs-live-status-badge{font-family:monospace;font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap;}
+  .gs-live-status-action{flex-basis:100%;font-family:'DM Sans',sans-serif;font-size:.66rem;letter-spacing:.02em;color:var(--text-muted);line-height:1.3;}
   .gs-live-status-badge.waiting{color:#9a9690;background:rgba(154,150,144,.12);}
   .gs-live-status-badge.triggered{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.watch-closely{color:#e8ca7a;background:rgba(212,175,55,.14);}
@@ -1512,7 +1514,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
       <div class="gs-live-status-loading">Loading live status&hellip;</div>
     </div>
     <div class="gs-live-status-legend" id="gs-live-status-legend">
-      <b>Buy Zone</b> &mdash; price is currently inside a published entry range. Same accumulation zones described in each pick&rsquo;s write-up below.<br>
+      <b>Buy Zone</b> &mdash; the price is currently inside a published entry range. The accompanying action label shows my current posture &mdash; whether I&rsquo;m accumulating, holding, waiting for further downside, adding on weakness, or simply monitoring the setup. These labels describe my personal approach and are not automatic buy recommendations.<br>
       <b>Triggered</b> &mdash; a published entry zone has been reached. Return shown is measured from that entry, not from today&rsquo;s price &mdash; it does not imply the stock remains a buy at the current level.<br>
       <b>Waiting for Entry</b> &mdash; no published zone has been reached yet this week.<br>
       <b>Breakout Pending / Breakout Triggered</b> &mdash; MSTR only. Tracks a confirmed close above a published level, a different mechanic from the dip-entry zones above.<br>

@@ -19,6 +19,7 @@
         { "price": 195.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already at the top of this zone at publish time."
     },
     {
@@ -34,7 +35,8 @@
         { "price": 365.00, "weight": 0.60 },
         { "price": 345.00, "weight": 0.40 }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "actionStatus": "waiting_further_downside"
     },
     {
       "rank": 3,
@@ -49,7 +51,8 @@
         { "price": 495.00, "weight": 0.60 },
         { "price": 475.00, "weight": 0.40 }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "actionStatus": "accumulating"
     },
     {
       "rank": 4,
@@ -65,6 +68,7 @@
         { "price": 400.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already at the top of this zone at publish time."
     },
     {
@@ -81,6 +85,7 @@
         { "price": 220.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already trading between the two published zones at publish time."
     },
     {
@@ -97,6 +102,7 @@
         { "price": 700.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already at the top of this zone at publish time."
     },
     {
@@ -113,6 +119,7 @@
         { "price": 105.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already at the top of this zone at publish time. Earnings Wednesday could create a materially different entry."
     },
     {
@@ -129,6 +136,7 @@
         { "price": 1750.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already at the top of this zone at publish time."
     },
     {
@@ -144,7 +152,8 @@
         { "price": 390.00, "weight": 0.60 },
         { "price": 375.00, "weight": 0.40 }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "actionStatus": "waiting_further_downside"
     },
     {
       "rank": 10,
@@ -159,7 +168,8 @@
         { "price": 290.00, "weight": 0.60 },
         { "price": 275.00, "weight": 0.40 }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "actionStatus": "accumulating"
     },
     {
       "rank": 11,
@@ -175,6 +185,7 @@
         { "price": 60.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already at the top of this zone at publish time."
     },
     {
@@ -191,6 +202,7 @@
         { "price": 335.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already inside this zone at publish time. Earnings Wednesday could create a materially different entry."
     },
     {
@@ -207,6 +219,7 @@
         { "price": 100.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already trading just inside this zone at publish time."
     },
     {
@@ -223,6 +236,7 @@
         { "price": 23.00, "weight": 0.40 }
       ],
       "status": "waiting_for_entry",
+      "actionStatus": "accumulating",
       "note": "Live price was already inside this zone at publish time. Very young, volatile stock -- size accordingly."
     },
     {
@@ -236,6 +250,7 @@
       "entryType": "no_entry",
       "zones": [],
       "status": "no_entry_this_week",
+      "actionStatus": "holding_off",
       "note": "Average analyst target ($236) sits below today's price, and two live negative catalysts -- Oracle's Project Jupiter rejection and New York's data-center moratorium -- argue against a disciplined entry this week."
     }
   ]

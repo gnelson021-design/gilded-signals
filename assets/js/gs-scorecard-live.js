@@ -59,6 +59,19 @@
     completed: 'Week finished and graded. The return shown is final for this pick.',
   };
 
+  // Personal posture labels for the compact board only ("This Week's Board,
+  // Right Now"). Purely a display layer -- never used by statusInfo() or
+  // the Results scorecard panel. Values come only from the weekly picks
+  // JSON's explicit "actionStatus" field, never inferred from price.
+  var ACTION_STATUS_LABELS = {
+    accumulating: 'Accumulating',
+    holding: 'Holding',
+    adding_on_weakness: 'Adding on Weakness',
+    waiting_further_downside: 'Waiting for Further Downside',
+    holding_off: 'Holding Off',
+    monitoring: 'Monitoring',
+  };
+
   function statusInfo(p) {
     var isBreakout = p.entryType === 'breakout';
 
@@ -92,8 +105,33 @@
   // ---------------------------------------------------------------------
   // Briefings compact grid
   // ---------------------------------------------------------------------
-  function renderGridItem(p) {
+  // Wraps statusInfo() for the compact board only -- does not modify it,
+  // so renderScoreRow() / the Results scorecard panel is untouched.
+  //   - Buy Zone stays exactly as computed from the published entry zones
+  //     (statusInfo/info.cls), never altered by actionStatus.
+  //   - A personal-posture suffix ("action") is only ever added once the
+  //     objective status is actually Buy Zone. If actionStatus is missing
+  //     or doesn't match a known posture, it defaults to "Monitoring" --
+  //     never guessed as Accumulating/Holding/etc.
+  //   - Triggered (Watch Closely) is relabeled to match the board's other
+  //     dot-separated labels. Same status, same class, cosmetic only.
+  function gridStatusInfo(p) {
     var info = statusInfo(p);
+
+    if (info.cls === 'watch-closely') {
+      return { label: 'Triggered \u00b7 Watch Closely', cls: info.cls, action: null };
+    }
+
+    if (info.cls === 'buy-zone') {
+      var action = ACTION_STATUS_LABELS[p.actionStatus] || ACTION_STATUS_LABELS.monitoring;
+      return { label: info.label, cls: info.cls, action: action };
+    }
+
+    return { label: info.label, cls: info.cls, action: null };
+  }
+
+  function renderGridItem(p) {
+    var info = gridStatusInfo(p);
     var detail = '';
     if (
       (p.status === 'active' || p.status === 'closed_win' || p.status === 'closed_loss') &&
@@ -102,11 +140,15 @@
       var cls = p.returnPct >= 0 ? 'up' : 'dn';
       detail = '<span class="gs-live-status-ret ' + cls + '">' + fmtPct(p.returnPct) + '</span>';
     }
+    var action = info.action
+      ? '<span class="gs-live-status-action">' + info.action + '</span>'
+      : '';
     return (
       '<div class="gs-live-status-item">' +
       '<span class="gs-live-status-sym">' + p.ticker + '</span>' +
       '<span class="gs-live-status-badge ' + info.cls + '">' + info.label + '</span>' +
       detail +
+      action +
       '</div>'
     );
   }
@@ -294,6 +336,14 @@
   // Test-only export — never runs in the browser (module is undefined
   // there), lets the render logic be unit-tested with synthetic data.
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { statusInfo: statusInfo, renderScoreRow: renderScoreRow, statBox: statBox, fmtPct: fmtPct };
+    module.exports = {
+      statusInfo: statusInfo,
+      renderScoreRow: renderScoreRow,
+      statBox: statBox,
+      fmtPct: fmtPct,
+      gridStatusInfo: gridStatusInfo,
+      renderGridItem: renderGridItem,
+      ACTION_STATUS_LABELS: ACTION_STATUS_LABELS,
+    };
   }
 })();
