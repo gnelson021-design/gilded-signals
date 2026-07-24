@@ -174,6 +174,54 @@
   }
 
   // ---------------------------------------------------------------------
+  // gb-pick card status badge (Briefings narrative cards only)
+  // ---------------------------------------------------------------------
+  // Five states, simpler by design than the compact grid's statusInfo():
+  // Accumulating / Watching / Waiting for Entry / Completed / Thesis Changed.
+  // Built on top of statusInfo() -- does not modify it, so the compact grid
+  // and renderScoreRow() below are both untouched.
+  //
+  // thesisStatus is a NEW field, set only by a human in the picks JSON
+  // ("intact" | "changed"), never inferred from price. When "changed", it
+  // overrides everything else, since a broken thesis matters regardless of
+  // where price sits relative to the zone.
+  var PICK_BADGE = {
+    accumulating: { label: 'Accumulating', cls: 'accumulating' },
+    watching: { label: 'Watching', cls: 'watching' },
+    waitingentry: { label: 'Waiting for Entry', cls: 'waitingentry' },
+    completed: { label: 'Completed', cls: 'thesiscompleted' },
+    thesischanged: { label: 'Thesis Changed', cls: 'thesischanged' },
+  };
+
+  function pickStatusBadge(p) {
+    if (p.thesisStatus === 'changed') return PICK_BADGE.thesischanged;
+
+    var info = statusInfo(p);
+    switch (info.cls) {
+      case 'completed':
+        return PICK_BADGE.completed;
+      case 'buy-zone':
+      case 'breakout-triggered':
+        return PICK_BADGE.accumulating;
+      case 'watch-closely':
+        return PICK_BADGE.watching;
+      // waiting, breakout-pending, no-entry, data_unavailable, and any
+      // unrecognized status all fall back to the same safe default: no
+      // position, nothing triggered, nothing to overstate.
+      default:
+        return PICK_BADGE.waitingentry;
+    }
+  }
+
+  function renderStatusBadge(p) {
+    var b = pickStatusBadge(p);
+    return (
+      '<span class="gb-status-badge ' + b.cls + '"><span class="gb-status-dot"></span>' +
+      b.label + '</span>'
+    );
+  }
+
+  // ---------------------------------------------------------------------
   // Results full scorecard panel
   // ---------------------------------------------------------------------
   function renderScoreRow(p) {
@@ -221,6 +269,45 @@
     );
   }
 
+  // One stat row, used whether the week is live or fully graded -- no more
+  // switching to a different Winners/Losers layout once grading finishes.
+  // Average Return is computed here from each pick's own returnPct, so it's
+  // real and live pre-grading, not just a post-grading final number.
+  function computeAverageReturn(picks) {
+    var withReturn = picks.filter(function (p) {
+      return p.returnPct != null && !isNaN(p.returnPct);
+    });
+    if (!withReturn.length) return null;
+    var sum = withReturn.reduce(function (acc, p) { return acc + p.returnPct; }, 0);
+    return sum / withReturn.length;
+  }
+
+  function renderStatsRow(d) {
+    var s = d.summary;
+    var picks = d.picks;
+
+    var breakoutPending = picks.filter(function (p) {
+      return p.entryType === 'breakout' && p.status === 'waiting_for_entry';
+    }).length;
+    var buyZonesTriggered = s.active + s.profitable + s.unprofitable;
+    var activeSetups = s.active;
+    var waitingForEntry = s.waitingForEntry - breakoutPending;
+
+    var avg = computeAverageReturn(picks);
+    var avgCls = avg != null && avg >= 0 ? 'up' : 'dn';
+    var avgHtml = avg != null ? '<span class="' + avgCls + '">' + fmtPct(avg) + '</span>' : '\u2014';
+    var spCls = d.benchmark.returnPct != null && d.benchmark.returnPct >= 0 ? 'up' : 'dn';
+
+    return (
+      statBox(s.totalPublished, 'Total Published', null, "Every pick published in this week's briefing, across all three tiers.") +
+      statBox(avgHtml, 'Average Return', null, 'Average return across every pick with a live or final price. Updates continuously, not just once grading completes.') +
+      statBox(buyZonesTriggered, 'Buy Zones Triggered', 'color:#3ECA7A;', 'Picks where price has reached the published accumulation zone at some point this week.') +
+      statBox(activeSetups, 'Active Setups', 'color:#3ECA7A;', 'Picks currently open in the zone right now, not yet closed out.') +
+      statBox(waitingForEntry, 'Waiting for Entry', 'color:#7ba7c9;', STATUS_TOOLTIPS['waiting']) +
+      statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500 Benchmark', null, 'Week-to-date S&P 500 return, same date range as the picks.')
+    );
+  }
+
   function loadResultsPanel() {
     var statsEl = document.getElementById('gr-live-stats');
     if (!statsEl) return;
@@ -244,46 +331,8 @@
           return;
         }
 
-        var s = d.summary;
-        var spCls = d.benchmark.returnPct != null && d.benchmark.returnPct >= 0 ? 'up' : 'dn';
-
-        // Breakout Pending is derived here, client-side, from fields the
-        // API already sends per pick (entryType + status) -- no backend
-        // or scoring change, just a more specific label for a subset of
-        // the existing "waiting for entry" picks.
-        var breakoutPending = d.picks.filter(function (p) {
-          return p.entryType === 'breakout' && p.status === 'waiting_for_entry';
-        }).length;
-        var dipWaiting = s.waitingForEntry - breakoutPending;
-
-        if (s.completedTriggered > 0) {
-          // Grading has produced at least one final result -> standard
-          // graded-week format, same as the archived weeks below it.
-          var avgCls = s.modelReturnPct != null && s.modelReturnPct >= 0 ? 'up' : 'dn';
-          statsEl.className = 'gr-stats-v2';
-          statsEl.innerHTML =
-            statBox(s.totalPublished, 'Total Published') +
-            statBox('<span class="' + avgCls + '">' + fmtPct(s.modelReturnPct) + '</span>', 'Average Return') +
-            statBox(s.profitable, 'Winners', 'color:#3ECA7A;') +
-            statBox(s.unprofitable, 'Losers', 'color:#E85555;') +
-            statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500 Benchmark');
-        } else {
-          // Still in progress -> status counts, not a fabricated average.
-          var buyZoneTotal = s.active + s.profitable + s.unprofitable;
-          var watchCloseTotal = d.picks.filter(function (p) {
-            return p.status === 'waiting_for_entry' && p.entryType !== 'breakout' && p.watchClose;
-          }).length;
-          var waitingOnly = dipWaiting - watchCloseTotal;
-          statsEl.className = 'gr-stats-v2';
-          statsEl.innerHTML =
-            statBox(s.totalPublished, 'Total Published', null, "Every pick published in this week's briefing, across all three tiers.") +
-            statBox(buyZoneTotal, 'Buy Zone', 'color:#3ECA7A;', STATUS_TOOLTIPS['buy-zone']) +
-            statBox(watchCloseTotal, 'Triggered (Watch Closely)', 'color:#e8ca7a;', STATUS_TOOLTIPS['watch-closely']) +
-            statBox(waitingOnly, 'Waiting for Entry', 'color:#9a9690;', STATUS_TOOLTIPS['waiting']) +
-            statBox(breakoutPending, 'Breakout Pending', 'color:#7ba7c9;', STATUS_TOOLTIPS['breakout-pending']) +
-            statBox(s.noEntryThisWeek, 'No Setup This Week', 'color:#7a7770;', 'No actionable entry was published for this pick this week.') +
-            statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500, WTD', null, 'Week-to-date S&P 500 return, same date range as the picks.');
-        }
+        statsEl.className = 'gr-stats-v2';
+        statsEl.innerHTML = renderStatsRow(d);
 
         if (listEl) listEl.innerHTML = d.picks.map(renderScoreRow).join('');
 
@@ -323,9 +372,112 @@
       });
   }
 
+  // ---------------------------------------------------------------------
+  // Accumulation Zone visual (Briefings narrative cards) -- replaces the
+  // old hand-typed "Where I'm buying" paragraph. Reads zones straight from
+  // data, so a new week only ever needs a data change, never a markup edit.
+  // ---------------------------------------------------------------------
+  function renderAccumZone(p) {
+    if (!p.zones || !p.zones.length) {
+      return (
+        '<div class="gb-accumzone"><span class="gb-accumzone-lbl">Accumulation Zone</span>' +
+        '<div class="gb-accumzone-note">No entry zone published this week.</div></div>'
+      );
+    }
+
+    var cur = p.currentPrice != null ? p.currentPrice : p.priceAtPublish;
+    var values = p.zones.map(function (z) { return z.price; });
+    if (cur != null) values.push(cur);
+    var min = Math.min.apply(null, values);
+    var max = Math.max.apply(null, values);
+    var span = Math.max(max - min, 0.01);
+    // Zones are often tight (single-digit % apart) -- wider padding than a
+    // typical chart keeps closely-spaced ticks from overlapping.
+    var pad = span * 0.35;
+    var scaledMin = min - pad;
+    var scaledSpan = (max + pad) - scaledMin;
+    function pct(v) { return ((v - scaledMin) / scaledSpan) * 100; }
+
+    var sorted = p.zones.slice().sort(function (a, b) { return b.price - a.price; });
+    var ticksHtml = sorted.map(function (z, i) {
+      return (
+        '<div class="gb-accumzone-tick' + (i === 0 ? '' : ' minor') + '" style="left:' + pct(z.price).toFixed(1) + '%">' +
+        '<span class="gb-accumzone-ticklbl">$' + z.price + '<span>' + Math.round(z.weight * 100) + '%</span></span></div>'
+      );
+    }).join('');
+    var curMarker = cur != null
+      ? '<div class="gb-accumzone-curmarker" style="left:' + pct(cur).toFixed(1) + '%"></div>'
+      : '';
+    var chips = sorted.map(function (z) {
+      return '<span class="gb-accumzone-chip"><b>' + Math.round(z.weight * 100) + '%</b> at $' + z.price + '</span>';
+    }).join('');
+    var noteHtml = p.note ? '<div class="gb-accumzone-note">' + p.note + '</div>' : '';
+
+    return (
+      '<div class="gb-accumzone">' +
+      '<div class="gb-accumzone-head"><span class="gb-accumzone-lbl">Accumulation Zone</span>' +
+      (cur != null ? '<span class="gb-accumzone-current">Current <b>$' + cur + '</b></span>' : '') +
+      '</div>' +
+      '<div class="gb-accumzone-track">' + ticksHtml + curMarker + '</div>' +
+      '<div class="gb-accumzone-chips">' + chips + '</div>' +
+      noteHtml +
+      '</div>'
+    );
+  }
+
+  function renderPickLiveBlock(p) {
+    return '<div style="margin-bottom:12px;">' + renderStatusBadge(p) + '</div>' + renderAccumZone(p);
+  }
+
+  // Static picks file (zones, note) is fetched separately from the live
+  // scorecard API (price, status, actionStatus) and merged by ticker, so
+  // this works regardless of whether the API echoes zones back or not.
+  function fetchStaticPicks(week) {
+    var key = 'static:' + week;
+    if (!pending[key]) {
+      pending[key] = fetch('/data/picks-' + week + '.json')
+        .then(function (r) { return r.json(); })
+        .catch(function () { return null; });
+    }
+    return pending[key];
+  }
+
+  function loadPickLiveBlocks() {
+    var mounts = document.querySelectorAll('.gb-pick-live[data-ticker]');
+    if (!mounts.length) return;
+    var weekEl = document.querySelector('[data-live="true"][data-week]');
+    var week = weekEl ? weekEl.getAttribute('data-week') : null;
+    if (!week) return;
+
+    Promise.all([fetchScorecard(week), fetchStaticPicks(week)])
+      .then(function (results) {
+        var live = results[0];
+        var staticData = results[1];
+        if (!live || live.error || !Array.isArray(live.picks)) return;
+
+        var staticByTicker = {};
+        if (staticData && Array.isArray(staticData.picks)) {
+          staticData.picks.forEach(function (sp) { staticByTicker[sp.ticker] = sp; });
+        }
+
+        var liveByTicker = {};
+        live.picks.forEach(function (lp) { liveByTicker[lp.ticker] = lp; });
+
+        mounts.forEach(function (el) {
+          var ticker = el.getAttribute('data-ticker');
+          var lp = liveByTicker[ticker];
+          if (!lp) return;
+          var merged = Object.assign({}, staticByTicker[ticker] || {}, lp);
+          el.innerHTML = renderPickLiveBlock(merged);
+        });
+      })
+      .catch(function () { /* leave mounts as-is rather than show something wrong */ });
+  }
+
   function load() {
     loadBriefGrid();
     loadResultsPanel();
+    loadPickLiveBlocks();
   }
 
   if (typeof document !== 'undefined') {
@@ -344,6 +496,12 @@
       gridStatusInfo: gridStatusInfo,
       renderGridItem: renderGridItem,
       ACTION_STATUS_LABELS: ACTION_STATUS_LABELS,
+      pickStatusBadge: pickStatusBadge,
+      renderStatusBadge: renderStatusBadge,
+      computeAverageReturn: computeAverageReturn,
+      renderStatsRow: renderStatsRow,
+      renderAccumZone: renderAccumZone,
+      PICK_BADGE: PICK_BADGE,
     };
   }
 })();

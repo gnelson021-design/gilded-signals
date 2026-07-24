@@ -933,6 +933,48 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 .gb-crosslink a{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;color:var(--gold-light);cursor:pointer;}
 .gb-crosslink a:hover{text-decoration:underline;}
 .gb-pending{font-family:monospace;font-size:.72rem;color:var(--text-muted);font-style:italic;}
+
+/* ============ Communication redesign: howto, status badge, accumulation zone ============ */
+.gb-howto{margin:0 0 34px;padding:26px 24px;border-radius:14px;background:linear-gradient(160deg,rgba(212,175,55,.08),rgba(212,175,55,.02));border:1px solid rgba(212,175,55,.28);}
+.gb-howto-eyebrow{font-family:'DM Sans',sans-serif;font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:10px;}
+.gb-howto-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--text-primary);margin:0 0 14px;}
+.gb-howto-quote{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;font-style:italic;line-height:1.55;color:var(--text-primary);border-left:2px solid var(--gold);padding-left:18px;margin:0 0 16px;}
+.gb-howto p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 14px;}
+.gb-howto-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px 18px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);}
+.gb-howto-legend-item{display:flex;align-items:flex-start;gap:8px;font-size:.78rem;color:var(--text-secondary);line-height:1.4;}
+.gb-howto-legend-item b{color:var(--text-primary);}
+.gb-howto-dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+
+.gb-status-badge{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:4px 11px 4px 9px;border-radius:999px;white-space:nowrap;}
+.gb-status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.gb-status-badge.accumulating{color:#3ECA7A;background:rgba(62,202,122,.09);border:1px solid rgba(62,202,122,.35);}
+.gb-status-badge.accumulating .gb-status-dot{background:#3ECA7A;}
+.gb-status-badge.watching{color:#e8ca7a;background:rgba(212,175,55,.10);border:1px solid rgba(212,175,55,.35);}
+.gb-status-badge.watching .gb-status-dot{background:#e8ca7a;}
+.gb-status-badge.waitingentry{color:#7ba7c9;background:rgba(94,150,196,.10);border:1px solid rgba(94,150,196,.35);}
+.gb-status-badge.waitingentry .gb-status-dot{background:#7ba7c9;}
+.gb-status-badge.thesiscompleted{color:#B0ABA5;background:rgba(176,171,165,.09);border:1px solid rgba(176,171,165,.3);}
+.gb-status-badge.thesiscompleted .gb-status-dot{background:#B0ABA5;}
+.gb-status-badge.thesischanged{color:#E85555;background:rgba(232,85,85,.10);border:1px solid rgba(232,85,85,.4);}
+.gb-status-badge.thesischanged .gb-status-dot{background:#E85555;}
+
+.gb-accumzone{margin:0 0 16px;padding:16px 18px;border-radius:10px;background:rgba(212,175,55,.05);border:1px solid rgba(212,175,55,.18);}
+.gb-accumzone-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;gap:10px;flex-wrap:wrap;}
+.gb-accumzone-lbl{font-family:monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-light);}
+.gb-accumzone-current{font-family:monospace;font-size:.68rem;color:var(--text-muted);}
+.gb-accumzone-current b{color:var(--text-primary);font-weight:700;}
+.gb-accumzone-track{position:relative;height:4px;border-radius:3px;background:var(--charcoal-4);margin:26px 4px 22px;}
+.gb-accumzone-tick{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:var(--gold);transform:translate(-50%,-50%);box-shadow:0 0 0 3px rgba(212,175,55,.16);}
+.gb-accumzone-tick.minor{width:7px;height:7px;background:var(--gold-2);box-shadow:0 0 0 3px rgba(212,175,55,.1);}
+.gb-accumzone-ticklbl{position:absolute;top:-30px;left:50%;transform:translateX(-50%);font-family:monospace;font-size:.6rem;font-weight:700;color:var(--gold-light);white-space:nowrap;text-align:center;line-height:1.3;}
+.gb-accumzone-ticklbl span{display:block;font-size:.52rem;font-weight:400;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;}
+.gb-accumzone-curmarker{position:absolute;top:-8px;bottom:-8px;width:2px;background:var(--text-primary);transform:translateX(-50%);}
+.gb-accumzone-curmarker::after{content:'NOW';position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-family:monospace;font-size:.5rem;letter-spacing:.1em;color:var(--text-secondary);}
+.gb-accumzone-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.gb-accumzone-chip{font-family:monospace;font-size:.72rem;color:var(--text-primary);background:rgba(255,255,255,.04);border:1px solid var(--border);padding:5px 10px;border-radius:6px;}
+.gb-accumzone-chip b{color:var(--gold-light);}
+.gb-accumzone-note{font-size:.78rem;color:var(--text-secondary);line-height:1.55;font-style:italic;}
+@media(max-width:600px){.gb-howto-title{font-size:1.35rem;}}
 .gb-locked-wrap .gb-locked-inner{filter:blur(7px);pointer-events:none;user-select:none;transition:filter .3s;}
 .gb-locked-wrap.unlocked .gb-locked-inner{filter:none;pointer-events:auto;user-select:auto;}
 .gb-lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;padding:20px;}
@@ -964,6 +1006,21 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   <div class="gb-rule"></div>
 
   <p class="gb-lead">A cluster of major AI earnings all land Wednesday this week &mdash; Alphabet, IBM, and ServiceNow report, and AMD holds its Advancing AI event and launches its Zen 6 &ldquo;Venice&rdquo; chips the same day. Underneath that, the AI-infrastructure trade is working through a real correction: the semiconductor sector is down over 20% from its June peak, Micron has fallen into a bear market, and Oracle took a credit-rating downgrade on AI-capex concentration risk &mdash; enough that it's off this week's list entirely. This week's mix leans toward names holding up better than the sector (NVDA, TSM), names with genuine event-driven catalysts (AMD, GOOG, NOW), and one new addition &mdash; Rocket Lab, added on a pending Iridium acquisition and an analyst range that sits entirely above today's price. Split into three tiers, same as always, so you can see where I'd act now versus where I'm watching for a better entry.</p>
+
+  <!-- ============ HOW GILDED SIGNALS WORKS ============ -->
+  <div class="gb-howto">
+    <div class="gb-howto-eyebrow">How Gilded Signals Works</div>
+    <div class="gb-howto-title">Buying great companies, not calling exact bottoms</div>
+    <div class="gb-howto-quote">Many of our best long-term investments begin with temporary declines. If the thesis remains intact, lower prices can create better accumulation opportunities &mdash; not invalidate the research.</div>
+    <p>Every pick below is a company I believe is high-quality, paired with the price zone where I'd actually put capital to work. The question this page is built to answer is <b>where I'm looking to buy and why</b> &mdash; not whether a stock went straight up the moment this published.</p>
+    <div class="gb-howto-legend">
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#3ECA7A;"></span><span><b>Accumulating</b> &mdash; price is inside my zone and I'm buying.</span></div>
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#e8ca7a;"></span><span><b>Watching</b> &mdash; getting close, nothing triggered yet.</span></div>
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#7ba7c9;"></span><span><b>Waiting for Entry</b> &mdash; still well above my zone.</span></div>
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#B0ABA5;"></span><span><b>Completed</b> &mdash; the week closed and this pick was graded.</span></div>
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#E85555;"></span><span><b>Thesis Changed</b> &mdash; something broke the original reasoning.</span></div>
+    </div>
+  </div>
 
   <!-- ============ RESULTS CROSSLINK ============ -->
   <div class="gb-crosslink">
@@ -1043,7 +1100,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$180 &middot; -11.33%</span></span><span>Max <span class="v up">$500 &middot; +146.31%</span></span></div>
           <div class="tl-foot">61 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Current prices already fall within my preferred accumulation zone. I'm comfortable buying at or near the open and would keep adding on normal red days, getting more aggressive near $195 -- roughly where it broke out from. For a business this established, further weakness is opportunity, not a warning sign. Continue monitoring company news, analyst revisions, and overall market conditions before adding further.</b></div>
+        <div class="gb-pick-live" data-ticker="NVDA"></div>
         <div class="gb-watch">Watching: <b>Whether the broader chip-sector selloff drags it back down alongside names with weaker charts.</b></div>
       </div>
     </div>
@@ -1072,7 +1129,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$215.88 &middot; -41.65%</span></span><span>Max <span class="v up">$650 &middot; +75.68%</span></span></div>
           <div class="tl-foot">48 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>This has run ahead of where I want to start buying. I'm waiting for a pullback toward roughly $365 before adding, and would get more aggressive near $345 -- or even more so if it revisits the $300 downside case a technician flagged, given the AI demand behind it. Keeping an eye on news flow and sector conditions before adding to the position.</b></div>
+        <div class="gb-pick-live" data-ticker="AVGO"></div>
         <div class="gb-watch">Watching: <b>Whether that $300 downside scenario plays out, and how correlated it stays with the broader chip selloff.</b></div>
       </div>
     </div>
@@ -1101,7 +1158,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$320 &middot; -35.74%</span></span><span>Max <span class="v up">$725 &middot; +45.58%</span></span></div>
           <div class="tl-foot">51 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Current prices are already inside the accumulation zone I've been targeting. I'm comfortable buying at current levels and would add with more confidence near $475 on any pullback. Continue monitoring earnings developments, analyst revisions, and overall market conditions before adding further.</b></div>
+        <div class="gb-pick-live" data-ticker="AMD"></div>
         <div class="gb-watch">Watching: <b>Whether Wednesday brings real customer commitments or just roadmap talk.</b></div>
       </div>
     </div>
@@ -1130,7 +1187,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$354 &middot; -15.51%</span></span><span>Max <span class="v up">$700 &middot; +67.06%</span></span></div>
           <div class="tl-foot">19 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>This is already trading inside my accumulation zone. I'm comfortable buying at or near today's price and would keep adding on any further weakness toward $400 while the thesis stays intact. Monitoring analyst revisions and sector news before adding to any position.</b></div>
+        <div class="gb-pick-live" data-ticker="TSM"></div>
         <div class="gb-watch">Watching: <b>Whether it decouples from sector-wide weakness given how strong its own numbers are.</b></div>
       </div>
     </div>
@@ -1159,7 +1216,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$110 &middot; -53.19%</span></span><span>Max <span class="v up">$385 &middot; +63.83%</span></span></div>
           <div class="tl-foot">43 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>This is trading well inside the zone a technician flagged as the institutional demand area. I'm comfortable buying at current levels and would keep adding on normal red days while that thesis holds. Continue monitoring analyst revisions and sector news before adding further.</b></div>
+        <div class="gb-pick-live" data-ticker="MRVL"></div>
         <div class="gb-watch">Watching: <b>Which side of the analyst split proves right.</b></div>
       </div>
     </div>
@@ -1196,7 +1253,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$600 &middot; -20.00%</span></span><span>Max <span class="v up">$1,400 &middot; +86.67%</span></span></div>
           <div class="tl-foot">29 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Current prices already fall within my preferred accumulation zone. I'm comfortable buying at or near today's level and would keep adding on weakness toward $700 -- below that, given the long-term AI-optics demand story, I'd treat it as an even better entry, not a reason to step away. Watching earnings (Aug 11) and sector news before adding further.</b></div>
+        <div class="gb-pick-live" data-ticker="LITE"></div>
         <div class="gb-watch">Watching: <b>Which target camp -- TD Cowen's or Northland's -- proves closer to right this quarter.</b></div>
       </div>
     </div>
@@ -1225,7 +1282,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$85 &middot; -23.42%</span></span><span>Max <span class="v up">$236 &middot; +112.61%</span></span></div>
           <div class="tl-foot">48 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Current levels are already inside my preferred accumulation zone -- right at the support cluster technicians have been watching. I'm comfortable starting a position here and would add with more confidence on any further weakness into Wednesday's report. Further additions depend on how the market reacts to earnings and whether the setup stays intact.</b></div>
+        <div class="gb-pick-live" data-ticker="NOW"></div>
         <div class="gb-watch">Watching: <b>The report itself -- this could gap either direction Thursday morning.</b></div>
       </div>
     </div>
@@ -1254,7 +1311,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$883.90 &middot; -50.89%</span></span><span>Max <span class="v up">$2,620 &middot; +45.56%</span></span></div>
           <div class="tl-foot">43 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Current prices already fall within my preferred accumulation zone -- comfortably below where I'd planned to start. I'm comfortable buying at or near today's level and would keep adding on any further pullback, since ASML's position at the center of the chip supply chain makes weakness here a better entry, not a red flag. Continue monitoring company news and sector conditions before adding to any position.</b></div>
+        <div class="gb-pick-live" data-ticker="ASML"></div>
         <div class="gb-watch">Watching: <b>Whether it delivers on its own second-half guidance bridge.</b></div>
       </div>
     </div>
@@ -1283,7 +1340,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$400 &middot; +1.57%</span></span><span>Max <span class="v up">$870 &middot; +120.91%</span></span></div>
           <div class="tl-foot">56 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>This has moved past where I want to start buying. I'd wait for a pullback toward approximately $390 before adding, and would get more aggressive near $375 -- about as safe an accumulation zone as this list gets, so weakness there is opportunity, not danger. Watching for reaction around the July 29 earnings report before adding further.</b></div>
+        <div class="gb-pick-live" data-ticker="MSFT"></div>
         <div class="gb-watch">Watching: <b>Nothing urgent this week -- a patient accumulation name.</b></div>
       </div>
     </div>
@@ -1312,7 +1369,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$338 &middot; +16.73%</span></span><span>Max <span class="v up">$500 &middot; +72.68%</span></span></div>
           <div class="tl-foot">19 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>This is sitting right in the zone I've been targeting. I'm comfortable buying at current levels and would add more on a pullback toward $275 while the data-center power thesis stays intact. Watching for analyst reaction around the July 29 earnings report before adding further.</b></div>
+        <div class="gb-pick-live" data-ticker="VRT"></div>
         <div class="gb-watch">Watching: <b>Which of those two competing analyst calls -- RBC's trim or Baird's initiation -- wins out.</b></div>
       </div>
     </div>
@@ -1349,7 +1406,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$77 &middot; +13.87%</span></span><span>Max <span class="v up">$150 &middot; +121.83%</span></span></div>
           <div class="tl-foot">16 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>No need to wait here -- this is already trading right at the level I want to be a buyer. I'm comfortable starting a position at current prices and would get more aggressive near $60 if the broader rotation out of space and growth names continues. Monitoring the pending acquisition timeline and sector sentiment before adding further.</b></div>
+        <div class="gb-pick-live" data-ticker="RKLB"></div>
         <div class="gb-watch">Watching: <b>Personal take: high conviction this moves this week, though there's no single confirmed catalyst pinned to this exact week beyond the ongoing acquisition process -- size accordingly. Watching Iridium deal approval progress and whether the space-stock rotation stabilizes.</b></div>
       </div>
     </div>
@@ -1378,7 +1435,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$310 &middot; -10.44%</span></span><span>Max <span class="v up">$515 &middot; +48.79%</span></span></div>
           <div class="tl-foot">64 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Current levels are already inside my accumulation zone. I'm comfortable buying at or near today's price and would add with real conviction on a move toward $335. If Wednesday's earnings spook the market further, I'd treat that as an even better long-term entry -- the Cloud/AI story doesn't change because of one quarter. Continue monitoring earnings reaction and analyst revisions before adding to any position.</b></div>
+        <div class="gb-pick-live" data-ticker="GOOG"></div>
         <div class="gb-watch">Watching: <b>Wednesday's print, especially the Cloud growth number.</b></div>
       </div>
     </div>
@@ -1407,7 +1464,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$115 &middot; +6.48%</span></span><span>Max <span class="v up">$152 &middot; +40.74%</span></span></div>
           <div class="tl-foot">5 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026 (avg of 5 named targets: Bernstein, UBS, Piper Sandler, Roth, Barclays)</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Current prices already fall within my preferred accumulation zone. I'm comfortable buying at or near today's level and would continue adding on a move toward $100. Keeping an eye on sector news and market conditions before adding further.</b></div>
+        <div class="gb-pick-live" data-ticker="ORA"></div>
         <div class="gb-watch">Watching: <b>Personal take: I think geothermal is one of the most underappreciated AI-power stories out there, and I'd treat further weakness here as a gift, not a red flag -- though it's worth being clear that's my own conviction, not consensus. Bernstein rates this Underperform at $115 while UBS says Buy at $152 -- Wall Street itself is split.</b></div>
       </div>
     </div>
@@ -1436,7 +1493,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="tl-ends"><span>Min <span class="v dn">$40 &middot; +60.00%</span></span><span>Max <span class="v up">$51 &middot; +104.00%</span></span></div>
           <div class="tl-foot">12 analysts &middot; S&amp;P Global consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Current prices already fall within my preferred accumulation zone. I'm comfortable buying at or near today's level and would add more on a move toward $23, the level that needs to hold as a floor -- it hit an all-time low there on July 7. Watching news flow closely given how early-stage this name still is.</b></div>
+        <div class="gb-pick-live" data-ticker="FRVO"></div>
         <div class="gb-watch">Watching: <b>Personal take: same belief as ORA -- I think this space is overlooked, and I'd treat weakness as opportunity. That said, this is the riskiest name on the entire list. If $23 breaks decisively, I'd pause and reassess rather than keep averaging down blindly.</b></div>
       </div>
     </div>
@@ -1460,7 +1517,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           </div>
           <div class="tl-foot">Full Min/Max analyst range pending confirmation &mdash; average target only, consensus as of Jul 19, 2026</div>
         </div>
-        <div class="gb-dip">Where I&rsquo;m buying: <b>Not yet. Wall Street's own average target ($236) sits below today's price (~$271), so this isn't a “buy the dip” name by the numbers right now. Personal take: long-term, I still think distributed AI power is real and BE could win in it -- but that view runs against where consensus sits today. I wouldn't average down until the regulatory picture actually improves. Continue monitoring regulatory developments and sector news before this becomes a buy again.</b></div>
+        <div class="gb-pick-live" data-ticker="BE"></div>
         <div class="gb-watch">Watching: <b>Whether the Hold rating turns into outright downgrades if the regulatory picture keeps deteriorating.</b></div>
       </div>
     </div>
