@@ -1275,6 +1275,22 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
     </div>
   </div>
 
+
+  <!-- CORE BUSINESS RULE: Free users may view Picks #1-5 only. Picks #6-15
+       are Pro-only and must never be exposed to unauthorized users.
+       Do not modify this access-control block without the owner's
+       explicit approval. -->
+  <div class="gb-teaser">
+    <div class="gb-teaser-eyebrow">Subscribers Only</div>
+    <h3 class="gb-teaser-title">10 More Names on My Screen</h3>
+    <p class="gb-teaser-body">The five above are where I&rsquo;d act now. The next ten are split into a Secondary Watchlist &mdash; strong businesses without a single this-week trigger &mdash; and Buy-on-Dip Candidates, where the upside case is real but so is the near-term risk. Full theses, catalysts, and risk levels are reserved for subscribers.</p>
+    <p class="gb-teaser-fine">As always, this reflects my own research and positioning &mdash; not a guarantee, and not personalized investment advice.</p>
+    <button class="gb-teaser-cta" onclick="gsBriefUnlock()">Unlock All 15 Picks &middot; $29.99/mo</button>
+  </div>
+
+  <div class="gb-locked-wrap">
+    <div class="gb-locked-inner">
+
   <!-- ============ TIER: SECONDARY WATCHLIST ============ -->
   <div class="gb-tier-head">
     <div class="gb-tier-eyebrow">Tier 2 &middot; Strong Businesses, No Single-Week Trigger</div>
@@ -1635,6 +1651,17 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
           <div class="gb-pick-live" data-ticker="PANW"></div>
           <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+    </div>
+    <div class="gb-lock-overlay">
+      <div class="gb-lock-card">
+        <div class="gb-lock-icon">&#128274;</div>
+        <div class="gb-lock-title">Subscribers Only</div>
+        <div class="gb-lock-sub">Unlock the Secondary Watchlist and Buy-On-Dip Candidates &mdash; full theses, catalysts, and risk levels for all 10 remaining names.</div>
+        <button class="gb-lock-cta" onclick="gsBriefUnlock()">Unlock &middot; $29.99/mo</button>
       </div>
     </div>
   </div>
