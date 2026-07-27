@@ -3363,6 +3363,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 </div>
 <!-- gs-footer-fix -->
 <!-- gs-brief-v2 -->
+<!-- gs-results-frozen-2026-07-24 -->
 <!-- gs-brief-2026-07-27 -->
 <!-- gs-brief-2026-07-20 -->
 <!-- gs-brief-layout-fix-2026-07-20 -->
@@ -3436,8 +3437,8 @@ function gsBriefUnlock(){
   <div class="gb-archive-bar">
     <span class="gb-archive-lbl">Browse past weeks:</span>
     <select class="gb-archive-select" onchange="gsResultsArchiveSwitch(this.value)">
-      <option value="2026-07-20">This Week (Live) &mdash; July 20&ndash;24, 2026</option>
-      <option value="2026-07-17">Most Recent &mdash; July 13&ndash;17, 2026</option>
+      <option value="2026-07-24">Most Recent &mdash; July 20&ndash;24, 2026</option>
+      <option value="2026-07-17">July 13&ndash;17, 2026</option>
       <option value="2026-07-10">July 6&ndash;10, 2026</option>
       <option value="2026-07-02">June 29&ndash;July 2, 2026</option>
       <option value="2026-06-26">June 22&ndash;26, 2026</option>
@@ -3481,30 +3482,39 @@ function gsBriefUnlock(){
     </div>
   </div>
 
-    <div class="gr-week-panel" id="gr-week-2026-07-20" data-live="true" data-week="2026-07-20">
+    <div class="gr-week-panel" id="gr-week-2026-07-24" data-week="2026-07-24" style="display:none;">
     <div class="gb-dateline">Week of <b>July 20&ndash;24, 2026</b></div>
     <div class="gb-rule"></div>
+    <p class="gb-lead">A rough week for the model, called in advance for several of these staged entries &mdash; two winners against nine losers, for an average return of &minus;5.38% against the S&amp;P 500's &minus;1.09%. NVDA was the one clean win, triggering at $203 and closing the week at $207.07. The damage was concentrated in the secondary and buy-on-dip tiers &mdash; Marvell's staged entries triggered right before an 18% slide, and ServiceNow, Fervo, and Alphabet all triggered into ongoing weakness. Three names &mdash; Broadcom, AMD, and Lumentum &mdash; never pulled back into their published zones at all, so no capital went to work there; Bloom Energy got no entry by design, on two live negative catalysts.</p>
 
-    <div class="gr-status-banner live" id="gr-status-banner">
-      <div class="gr-status-main"><span class="gr-status-dot"></span> <span id="gr-status-label">Live</span></div>
-      <div class="gr-status-sub" id="gr-status-sub">Grading completes Friday after close &middot; nothing below is final</div>
+    <div class="gr-stats-v2">
+      <div class="gr-stat-box"><div class="wrh-stat-num">15</div><div class="wrh-stat-lbl">Total Published</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num dn">&minus;5.38%</div><div class="wrh-stat-lbl">Average Return</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#3ECA7A;">2</div><div class="wrh-stat-lbl">Winners</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#E85555;">9</div><div class="wrh-stat-lbl">Losers</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num dn">&minus;1.09%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
     </div>
 
-    <p class="gb-lead" id="gr-status-lead">This week is still in progress. Every number below comes from the same engine that grades the final scorecard Friday after close &mdash; nothing here is final until the week closes.</p>
+    <div class="gb-section-lbl">Full Scorecard</div>
+    <h2 class="gb-section-title">15 Picks, Graded</h2>
 
-    <div class="gr-stats-v2" id="gr-live-stats">
-      <div class="gr-live-loading">Loading live scorecard&hellip;</div>
-    </div>
+    <div class="gb-score"><div class="gb-rank">01</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">NVDA</span><span class="gb-company">Nvidia</span></div><span class="gb-scorepct up">+2.00%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; triggered $203 (7/20) &rarr; $207.07 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">02</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">VRT</span><span class="gb-company">Vertiv Holdings</span></div><span class="gb-scorepct up">+0.08%</span></div><div class="gb-scoreline">Result: <b class="up">Win</b> &middot; triggered $290 (7/24) &rarr; $290.23 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">03</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">ASML</span><span class="gb-company">ASML Holding</span></div><span class="gb-scorepct dn">&minus;1.18%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; staged entries $1,800 &amp; $1,750 (7/20), blended $1,780 &rarr; $1,758.94 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">04</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MSFT</span><span class="gb-company">Microsoft</span></div><span class="gb-scorepct dn">&minus;2.10%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; triggered $390 (7/20) &rarr; $381.81 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">05</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">TSM</span><span class="gb-company">Taiwan Semiconductor</span></div><span class="gb-scorepct dn">&minus;3.81%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; triggered $420 (7/20) &rarr; $404.01 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">06</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">RKLB</span><span class="gb-company">Rocket Lab</span></div><span class="gb-scorepct dn">&minus;6.03%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; triggered $68 (7/20) &rarr; $63.90 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">07</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">ORA</span><span class="gb-company">Ormat Technologies</span></div><span class="gb-scorepct dn">&minus;6.29%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; staged entries $110 (7/20) &amp; $100 (7/24), blended $106 &rarr; $99.33 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">08</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">GOOG</span><span class="gb-company">Alphabet</span></div><span class="gb-scorepct dn">&minus;6.90%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; staged entries $348 (7/21) &amp; $335 (7/23), blended $342.80 &rarr; $319.15 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">09</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">FRVO</span><span class="gb-company">Fervo Energy</span></div><span class="gb-scorepct dn">&minus;7.60%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; triggered $26 (7/20) &rarr; $24.03 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">10</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">NOW</span><span class="gb-company">ServiceNow</span></div><span class="gb-scorepct dn">&minus;9.05%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; staged entries $111 &amp; $105 (7/20), blended $108.60 &rarr; $98.77 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">11</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MRVL</span><span class="gb-company">Marvell Technology</span></div><span class="gb-scorepct dn">&minus;18.27%</span></div><div class="gb-scoreline">Result: <b class="dn">Loss</b> &middot; staged entries $250 &amp; $220 (7/20), blended $238 &rarr; $194.51 at Friday close</div></div></div>
+    <div class="gb-score"><div class="gb-rank">12</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span></div><span class="gb-scorepct" style="color:var(--text-muted);font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;">Not Scored</span></div><div class="gb-scoreline gb-pending">Zone never triggered &mdash; published entry $345&ndash;$365, price held above it all week (closed $381.84). No capital went to work, no result to grade.</div></div></div>
+    <div class="gb-score"><div class="gb-rank">13</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AMD</span><span class="gb-company">Advanced Micro Devices</span></div><span class="gb-scorepct" style="color:var(--text-muted);font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;">Not Scored</span></div><div class="gb-scoreline gb-pending">Zone never triggered &mdash; published entry $475&ndash;$495, price held above it all week (closed $522.03). No capital went to work, no result to grade.</div></div></div>
+    <div class="gb-score"><div class="gb-rank">14</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">LITE</span><span class="gb-company">Lumentum Holdings</span></div><span class="gb-scorepct" style="color:var(--text-muted);font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;">Not Scored</span></div><div class="gb-scoreline gb-pending">Zone never triggered &mdash; published entry $700&ndash;$750, price held above it all week (closed $763.29). No capital went to work, no result to grade.</div></div></div>
+    <div class="gb-score"><div class="gb-rank">15</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">BE</span><span class="gb-company">Bloom Energy</span></div><span class="gb-scorepct" style="color:var(--text-muted);font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;">Not Scored</span></div><div class="gb-scoreline gb-pending">No entry this week by design: average analyst target ($236) sits below the price at publish, and two live negative catalysts &mdash; Oracle's Project Jupiter rejection and New York's data-center moratorium &mdash; argued against a disciplined entry.</div></div></div>
 
-    <div class="gb-section-lbl">Live Scorecard</div>
-    <h2 class="gb-section-title">15 Picks, Tracked Live</h2>
-
-    <div id="gr-live-scorelist">
-      <div class="gr-live-loading">Loading&hellip;</div>
-    </div>
-
-    <p class="gb-scorefoot" id="gr-live-scorefoot"></p>
-    <div class="gr-live-meta" id="gr-live-meta"></div>
+    <p class="gb-scorefoot">2 of 11 scored names closed green, avg <b>&minus;5.38%</b> vs. the S&amp;P 500's &minus;1.09% &mdash; a losing week. <b>NVDA was the lone standout at +2.00%; Marvell was the biggest drag at &minus;18.27%. Three names (AVGO, AMD, LITE) never triggered their published zones at all &mdash; staged entries doing their job of keeping capital out when price didn't cooperate.</b></p>
 
     <div class="gb-crosslink">
       <span class="gb-crosslink-lbl">This Week&rsquo;s Picks</span>
