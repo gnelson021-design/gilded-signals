@@ -922,6 +922,28 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 .gb-risk.low{color:#3ECA7A;border:1px solid rgba(62,202,122,.4);background:rgba(62,202,122,.08);}
 .gb-risk.medium{color:#D4AF37;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.08);}
 .gb-risk.high{color:#E85555;border:1px solid rgba(232,85,85,.4);background:rgba(232,85,85,.08);}
+
+.gb-topnote{margin:0 0 26px;padding:16px 18px;border-radius:10px;background:var(--charcoal-2);border:1px solid var(--border);font-size:.86rem;line-height:1.7;color:var(--text-secondary);font-style:italic;}
+.gb-buyplan{margin:14px 0 12px;padding:14px 16px;border-radius:8px;background:rgba(212,175,55,.05);border:1px solid rgba(212,175,55,.18);}
+.gb-buyplan-lbl{font-family:monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);margin-bottom:9px;}
+.gb-buyplan-row{font-size:.86rem;line-height:1.6;color:var(--text-primary);margin:5px 0;}
+.gb-buyplan-row b{font-weight:600;}
+.gb-why{font-size:.88rem;line-height:1.65;color:var(--text-secondary);margin:0 0 9px;}
+.gb-why .lbl{font-weight:600;color:var(--text-primary);}
+.gb-riskline{font-size:.84rem;line-height:1.6;color:var(--text-secondary);margin:0 0 16px;padding:9px 12px;border-radius:6px;background:rgba(232,85,85,.05);border-left:2px solid rgba(232,85,85,.45);}
+.gb-riskline .lbl{font-weight:600;color:#E88888;}
+.gb-flag{font-size:.74rem;line-height:1.5;color:var(--gold-light);margin:0 0 14px;padding:7px 11px;border-radius:6px;background:rgba(212,175,55,.06);border-left:2px solid rgba(212,175,55,.4);font-style:italic;}
+.tl-lbl{font-family:monospace;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
+.tl-buyzone-track{position:relative;height:4px;border-radius:3px;margin:38px 4px 8px;background:var(--charcoal-4);}
+.tl-buyzone-track::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;border-radius:3px;background:linear-gradient(90deg,rgba(62,202,122,.55),rgba(62,202,122,.15) 60%,rgba(255,255,255,.04));}
+.tl-buy-dot{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid #0c0c10;transform:translate(-50%,-50%);box-shadow:0 0 0 3px rgba(62,202,122,.2);z-index:2;}
+.tl-buy-lbl{position:absolute;top:-32px;left:50%;transform:translateX(-50%);text-align:center;white-space:nowrap;}
+.tl-buy-lbl .t{font-family:monospace;font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);}
+.tl-buy-lbl .p{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;color:var(--text-primary);}
+.tl-avgline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:18px;padding-top:12px;border-top:1px solid var(--border);}
+.tl-avgline-lbl{font-family:monospace;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);}
+.tl-avgline-val{font-family:monospace;font-size:.68rem;color:var(--text-secondary);text-align:right;}
+@media(max-width:600px){.gb-buyplan-row{font-size:.82rem;}}
 .gb-tier-head{margin:44px 0 8px;}
 .gb-tier-eyebrow{font-family:monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
 .gb-tier-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--text-primary);margin:0 0 8px;}
@@ -991,7 +1013,8 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   <div class="gb-archive-bar">
     <span class="gb-archive-lbl">Browse past weeks:</span>
     <select class="gb-archive-select" onchange="gsBriefArchiveSwitch(this.value)">
-      <option value="2026-07-20">This Week &mdash; July 20&ndash;24, 2026</option>
+      <option value="2026-07-27">This Week &mdash; July 27&ndash;31, 2026</option>
+    <option value="2026-07-20">Week of July 20&ndash;24, 2026</option>
     <option value="2026-07-13">Week of July 13&ndash;17, 2026</option>
       <option value="2026-07-06">July 6&ndash;10, 2026</option>
       <option value="2026-06-29">June 29&ndash;July 3, 2026</option>
@@ -1000,7 +1023,626 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 
   <div class="gb-rule"></div>
 
-    <div class="gb-week-panel" id="gb-week-2026-07-20" data-live="true">
+    <div class="gb-week-panel" id="gb-week-2026-07-27" data-live="true">
+    <div class="gb-dateline">For the week of <b>July 27&ndash;31, 2026</b> &middot; Updated Sundays</div>
+
+  <div class="gb-rule"></div>
+
+  <div class="gb-topnote">These are the stocks I&rsquo;m personally watching most closely this week based on my research. The buy plan shows where I&rsquo;m looking to begin or add to my own position if prices cooperate. This is not financial advice &mdash; it&rsquo;s a transparent look at my investing process.</div>
+
+  <p class="gb-lead">Broadcom signed a $200B AI chip supply deal with Samsung today, on top of its existing $30B Apple agreement &mdash; one of the clearest signals yet that hyperscaler AI spending isn&rsquo;t slowing. AMD&rsquo;s Advancing AI event last week landed just as hard, with Baird&rsquo;s price target jumping to a street-high $1,250. Two names are coming off the list entirely this week: Oracle, down 34% this month with a real governance overhang (Ellison&rsquo;s $40.4B personal guarantee on his son&rsquo;s Warner Bros. Discovery deal, and a 12-state lawsuit to block it), and IBM, still working through its record 25% earnings-day crash and a new securities-fraud investigation into its sales pipeline. In their place: Vertiv, the clearest pure-play on AI data-center power, and Credo Technology, an AI-connectivity name pulled back 25% into a real analyst target cluster. Microsoft, Meta, and Amazon earnings land this week too &mdash; the AI-capex read-through the whole sector is watching for.</p>
+
+  <!-- ============ HOW GILDED SIGNALS WORKS ============ -->
+  <div class="gb-howto">
+    <div class="gb-howto-eyebrow">How Gilded Signals Works</div>
+    <div class="gb-howto-title">Buying great companies, not calling exact bottoms</div>
+    <div class="gb-howto-quote">Many of our best long-term investments begin with temporary declines. If the thesis remains intact, lower prices can create better accumulation opportunities &mdash; not invalidate the research.</div>
+    <p>Every pick below is a company I believe is high-quality, paired with the price zone where I&rsquo;d actually put capital to work. The question this page is built to answer is <b>where I&rsquo;m looking to buy and why</b> &mdash; not whether a stock went straight up the moment this published.</p>
+    <div class="gb-howto-legend">
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#3ECA7A;"></span><span><b>Accumulating</b> &mdash; price is inside my zone and I'm buying.</span></div>
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#e8ca7a;"></span><span><b>Watching</b> &mdash; getting close, nothing triggered yet.</span></div>
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#7ba7c9;"></span><span><b>Waiting for Entry</b> &mdash; still well above my zone.</span></div>
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#B0ABA5;"></span><span><b>Completed</b> &mdash; the week closed and this pick was graded.</span></div>
+      <div class="gb-howto-legend-item"><span class="gb-howto-dot" style="background:#E85555;"></span><span><b>Thesis Changed</b> &mdash; something broke the original reasoning.</span></div>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS CROSSLINK ============ -->
+  <div class="gb-crosslink">
+    <span class="gb-crosslink-lbl">Last Week&rsquo;s Results</span>
+    <a id="gb-lastweek-link" onclick="gsGoToResults('2026-07-24')">Week of July 20&ndash;24, 2026 &middot; Full Scorecard &rarr;</a>
+  </div>
+  <style>
+  .gs-live-status{margin:24px 0 36px;padding:20px 22px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.16);}
+  .gs-live-status-lbl{font-family:monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);}
+  .gs-live-status-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--text-primary);margin:6px 0 4px;}
+  .gs-live-status-sub{font-size:.8rem;color:var(--text-secondary);margin-bottom:16px;max-width:620px;}
+  .gs-live-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
+  .gs-live-status-item{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
+  .gs-live-status-sym{font-family:monospace;font-weight:700;font-size:.82rem;color:var(--text-primary);}
+  .gs-live-status-badge{font-family:monospace;font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap;}
+  .gs-live-status-action{flex-basis:100%;font-family:'DM Sans',sans-serif;font-size:.66rem;letter-spacing:.02em;color:var(--text-muted);line-height:1.3;}
+  .gs-live-status-badge.waiting{color:#9a9690;background:rgba(154,150,144,.12);}
+  .gs-live-status-badge.triggered{color:#e8ca7a;background:rgba(212,175,55,.14);}
+  .gs-live-status-badge.watch-closely{color:#e8ca7a;background:rgba(212,175,55,.14);}
+  .gs-live-status-badge.buy-zone{color:#3ECA7A;background:rgba(62,202,122,.14);}
+  .gs-live-status-badge.completed{color:#B0ABA5;background:rgba(176,171,165,.12);}
+  .gs-live-status-badge.no-entry{color:#7a7770;background:rgba(122,119,112,.1);}
+  .gs-live-status-badge.breakout-pending{color:#7ba7c9;background:rgba(94,150,196,.12);}
+  .gs-live-status-badge.breakout-triggered{color:#5eb3e8;background:rgba(94,179,232,.18);}
+  .gs-live-status-legend{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:.72rem;line-height:1.6;color:var(--text-muted);}
+  .gs-live-status-legend b{color:var(--text-secondary);font-weight:600;}
+  .gs-live-status-ret{font-family:monospace;font-size:.76rem;font-weight:600;}
+  .gs-live-status-loading{grid-column:1/-1;color:var(--text-muted);font-family:monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 0;}
+  </style>
+
+  <!-- ============ LIVE SCORECARD STATUS ============ -->
+  <div class="gs-live-status" id="gs-live-status" data-live="true" data-week="2026-07-27">
+    <span class="gs-live-status-lbl">Live &middot; Updated Continuously</span>
+    <h3 class="gs-live-status-title">This Week&rsquo;s Board, Right Now</h3>
+    <p class="gs-live-status-sub">Where each pick actually stands &mdash; entry zones triggered, still waiting, or off the table this week. This is the same engine that grades the Friday scorecard; nothing here is estimated. Red % reflects movement since that entry price was published, not a loss &mdash; several of these are exactly where I&rsquo;m still buying.</p>
+    <div class="gs-live-status-grid" id="gs-live-status-grid">
+      <div class="gs-live-status-loading">Loading live status&hellip;</div>
+    </div>
+    <div class="gs-live-status-legend" id="gs-live-status-legend">
+      <b>Buy Zone</b> &mdash; the price is currently inside a published entry range. The accompanying action label shows my current posture &mdash; whether I&rsquo;m accumulating, holding, waiting for further downside, adding on weakness, or simply monitoring the setup. These labels describe my personal approach and are not automatic buy recommendations.<br>
+      <b>Triggered</b> &mdash; a published entry zone has been reached. Return shown is measured from that entry, not from today&rsquo;s price &mdash; it does not imply the stock remains a buy at the current level.<br>
+      <b>Waiting for Entry</b> &mdash; no published zone has been reached yet this week.<br>
+      <b>Breakout Pending / Breakout Triggered</b> &mdash; MSTR only. Tracks a confirmed close above a published level, a different mechanic from the dip-entry zones above.<br>
+      <b>No Setup This Week</b> &mdash; no entry was planned this week (earnings risk, unreliable data, etc.) &mdash; never a fabricated zone.
+    </div>
+  </div>
+
+  <!-- ============ TIER: PRIMARY PICKS ============ -->
+  <div class="gb-tier-head">
+    <div class="gb-tier-eyebrow">Tier 1 &middot; Ranked by Conviction</div>
+    <h2 class="gb-tier-title">Primary Picks</h2>
+    <p class="gb-tier-sub">A specific this-week trigger &mdash; a target hike, a confirmed catalyst, no earnings conflict &mdash; not just a good year-long story. The first five are open to everyone. <b>Risk level</b> is a plain read on volatility, not quality &mdash; Low moves slowly, High can swing hard in a single session, so size accordingly. <b>Strong Buy</b> is the tier I have the most conviction in right now &mdash; setup, catalyst, and risk profile all line up. <b>Buy</b> still means a real, actionable setup, just without every box checked.</p>
+  </div>
+
+  <!-- NVDA -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">01</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">NVDA</span><span class="gb-company">Nvidia</span></div>
+          <span class="gb-conviction strong">Strong Buy</span><span class="gb-risk medium">Medium Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$195</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$178</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Still the clear AI-compute leader heading into a week where Microsoft, Meta, and Amazon earnings will show whether hyperscaler AI spending stays as strong as the market expects.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> A soft hyperscaler capex signal this week could drag the whole AI-chip complex lower, NVDA included.</div>
+        <div class="tl" id="tl-NVDA" data-symbol="NVDA">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$207</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:41.7%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$195</div></div></div>
+            <div class="tl-buy-dot" style="left:13.3%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$178</div></div></div>
+            <div class="tl-cur-marker" style="left:61.7%"><span class="tl-cur-marker-live">$207</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Analyst Avg (secondary)</div><div class="tl-avgline-val">$301.62 &middot; 61 analysts</div></div>
+          <div class="gb-pick-live" data-ticker="NVDA"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVGO -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">02</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span></div>
+          <span class="gb-conviction strong">Strong Buy</span><span class="gb-risk high">High Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$355</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$300</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Samsung just signed a $200B AI chip supply deal through 2030 today, on top of the $30B Apple custom-silicon deal already running through 2031 &mdash; two of the largest AI hardware customers now locked in for years.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> The stock is already near highs on this news &mdash; a &ldquo;sell the news&rdquo; pullback before it holds these gains is a real possibility.</div>
+        <div class="tl" id="tl-AVGO" data-symbol="AVGO">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$382</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:53.6%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$355</div></div></div>
+            <div class="tl-buy-dot" style="left:14.3%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$300</div></div></div>
+            <div class="tl-cur-marker" style="left:72.5%"><span class="tl-cur-marker-live">$382</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Analyst Avg (secondary)</div><div class="tl-avgline-val">$525.44 &middot; 48 analysts</div></div>
+          <div class="gb-pick-live" data-ticker="AVGO"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AMD -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">03</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">AMD</span><span class="gb-company">Advanced Micro Devices</span></div>
+          <span class="gb-conviction strong">Strong Buy</span><span class="gb-risk high">High Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$480</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$420</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> The Advancing AI event (7/22&ndash;23) delivered Helios AI racks, the Zen 6 &ldquo;Venice&rdquo; launch, and a $5B Anthropic compute deal &mdash; Baird responded with a street-high $1,250 target.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> The stock already ran hard into the event &mdash; a lot of this good news may already be priced in for the next few weeks.</div>
+        <div class="tl" id="tl-AMD" data-symbol="AMD">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$522</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:50%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$480</div></div></div>
+            <div class="tl-buy-dot" style="left:12.5%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$420</div></div></div>
+            <div class="tl-cur-marker" style="left:76.2%"><span class="tl-cur-marker-live">$522</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Street Targets (secondary)</div><div class="tl-avgline-val">$410 &ndash; $1,250 range post-event</div></div>
+          <div class="gb-pick-live" data-ticker="AMD"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MRVL -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">04</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">MRVL</span><span class="gb-company">Marvell Technology</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk high">High Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$185</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$165</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Down sharply this week (from ~$235 to ~$193) even as KeyBanc reiterated its $400 target after an Asia trip confirmed strong AI/optical-interconnect demand &mdash; a name getting cheaper while the thesis hasn't changed.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Erste Group downgraded to Hold on real customer-concentration risk &mdash; this could keep falling before it stabilizes.</div>
+        <div class="tl" id="tl-MRVL" data-symbol="MRVL">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$193</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:50%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$185</div></div></div>
+            <div class="tl-buy-dot" style="left:16.7%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$165</div></div></div>
+            <div class="tl-cur-marker" style="left:63.3%"><span class="tl-cur-marker-live">$193</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Analyst Avg (secondary)</div><div class="tl-avgline-val">$254.41 &middot; pre-pullback baseline</div></div>
+          <div class="gb-pick-live" data-ticker="MRVL"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASML -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">05</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">ASML</span><span class="gb-company">ASML Holding</span></div>
+          <span class="gb-conviction strong">Strong Buy</span><span class="gb-risk low">Low Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$1,750</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$1,600</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Blew out Q2 and raised full-year guidance to &euro;43&ndash;45B (from &euro;36&ndash;40B) &mdash; the only company on earth selling EUV lithography, with demand still outpacing supply.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Already popped 7%+ on the news &mdash; the easy catalyst is behind it until the next print.</div>
+        <div class="tl" id="tl-ASML" data-symbol="ASML">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$1,790</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:57.1%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$1,750</div></div></div>
+            <div class="tl-buy-dot" style="left:14.3%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$1,600</div></div></div>
+            <div class="tl-cur-marker" style="left:68.6%"><span class="tl-cur-marker-live">$1,790</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">One Bull Case (secondary)</div><div class="tl-avgline-val">$2,023 &middot; 24/7 Wall St</div></div>
+          <div class="gb-pick-live" data-ticker="ASML"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TIER: SECONDARY WATCHLIST ============ -->
+  <div class="gb-tier-head">
+    <div class="gb-tier-eyebrow">Tier 2 &middot; Strong Businesses, No Single-Week Trigger</div>
+    <h2 class="gb-tier-title">Secondary Watchlist</h2>
+    <p class="gb-tier-sub">High-quality companies with attractive setups, just without a single dated catalyst forcing the issue this specific week.</p>
+  </div>
+
+  <!-- LITE -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">06</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">LITE</span><span class="gb-company">Lumentum Holdings</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk high">High Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$720</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$650</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> AI optics demand keeps accelerating &mdash; Citi has it on a 90-day &ldquo;upside catalyst watch&rdquo; into the Aug 11 earnings and an Optical Communication industry conference.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Extremely volatile &mdash; has swung from over $1,000 to under $700 in a matter of weeks. Size accordingly.</div>
+        <div class="tl" id="tl-LITE" data-symbol="LITE">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$764</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:43.5%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$720</div></div></div>
+            <div class="tl-buy-dot" style="left:13%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$650</div></div></div>
+            <div class="tl-cur-marker" style="left:62.6%"><span class="tl-cur-marker-live">$764</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Street Avg (secondary)</div><div class="tl-avgline-val">~$1,135 per TD Cowen</div></div>
+          <div class="gb-pick-live" data-ticker="LITE"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COHR -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">07</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">COHR</span><span class="gb-company">Coherent Corp</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk high">High Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$270</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$240</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Fell 8% Friday alongside LITE and Ciena in a sector-wide optics rotation, not a company-specific problem &mdash; Q4 guidance already came in above consensus ahead of the Aug 12 report.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Trading north of 40x forward earnings &mdash; any stumble on Aug 12 could hit hard.</div>
+        <div class="tl" id="tl-COHR" data-symbol="COHR">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$288</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:45.5%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$270</div></div></div>
+            <div class="tl-buy-dot" style="left:18.2%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$240</div></div></div>
+            <div class="tl-cur-marker" style="left:61.8%"><span class="tl-cur-marker-live">$288</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">52-Wk High (secondary)</div><div class="tl-avgline-val">$440 &middot; Jun 3</div></div>
+          <div class="gb-pick-live" data-ticker="COHR"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MU -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">08</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">MU</span><span class="gb-company">Micron Technology</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk medium">Medium Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$870</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$800</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Blew out Q3 (EPS $25.11 vs. $20.20 est.) riding the DRAM/HBM memory supercycle &mdash; Citi is calling this a buy-the-dip after the pullback from its $1,255 high.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Traded between $804 and $1,255 in the past month alone &mdash; this is a trader's stock as much as an investor's.</div>
+        <div class="tl" id="tl-MU" data-symbol="MU">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$911</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:44%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$870</div></div></div>
+            <div class="tl-buy-dot" style="left:16%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$800</div></div></div>
+            <div class="tl-cur-marker" style="left:60.4%"><span class="tl-cur-marker-live">$911</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Analyst Avg (secondary)</div><div class="tl-avgline-val">$1,491.95 &middot; 45 analysts</div></div>
+          <div class="gb-pick-live" data-ticker="MU"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VRT -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">09</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">VRT</span><span class="gb-company">Vertiv Holdings</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk medium">Medium Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$280</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$250</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> The clearest pure-play on AI data-center power and cooling &mdash; a $15B backlog on 252% order growth, a new Malaysia manufacturing facility, and Baird just initiated at Outperform with a $370 target.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Priced for perfection at ~35x EBITDA &mdash; any delay in hyperscaler deployment timing would hit this hard.</div>
+        <div class="tl" id="tl-VRT" data-symbol="VRT">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$295</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:45.5%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$280</div></div></div>
+            <div class="tl-buy-dot" style="left:18.2%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$250</div></div></div>
+            <div class="tl-cur-marker" style="left:59.1%"><span class="tl-cur-marker-live">$295</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">New Target (secondary)</div><div class="tl-avgline-val">$370 &middot; Baird, initiated 7/26</div></div>
+          <div class="gb-pick-live" data-ticker="VRT"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRDO -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">10</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">CRDO</span><span class="gb-company">Credo Technology</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk high">High Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$205</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$175</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> An AI-connectivity leader shifting from copper into a mixed copper-optical portfolio &mdash; Evercore, Stifel, and BofA have all raised targets to $325&ndash;$350 even as the stock sits ~25% off its highs.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Notable insider selling from the CTO, COO, and CFO in recent weeks, on top of a rich valuation near 80x earnings.</div>
+        <div class="tl" id="tl-CRDO" data-symbol="CRDO">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$214</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:50%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$205</div></div></div>
+            <div class="tl-buy-dot" style="left:16.7%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$175</div></div></div>
+            <div class="tl-cur-marker" style="left:60%"><span class="tl-cur-marker-live">$214</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Analyst Cluster (secondary)</div><div class="tl-avgline-val">$250 &ndash; $350</div></div>
+          <div class="gb-pick-live" data-ticker="CRDO"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TIER: BUY-ON-DIP CANDIDATES ============ -->
+  <div class="gb-tier-head">
+    <div class="gb-tier-eyebrow">Tier 3 &middot; Real Upside, Real Near-Term Risk</div>
+    <h2 class="gb-tier-title">Buy-On-Dip Candidates</h2>
+    <p class="gb-tier-sub">The upside case is real here, but so is something concrete working against it right now &mdash; earnings risk, thin coverage, active regulatory or analyst headwinds. Sized and framed accordingly.</p>
+  </div>
+
+  <!-- GLW -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">11</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">GLW</span><span class="gb-company">Corning</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk high">High Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$140</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$115</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Real AI data-center exposure through its glass-substrate and optical-connectivity business, now down 28.8% over the past month.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Reports Q2 earnings Tuesday 7/28 &mdash; inside this publishing week. That print will likely move the stock before you get a fill at these levels.</div>
+        <div class="tl" id="tl-GLW" data-symbol="GLW">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$146.65</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:58.3%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$140</div></div></div>
+            <div class="tl-buy-dot" style="left:16.7%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$115</div></div></div>
+            <div class="tl-cur-marker" style="left:69.4%"><span class="tl-cur-marker-live">$146.65</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Analyst Avg (secondary)</div><div class="tl-avgline-val">$214.18 &middot; 11 analysts</div></div>
+          <div class="gb-pick-live" data-ticker="GLW"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BKR -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">12</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">BKR</span><span class="gb-company">Baker Hughes</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk medium">Medium Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$54</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$48</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Energy-infrastructure and gas-turbine supply chain exposure relevant to data-center backup power, with the Chart Industries acquisition just closed and a Buy-rated Street.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Reported Q2 tonight, 5pm ET, hours before this published &mdash; treat these zones as provisional until you've seen the after-hours reaction.</div>
+        <div class="tl" id="tl-BKR" data-symbol="BKR">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$57</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:50%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$54</div></div></div>
+            <div class="tl-buy-dot" style="left:20%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$48</div></div></div>
+            <div class="tl-cur-marker" style="left:65%"><span class="tl-cur-marker-live">$57</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Analyst Avg (secondary)</div><div class="tl-avgline-val">$70.32 &middot; 23 analysts</div></div>
+          <div class="gb-pick-live" data-ticker="BKR"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRVO -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">13</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">FRVO</span><span class="gb-company">Fervo Energy</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk high">High Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$23</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$19</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> My geothermal AI-power conviction call &mdash; this is my personal view, not consensus. Five separate analyst upgrades to Buy this month (Jefferies, BofA, Barclays, RBC, Morgan Stanley) after a drilling-pace record at Cape Station Phase II.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Still pre-commercial &mdash; Q1 revenue was just $61K against a $32M net loss. This is a multi-year execution story, not a near-term earnings one.</div>
+        <div class="tl" id="tl-FRVO" data-symbol="FRVO">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$24.58</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:54.5%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$23</div></div></div>
+            <div class="tl-buy-dot" style="left:18.2%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$19</div></div></div>
+            <div class="tl-cur-marker" style="left:68.9%"><span class="tl-cur-marker-live">$24.58</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Target Est (secondary)</div><div class="tl-avgline-val">$45.00 &middot; Yahoo 1y est</div></div>
+          <div class="gb-pick-live" data-ticker="FRVO"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORA -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">14</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">ORA</span><span class="gb-company">Ormat Technologies</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk medium">Medium Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$95</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$84</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> Also my geothermal conviction call, my personal view. Vertically integrated geothermal producer &mdash; Barclays, UBS, and Piper Sandler all raised targets this month, to $127&ndash;$152.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> Bernstein's bear case cites real exploration risk in conventional geothermal &mdash; a legitimate technical risk for the sector, even though its own downside target ($115) still sits above today's price.</div>
+        <div class="tl" id="tl-ORA" data-symbol="ORA">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$99.40</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:50%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$95</div></div></div>
+            <div class="tl-buy-dot" style="left:17.6%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$84</div></div></div>
+            <div class="tl-cur-marker" style="left:62.9%"><span class="tl-cur-marker-live">$99.40</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">Target Range (secondary)</div><div class="tl-avgline-val">$115 &ndash; $152</div></div>
+          <div class="gb-pick-live" data-ticker="ORA"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANW -->
+  <div class="gb-pick">
+    <div class="gb-pick-row">
+      <div class="gb-rank">15</div>
+      <div>
+        <div class="gb-scoretop">
+          <div class="gb-pick-head"><span class="gb-ticker">PANW</span><span class="gb-company">Palo Alto Networks</span></div>
+          <span class="gb-conviction buy">Buy</span><span class="gb-risk medium">Medium Risk</span>
+        </div>
+        <div class="gb-buyplan">
+          <div class="gb-buyplan-lbl">&#128205; My Buy Plan</div>
+          <div class="gb-buyplan-row">&#128994; <b>First Buy:</b> starting a position around <b>$310</b></div>
+          <div class="gb-buyplan-row">&#128994; <b>Second Buy:</b> adding around <b>$270</b> if it pulls back further</div>
+          <div class="gb-buyplan-row">&#128993; <b>If it runs:</b> waiting patiently instead of chasing</div>
+        </div>
+        <div class="gb-why">&#128200; <span class="lbl">Why I like it:</span> AI-driven cybersecurity demand story &mdash; Argus just raised its target to $425, and the stock has pulled back 8.8% off last week's all-time high.</div>
+        <div class="gb-riskline">&#9888;&#65039; <span class="lbl">Biggest risk:</span> This is a valuation-driven pullback &mdash; even the CEO said this week &ldquo;we need to see the pricing for AI come down.&rdquo; That theme could keep pressuring the stock.</div>
+        <div class="tl" id="tl-PANW" data-symbol="PANW">
+          <div class="tl-lbl">&#128202; Chart &mdash; where I'm looking to buy</div>
+          <div class="tl-head">
+            <div><div class="tl-curlabel">Current <span class="tl-live-badge">Jul 26</span></div><div class="tl-cur">$324.55</div></div>
+          </div>
+          <div class="tl-buyzone-track">
+            <div class="tl-buy-dot" style="left:54.5%"><div class="tl-buy-lbl"><div class="t">Buy 1</div><div class="p">$310</div></div></div>
+            <div class="tl-buy-dot" style="left:18.2%"><div class="tl-buy-lbl"><div class="t">Buy 2</div><div class="p">$270</div></div></div>
+            <div class="tl-cur-marker" style="left:67.8%"><span class="tl-cur-marker-live">$324.55</span></div>
+          </div>
+          <div class="tl-avgline"><div class="tl-avgline-lbl">New Target (secondary)</div><div class="tl-avgline-val">$425 &middot; Argus</div></div>
+          <div class="gb-pick-live" data-ticker="PANW"></div>
+          <div class="tl-foot">Buy zones locked at publish &middot; never adjusted afterward</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+
+  <div class="gb-week-panel" id="gb-week-2026-07-20" data-live="false" style="display:none;">
     <div class="gb-dateline">For the week of <b>July 20&ndash;24, 2026</b> &middot; Updated Sundays</div>
 
   <div class="gb-rule"></div>
@@ -2721,6 +3363,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 </div>
 <!-- gs-footer-fix -->
 <!-- gs-brief-v2 -->
+<!-- gs-brief-2026-07-27 -->
 <!-- gs-brief-2026-07-20 -->
 <!-- gs-brief-layout-fix-2026-07-20 -->
 
