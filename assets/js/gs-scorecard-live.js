@@ -36,13 +36,26 @@
     return (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2) + '%';
   }
 
+  var FETCH_TIMEOUT_MS = 10000;
+
+  // Every fetch in this file routes through here. A hung request (bad
+  // connection, server stall) now fails after 10s instead of leaving a
+  // "Loading..." placeholder waiting forever -- callers already have
+  // fallback text for the ordinary network-error case, this just makes
+  // sure that path actually gets reached within a bounded time.
+  function timedFetch(url) {
+    var ctrl = new AbortController();
+    var t = setTimeout(function () { ctrl.abort(); }, FETCH_TIMEOUT_MS);
+    return fetch(url, { signal: ctrl.signal })
+      .then(function (r) { clearTimeout(t); return r.json(); })
+      .catch(function (e) { clearTimeout(t); throw e; });
+  }
+
   function fetchScorecard(week, endpoint) {
     var ep = endpoint || API;
     var key = ep + week;
     if (!pending[key]) {
-      pending[key] = fetch(ep + encodeURIComponent(week)).then(function (r) {
-        return r.json();
-      });
+      pending[key] = timedFetch(ep + encodeURIComponent(week));
     }
     return pending[key];
   }
@@ -176,25 +189,31 @@
     );
   }
 
+  // Every archived Briefing week's grid shares the same id (pre-existing
+  // markup duplication, not something this patch changes) -- iterate all
+  // of them by class instead of taking only the first by id, so every
+  // week actually gets fetched and rendered, not just whichever one
+  // happens to be first in the page.
   function loadBriefGrid() {
-    var grid = document.getElementById('gs-live-status-grid');
-    if (!grid) return;
-    var wrap = grid.closest('[data-live="true"]');
-    var week = wrap ? wrap.getAttribute('data-week') : null;
-    if (!week) return;
-    var isV3 = wrap && wrap.getAttribute('data-methodology') === 'v3';
+    var grids = document.querySelectorAll('.gs-live-status-grid');
+    grids.forEach(function (grid) {
+      var wrap = grid.closest('[data-live="true"]');
+      var week = wrap ? wrap.getAttribute('data-week') : null;
+      if (!week) return;
+      var isV3 = wrap && wrap.getAttribute('data-methodology') === 'v3';
 
-    fetchScorecard(week, isV3 ? V3_API : API)
-      .then(function (d) {
-        if (!d || d.error || !Array.isArray(d.picks) || !d.picks.length) {
+      fetchScorecard(week, isV3 ? V3_API : API)
+        .then(function (d) {
+          if (!d || d.error || !Array.isArray(d.picks) || !d.picks.length) {
+            grid.innerHTML = '<div class="gs-live-status-loading">Live status unavailable right now.</div>';
+            return;
+          }
+          grid.innerHTML = d.picks.map(renderGridItem).join('');
+        })
+        .catch(function () {
           grid.innerHTML = '<div class="gs-live-status-loading">Live status unavailable right now.</div>';
-          return;
-        }
-        grid.innerHTML = d.picks.map(renderGridItem).join('');
-      })
-      .catch(function () {
-        grid.innerHTML = '<div class="gs-live-status-loading">Live status unavailable right now.</div>';
-      });
+        });
+    });
   }
 
   // ---------------------------------------------------------------------
@@ -486,8 +505,7 @@
   function fetchStaticPicks(week) {
     var key = 'static:' + week;
     if (!pending[key]) {
-      pending[key] = fetch('/data/picks-' + week + '.json')
-        .then(function (r) { return r.json(); })
+      pending[key] = timedFetch('/data/picks-' + week + '.json')
         .catch(function () { return null; });
     }
     return pending[key];
@@ -526,10 +544,72 @@
       .catch(function () { /* leave mounts as-is rather than show something wrong */ });
   }
 
+  // ---------------------------------------------------------------------
+  // "This Week at a Glance" card (Briefings page, near the top)
+  // ---------------------------------------------------------------------
+  // Buckets every pick into Currently Buying / Watching for Entry /
+  // Avoiding This Week, purely from the same objective status already
+  // computed by statusInfo() -- nothing new inferred, nothing guessed.
+  function computeGlanceLists(picks) {
+    var buying = [], watching = [], avoiding = [];
+    picks.forEach(function (p) {
+      var info = statusInfo(p);
+      if (info.cls === 'buy-zone' || info.cls === 'breakout-triggered' ||
+          info.cls === 'buy-zone-triggered' || info.cls === 'active-position') {
+        buying.push(p.ticker);
+      } else if (p.status === 'no_entry_this_week') {
+        avoiding.push(p.ticker);
+      } else if (info.cls === 'waiting' || info.cls === 'watch-closely' ||
+                 info.cls === 'watching-no-trade' || info.cls === 'breakout-pending') {
+        watching.push(p.ticker);
+      }
+    });
+    return { buying: buying, watching: watching, avoiding: avoiding };
+  }
+
+  function loadGlanceCard() {
+    var card = document.getElementById('gs-glance-card');
+    if (!card) return;
+    var wrap = card.closest('[data-live="true"]');
+    var week = wrap ? wrap.getAttribute('data-week') : null;
+    if (!week) return;
+    var isV3 = wrap && wrap.getAttribute('data-methodology') === 'v3';
+
+    var buyingEl = card.querySelector('#gs-glance-buying .gs-glance-val');
+    var watchingEl = card.querySelector('#gs-glance-watching .gs-glance-val');
+    var avoidingRow = card.querySelector('#gs-glance-avoiding');
+    var avoidingEl = avoidingRow ? avoidingRow.querySelector('.gs-glance-val') : null;
+
+    fetchScorecard(week, isV3 ? V3_API : API)
+      .then(function (d) {
+        if (!d || d.error || !Array.isArray(d.picks) || !d.picks.length) {
+          if (buyingEl) buyingEl.textContent = 'Data unavailable right now.';
+          if (watchingEl) watchingEl.textContent = 'Data unavailable right now.';
+          return;
+        }
+        var lists = computeGlanceLists(d.picks);
+        if (buyingEl) buyingEl.textContent = lists.buying.length ? lists.buying.join(', ') : 'None yet this week.';
+        if (watchingEl) watchingEl.textContent = lists.watching.length ? lists.watching.join(', ') : 'None right now.';
+        if (avoidingRow && avoidingEl) {
+          if (lists.avoiding.length) {
+            avoidingEl.textContent = lists.avoiding.join(', ');
+            avoidingRow.style.display = '';
+          } else {
+            avoidingRow.style.display = 'none';
+          }
+        }
+      })
+      .catch(function () {
+        if (buyingEl) buyingEl.textContent = 'Data unavailable right now.';
+        if (watchingEl) watchingEl.textContent = 'Data unavailable right now.';
+      });
+  }
+
   function load() {
     loadBriefGrid();
     loadResultsPanel();
     loadPickLiveBlocks();
+    loadGlanceCard();
   }
 
   if (typeof document !== 'undefined') {
@@ -555,6 +635,7 @@
       renderStatsRowV3: renderStatsRowV3,
       renderAccumZone: renderAccumZone,
       PICK_BADGE: PICK_BADGE,
+      computeGlanceLists: computeGlanceLists,
     };
   }
 })();

@@ -1023,10 +1023,61 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 
   <div class="gb-rule"></div>
 
+  <div class="gb-trust-section">
+    <div class="gb-section-lbl">Methodology</div>
+    <h2 class="gb-section-title">How We Select Stocks</h2>
+    <div class="gb-trust-grid">
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Technical Analysis</div>
+        <div class="gb-trust-body">Trend, momentum, relative strength, and support levels &mdash; where the chart actually confirms the thesis.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Analyst Price Targets</div>
+        <div class="gb-trust-body">Independent consensus targets, used as a reference range &mdash; never the sole reason a name makes the list.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Earnings &amp; Catalysts</div>
+        <div class="gb-trust-body">Upcoming events &mdash; earnings, product launches, analyst actions &mdash; that could move the stock in either direction.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Valuation</div>
+        <div class="gb-trust-body">Is the price reasonable for the quality and growth on offer, or does the setup only work if everything goes right.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Market Trends</div>
+        <div class="gb-trust-body">Sector positioning and the broader macro backdrop a name is trading against.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">News &amp; Developments</div>
+        <div class="gb-trust-body">Company-specific and industry-wide news that changes the picture, positive or negative.</div>
+      </div>
+      <div class="gb-trust-item">
+        <div class="gb-trust-head">Disciplined Risk Management</div>
+        <div class="gb-trust-body">Staged entries, published invalidation levels, and no chasing extended names into a fresh high.</div>
+      </div>
+    </div>
+  </div>
+
     <div class="gb-week-panel" id="gb-week-2026-07-27" data-live="true">
     <div class="gb-dateline">For the week of <b>July 27&ndash;31, 2026</b> &middot; Updated Sundays</div>
 
   <div class="gb-rule"></div>
+
+  <div class="gs-glance" id="gs-glance-card">
+  <style>
+  .gs-glance{margin:20px 0 28px;padding:18px 20px;border-radius:10px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.16);}
+  .gs-glance-eyebrow{font-family:'DM Sans',sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:12px;}
+  .gs-glance-row{display:flex;flex-wrap:wrap;gap:4px 10px;padding:8px 0;border-top:1px solid rgba(212,175,55,.1);}
+  .gs-glance-row:first-of-type{border-top:none;padding-top:0;}
+  .gs-glance-lbl{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;color:var(--text-secondary);min-width:170px;}
+  .gs-glance-val{font-family:monospace;font-size:.78rem;color:var(--text-primary);}
+  </style>
+  <div class="gs-glance-eyebrow">This Week at a Glance</div>
+  <div class="gs-glance-row" id="gs-glance-buying"><span class="gs-glance-lbl">Currently Buying</span><span class="gs-glance-val">Loading&hellip;</span></div>
+  <div class="gs-glance-row" id="gs-glance-watching"><span class="gs-glance-lbl">Watching for Entry</span><span class="gs-glance-val">Loading&hellip;</span></div>
+  <div class="gs-glance-row" id="gs-glance-avoiding" style="display:none;"><span class="gs-glance-lbl">Avoiding This Week</span><span class="gs-glance-val"></span></div>
+  <div class="gs-glance-row"><span class="gs-glance-lbl">Biggest Catalyst This Week</span><span class="gs-glance-val" style="font-family:'DM Sans',sans-serif;">DRAFT &mdash; Microsoft, Meta, and Amazon report earnings this week, the market's clearest read on whether AI infrastructure spending is still accelerating. (Pulled from this week's own lead paragraph -- confirm or replace.)</span></div>
+  </div>
 
   <div class="gb-topnote">These are the stocks I&rsquo;m personally watching most closely this week based on my research. The buy plan shows where I&rsquo;m looking to begin or add to my own position if prices cooperate. This is not financial advice &mdash; it&rsquo;s a transparent look at my investing process.</div>
 
@@ -3759,7 +3810,11 @@ function gsGoToBriefing(id){
 
   function fetchWeek(w){
     var endpoint = w.methodology === 'v3' ? '/api/scorecard-v3?week=' : '/api/scorecard?week=';
-    return fetch(endpoint + w.week).then(function(r){ return r.json(); }).catch(function(){ return null; });
+    var ctrl = new AbortController();
+    var t = setTimeout(function(){ ctrl.abort(); }, 10000);
+    return fetch(endpoint + w.week, { signal: ctrl.signal })
+      .then(function(r){ clearTimeout(t); return r.json(); })
+      .catch(function(){ clearTimeout(t); return null; });
   }
 
   Promise.all(GP_WEEKS.map(fetchWeek)).then(function(results){
