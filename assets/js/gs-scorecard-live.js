@@ -28,20 +28,23 @@
 (function () {
   'use strict';
   var API = '/api/scorecard?week=';
-  var pending = {}; // week -> Promise, so both renderers share one fetch
+  var V3_API = '/api/scorecard-v3?week=';
+  var pending = {}; // endpoint+week -> Promise, so renderers share one fetch
 
   function fmtPct(v) {
     if (v == null || isNaN(v)) return '\u2014';
     return (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2) + '%';
   }
 
-  function fetchScorecard(week) {
-    if (!pending[week]) {
-      pending[week] = fetch(API + encodeURIComponent(week)).then(function (r) {
+  function fetchScorecard(week, endpoint) {
+    var ep = endpoint || API;
+    var key = ep + week;
+    if (!pending[key]) {
+      pending[key] = fetch(ep + encodeURIComponent(week)).then(function (r) {
         return r.json();
       });
     }
-    return pending[week];
+    return pending[key];
   }
 
   // Label + badge class depend on BOTH status and entryType, since MSTR's
@@ -57,6 +60,11 @@
     'breakout-triggered': "Price closed above the published breakout level. This does not mean the stock is still a buy today.",
     'no-entry': 'No actionable entry was published this week, or market data was unavailable for this pick.',
     completed: 'Week finished and graded. The return shown is final for this pick.',
+    'watching-no-trade': "Price never reached the published Buy Zone this week. No capital was deployed \u2014 this is not counted as a win or a loss.",
+    'buy-zone-triggered': 'Price reached the published Buy Zone. A position was opened at the published entry.',
+    'active-position': 'Position is open. Neither the published target nor the invalidation level has been reached yet.',
+    'target-reached': 'Price reached the published first target. This does not mean the stock is still a buy today.',
+    'stopped-out': "Price reached the published invalidation level \u2014 the level at which the original thesis is no longer considered intact.",
   };
 
   // Personal posture labels for the compact board only ("This Week's Board,
@@ -97,6 +105,19 @@
         return { label: 'No Setup This Week', cls: 'no-entry' };
       case 'data_unavailable':
         return { label: 'Data Unavailable', cls: 'no-entry' };
+      // Methodology v3 (target / invalidation) statuses -- only ever
+      // appear in a scorecard-v3.js response, never in scorecard.js's,
+      // so these are purely additive.
+      case 'watching_no_trade':
+        return { label: 'Watching \u2013 No Trade Triggered', cls: 'watching-no-trade' };
+      case 'buy_zone_triggered':
+        return { label: 'Buy Zone Triggered', cls: 'buy-zone-triggered' };
+      case 'active_position':
+        return { label: 'Active Position', cls: 'active-position' };
+      case 'target_reached':
+        return { label: 'First Target Reached', cls: 'target-reached' };
+      case 'stopped_out':
+        return { label: 'Stopped Out', cls: 'stopped-out' };
       default:
         return { label: p.status, cls: 'waiting' };
     }
@@ -134,7 +155,9 @@
     var info = gridStatusInfo(p);
     var detail = '';
     if (
-      (p.status === 'active' || p.status === 'closed_win' || p.status === 'closed_loss') &&
+      (p.status === 'active' || p.status === 'closed_win' || p.status === 'closed_loss' ||
+        p.status === 'buy_zone_triggered' || p.status === 'active_position' ||
+        p.status === 'target_reached' || p.status === 'stopped_out') &&
       p.returnPct != null
     ) {
       var cls = p.returnPct >= 0 ? 'up' : 'dn';
@@ -159,8 +182,9 @@
     var wrap = grid.closest('[data-live="true"]');
     var week = wrap ? wrap.getAttribute('data-week') : null;
     if (!week) return;
+    var isV3 = wrap && wrap.getAttribute('data-methodology') === 'v3';
 
-    fetchScorecard(week)
+    fetchScorecard(week, isV3 ? V3_API : API)
       .then(function (d) {
         if (!d || d.error || !Array.isArray(d.picks) || !d.picks.length) {
           grid.innerHTML = '<div class="gs-live-status-loading">Live status unavailable right now.</div>';
@@ -199,11 +223,16 @@
     var info = statusInfo(p);
     switch (info.cls) {
       case 'completed':
+      case 'target-reached':
+      case 'stopped-out':
         return PICK_BADGE.completed;
       case 'buy-zone':
       case 'breakout-triggered':
+      case 'buy-zone-triggered':
+      case 'active-position':
         return PICK_BADGE.accumulating;
       case 'watch-closely':
+      case 'watching-no-trade':
         return PICK_BADGE.watching;
       // waiting, breakout-pending, no-entry, data_unavailable, and any
       // unrecognized status all fall back to the same safe default: no
@@ -230,7 +259,9 @@
 
     var pctHtml = '<span class="gb-scorepct" style="color:var(--text-muted);">&mdash;</span>';
     if (
-      (p.status === 'active' || p.status === 'closed_win' || p.status === 'closed_loss') &&
+      (p.status === 'active' || p.status === 'closed_win' || p.status === 'closed_loss' ||
+        p.status === 'buy_zone_triggered' || p.status === 'active_position' ||
+        p.status === 'target_reached' || p.status === 'stopped_out') &&
       p.returnPct != null
     ) {
       var cls = p.returnPct >= 0 ? 'up' : 'dn';
@@ -308,12 +339,32 @@
     );
   }
 
+  // Weekly Summary card for methodology v3 (target / invalidation) weeks.
+  // Separate from renderStatsRow() above -- does not touch it. Process
+  // metrics, not just green-or-red: how many names actually triggered,
+  // how many resolved, how many are still open, how many never got a
+  // trade at all.
+  function renderStatsRowV3(d) {
+    var s = d.summary;
+    var spCls = d.benchmark.returnPct != null && d.benchmark.returnPct >= 0 ? 'up' : 'dn';
+    return (
+      statBox(s.tradesEntered + ' / ' + s.totalPublished, 'Buy Zones Triggered', 'color:#3ECA7A;', 'Picks where price reached the published Buy Zone at some point this week.') +
+      statBox(s.tradesEntered, 'Trades Entered', 'color:#3ECA7A;', 'Positions actually opened this week, out of the published Top 15.') +
+      statBox(s.targetsReached, 'Targets Reached', 'color:#3ECA7A;', 'Positions where the published First Target was reached.') +
+      statBox(s.stillActive, 'Still Active', 'color:#e8ca7a;', 'Positions open right now \u2014 neither the target nor the invalidation level has been reached.') +
+      statBox(s.neverTriggered, 'Never Triggered (No Trade)', null, 'Picks that never reached their published Buy Zone. No capital was deployed \u2014 not counted as a win or a loss.') +
+      statBox(s.stoppedOut, 'Stopped Out', 'color:#E85555;', 'Positions where the published invalidation level was reached \u2014 the original thesis is no longer considered intact.') +
+      statBox('<span class="' + spCls + '">' + fmtPct(d.benchmark.returnPct) + '</span>', 'S&amp;P 500 Comparison', null, 'Week-to-date S&P 500 return, same date range as the picks.')
+    );
+  }
+
   function loadResultsPanel() {
     var statsEl = document.getElementById('gr-live-stats');
     if (!statsEl) return;
     var wrap = statsEl.closest('[data-live="true"]');
     var week = wrap ? wrap.getAttribute('data-week') : null;
     if (!week) return;
+    var isV3 = wrap && wrap.getAttribute('data-methodology') === 'v3';
 
     var listEl = document.getElementById('gr-live-scorelist');
     var footEl = document.getElementById('gr-live-scorefoot');
@@ -323,7 +374,7 @@
     var statusSubEl = document.getElementById('gr-status-sub');
     var leadEl = document.getElementById('gr-status-lead');
 
-    fetchScorecard(week)
+    fetchScorecard(week, isV3 ? V3_API : API)
       .then(function (d) {
         if (!d || d.error || !Array.isArray(d.picks) || !d.picks.length) {
           statsEl.innerHTML = '<div class="gr-live-loading">Live scorecard unavailable right now.</div>';
@@ -332,7 +383,7 @@
         }
 
         statsEl.className = 'gr-stats-v2';
-        statsEl.innerHTML = renderStatsRow(d);
+        statsEl.innerHTML = isV3 ? renderStatsRowV3(d) : renderStatsRow(d);
 
         if (listEl) listEl.innerHTML = d.picks.map(renderScoreRow).join('');
 
@@ -448,8 +499,9 @@
     var weekEl = document.querySelector('[data-live="true"][data-week]');
     var week = weekEl ? weekEl.getAttribute('data-week') : null;
     if (!week) return;
+    var isV3 = weekEl && weekEl.getAttribute('data-methodology') === 'v3';
 
-    Promise.all([fetchScorecard(week), fetchStaticPicks(week)])
+    Promise.all([fetchScorecard(week, isV3 ? V3_API : API), fetchStaticPicks(week)])
       .then(function (results) {
         var live = results[0];
         var staticData = results[1];
@@ -500,6 +552,7 @@
       renderStatusBadge: renderStatusBadge,
       computeAverageReturn: computeAverageReturn,
       renderStatsRow: renderStatsRow,
+      renderStatsRowV3: renderStatsRowV3,
       renderAccumZone: renderAccumZone,
       PICK_BADGE: PICK_BADGE,
     };
