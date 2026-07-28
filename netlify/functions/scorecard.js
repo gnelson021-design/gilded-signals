@@ -44,6 +44,9 @@
 
 'use strict';
 
+const { getMarketSession, classifySessionAt, weekStartET } = require('./_lib/market-session');
+const { getLiveTrade, getIntradayLowSeries } = require('./_lib/live-trade');
+
 const FETCH_TIMEOUT_MS = 12000;
 const BARS_LOOKBACK_DAYS = 14; // plenty of buffer before/after a single scored week
 
@@ -56,7 +59,12 @@ const BARS_LOOKBACK_DAYS = 14; // plenty of buffer before/after a single scored 
 // data came back clean (see the dataUnavailable check near the bottom) —
 // a transient Alpaca failure retries fresh on the very next request rather
 // than getting locked in as the answer for everyone for two minutes.
-const CACHE_TTL_MS = 2 * 60 * 1000;
+//
+// 2026-07-28: during an active session the TTL drops to 15s (same as
+// quote.js) so a fresh trigger shows up on the weekly-board promptly
+// instead of being masked by a stale cached response for up to 2 minutes.
+const CACHE_TTL_MS = 2 * 60 * 1000; // closed-market TTL
+const ACTIVE_SESSION_TTL_MS = 15 * 1000;
 const scorecardCache = new Map(); // week -> { expires, data }
 
 const CORS = {
@@ -138,15 +146,37 @@ async function getDailyBars(symbol, startDateStr) {
 // ---------------------------------------------------------------------------
 // Entry detection
 // ---------------------------------------------------------------------------
-function detectDipZoneEntry(bars, zones) {
-  const triggered = []; // { price, weight, date }
-  const remaining = zones.map((z) => ({ ...z, hit: false }));
+// bars: [{ t: ISO timestamp string, low, ... }], ascending chronological.
+// zones: published [{ price, weight }, ...] in order — zones[0] is the
+// First Buy level, zones[1] (if present) is the Second Buy level, etc.
+// degraded: true when bars are daily-granularity (no authoritative
+// intraday source was reachable) — session labels are marked accordingly
+// rather than guessed from a daily bar's arbitrary timestamp.
+//
+// A trigger is permanent for the week once recorded: this function always
+// scans the FULL bar history handed to it (which the caller always builds
+// from Monday 4:00 AM ET forward), so a later price rebound can never
+// erase an earlier trigger — there is no mutable "current state" here to
+// roll back, only a fresh scan of the complete published-week record.
+function detectDipZoneEntry(bars, zones, degraded) {
+  const triggered = []; // { price, weight, ts, date, session, levelIndex }
+  const remaining = zones.map((z, i) => ({ ...z, hit: false, levelIndex: i }));
 
   for (const bar of bars) {
     for (const z of remaining) {
       if (!z.hit && bar.low <= z.price) {
         z.hit = true;
-        triggered.push({ price: z.price, weight: z.weight, date: bar.date });
+        const ts = bar.t;
+        const session = degraded ? 'unknown_degraded_daily' : classifySessionAt(ts);
+        triggered.push({
+          price: z.price,
+          weight: z.weight,
+          levelIndex: z.levelIndex,
+          ts,
+          date: degraded ? (bar.date || ts.slice(0, 10)) : ts.slice(0, 10),
+          session,
+          tradedLow: bar.low,
+        });
       }
     }
   }
@@ -157,13 +187,38 @@ function detectDipZoneEntry(bars, zones) {
 
   const totalWeight = triggered.reduce((s, t) => s + t.weight, 0);
   const entryPrice = triggered.reduce((s, t) => s + t.price * (t.weight / totalWeight), 0);
-  const entryDate = triggered[triggered.length - 1].date; // last zone to trigger = when entry was completed
+  const last = triggered[triggered.length - 1];
 
   return {
     status: 'triggered',
     entryPrice: round(entryPrice, 4),
-    entryDate,
-    triggeredZones: triggered.map((t) => ({ price: t.price, date: t.date })),
+    entryDate: last.date,
+    triggeredZones: triggered.map((t) => ({
+      price: t.price,
+      date: t.date,
+      timestamp: t.ts,
+      session: t.session,
+      levelIndex: t.levelIndex,
+      tradedLow: round(t.tradedLow, 4),
+    })),
+    // Permanent, level-specific trigger record (item 3/6 of the fix spec).
+    firstBuyTriggered: triggered.some((t) => t.levelIndex === 0),
+    secondBuyTriggered: triggered.some((t) => t.levelIndex === 1),
+    firstTrigger: {
+      levelIndex: triggered[0].levelIndex,
+      price: triggered[0].price,
+      triggeredAt: triggered[0].ts,
+      triggeredPrice: round(triggered[0].tradedLow, 4),
+      triggeredSession: triggered[0].session,
+    },
+    lastTrigger: {
+      levelIndex: last.levelIndex,
+      price: last.price,
+      triggeredAt: last.ts,
+      triggeredPrice: round(last.tradedLow, 4),
+      triggeredSession: last.session,
+    },
+    degradedDataSource: !!degraded,
   };
 }
 
@@ -230,9 +285,45 @@ function isGradingComplete(resultsGradeDate) {
 }
 
 // ---------------------------------------------------------------------------
+// Additive display-only zone state for dip_zone picks (item 6 of the
+// 2026-07-28 premarket-trigger fix). Never changes `status` — the
+// existing waiting_for_entry/active/closed_win/closed_loss contract that
+// the front end already switches on is untouched. This only adds finer
+// detail for picks whose zone has actually triggered:
+//   buy_zone_accumulating  — first level hit, price currently still
+//                            within the published zone
+//   first_buy_triggered    — first level hit, no live price to compare
+//   second_buy_triggered   — both levels hit, no live price to compare
+//   triggered_now_above_zone — triggered earlier, price has rebounded
+//                              above the zone
+//   below_second_buy       — both levels hit, price currently below the
+//                            deeper (second) level
+// ---------------------------------------------------------------------------
+function computeZoneState(detection, zones, livePrice) {
+  if (!detection || detection.status !== 'triggered') return null;
+  const prices = zones.map((z) => z.price);
+  const zoneHigh = Math.max(...prices);
+  const zoneLow = Math.min(...prices);
+  const bothTriggered = !!detection.firstBuyTriggered && !!detection.secondBuyTriggered;
+
+  if (livePrice == null) {
+    return bothTriggered ? 'second_buy_triggered' : 'first_buy_triggered';
+  }
+  // Check "rebounded above the whole zone" first — applies whether one or
+  // both levels triggered.
+  if (livePrice > zoneHigh) return 'triggered_now_above_zone';
+  // Both triggered and price has fallen through even the deeper level.
+  if (bothTriggered && livePrice < zoneLow) return 'below_second_buy';
+  // Anywhere inside the published range — including "both levels hit,
+  // price sitting between them" — is still an active, in-zone position.
+  if (livePrice >= zoneLow && livePrice <= zoneHigh) return 'buy_zone_accumulating';
+  return 'first_buy_triggered';
+}
+
+// ---------------------------------------------------------------------------
 // Grade a single pick against its bars.
 // ---------------------------------------------------------------------------
-function gradePick(pick, bars, gradingComplete) {
+function gradePick(pick, bars, gradingComplete, intraday, livePrice) {
   const base = {
     rank: pick.rank,
     ticker: pick.ticker,
@@ -254,12 +345,28 @@ function gradePick(pick, bars, gradingComplete) {
     return { ...base, status: 'data_unavailable', note: 'No market data returned for this ticker.' };
   }
 
-  const detection =
-    pick.entryType === 'dip_zone'
-      ? detectDipZoneEntry(bars, pick.zones)
-      : pick.entryType === 'breakout'
-      ? detectBreakoutEntry(bars, pick.zones[0])
-      : { status: 'unsupported_entry_type', entryPrice: null, entryDate: null, triggeredZones: [] };
+  let detection;
+  if (pick.entryType === 'dip_zone') {
+    const useIntraday = intraday && intraday.authoritative && intraday.bars && intraday.bars.length;
+    if (useIntraday) {
+      detection = detectDipZoneEntry(intraday.bars, pick.zones, false);
+      detection.dataProvider = intraday.provider;
+      detection.dataFeed = intraday.feed;
+    } else {
+      // No authoritative consolidated intraday source reached (SIP and
+      // Finnhub candles both unavailable) -- degrade to the daily bars
+      // already fetched for this pick, explicitly flagged, rather than
+      // silently reporting "waiting for entry" on stale/thin coverage.
+      const dailyAsMinuteShape = bars.map((b) => ({ t: b.date + 'T20:00:00.000Z', low: b.low, date: b.date }));
+      detection = detectDipZoneEntry(dailyAsMinuteShape, pick.zones, true);
+      detection.dataProvider = 'alpaca';
+      detection.dataFeed = (process.env.ALPACA_FEED || 'iex') + '-daily-degraded';
+    }
+  } else if (pick.entryType === 'breakout') {
+    detection = detectBreakoutEntry(bars, pick.zones[0]);
+  } else {
+    detection = { status: 'unsupported_entry_type', entryPrice: null, entryDate: null, triggeredZones: [] };
+  }
 
   if (detection.status === 'waiting_for_entry' || detection.status === 'unsupported_entry_type') {
     return { ...base, status: 'waiting_for_entry', triggeredZones: [], ...buildWatchInfo(pick, bars) };
@@ -269,12 +376,26 @@ function gradePick(pick, bars, gradingComplete) {
   const markPrice = lastBar.close;
   const returnPct = round(((markPrice - detection.entryPrice) / detection.entryPrice) * 100, 2);
 
+  const zoneState =
+    pick.entryType === 'dip_zone' ? computeZoneState(detection, pick.zones, livePrice != null ? livePrice : null) : null;
+
   return {
     ...base,
     status: gradingComplete ? (returnPct > 0 ? 'closed_win' : 'closed_loss') : 'active',
     entryPrice: detection.entryPrice,
     entryDate: detection.entryDate,
     triggeredZones: detection.triggeredZones,
+    // Additive trigger detail (item 3/4/6 of the 2026-07-28 fix) -- the
+    // status field above is untouched, so nothing on the front end that
+    // switches on it needs to change.
+    firstBuyTriggered: detection.firstBuyTriggered || false,
+    secondBuyTriggered: detection.secondBuyTriggered || false,
+    firstTrigger: detection.firstTrigger || null,
+    lastTrigger: detection.lastTrigger || null,
+    triggerDataProvider: detection.dataProvider || null,
+    triggerDataFeed: detection.dataFeed || null,
+    degradedDataSource: !!detection.degradedDataSource,
+    zoneState,
     markPrice,
     markDate: lastBar.date,
     returnPct,
@@ -318,13 +439,51 @@ exports.handler = async (event) => {
   );
   const spyResult = await Promise.allSettled([getDailyBars('SPY', startDateStr)]);
 
+  // Premarket-trigger fix (2026-07-28): dip_zone picks additionally get an
+  // authoritative intraday minute-bar low series (SIP -> Finnhub candles,
+  // see _lib/live-trade.js) covering the FULL published week from
+  // Monday 4:00 AM ET through now -- not just the latest snapshot -- so a
+  // trigger from any eligible session this week is found regardless of
+  // when this endpoint happens to be called. A live "current price" is
+  // fetched alongside it for the additive Buy Zone/Accumulating vs.
+  // Triggered-Now-Above-Zone display detail. Both are best-effort: if
+  // they fail, gradePick() degrades to the existing daily-bar detection
+  // rather than losing coverage entirely.
+  const creds = {
+    alpacaKey: process.env.ALPACA_API_KEY,
+    alpacaSecret: process.env.ALPACA_SECRET_KEY,
+    finnhubKey: process.env.FINNHUB_API_KEY,
+  };
+  const dipPicks = gradable.filter((p) => p.entryType === 'dip_zone');
+  const weekStartISO = weekStartET(picksData.weekOf).toISOString();
+  const nowISO = new Date().toISOString();
+
+  const [intradayResults, liveResults] = await Promise.all([
+    Promise.allSettled(dipPicks.map((p) => getIntradayLowSeries(p.ticker, weekStartISO, nowISO, creds))),
+    Promise.allSettled(dipPicks.map((p) => getLiveTrade(p.ticker, creds))),
+  ]);
+
+  const intradayByTicker = {};
+  const livePriceByTicker = {};
+  dipPicks.forEach((p, i) => {
+    intradayByTicker[p.ticker] = intradayResults[i].status === 'fulfilled' ? intradayResults[i].value : null;
+    const live = liveResults[i].status === 'fulfilled' ? liveResults[i].value : null;
+    livePriceByTicker[p.ticker] = live && live.price != null ? live.price : null;
+  });
+
   const barsByTicker = {};
   gradable.forEach((p, i) => {
     barsByTicker[p.ticker] = barsResults[i].status === 'fulfilled' ? barsResults[i].value : null;
   });
 
   const gradedPicks = picksData.picks.map((p) =>
-    gradePick(p, barsByTicker[p.ticker] || null, gradingComplete)
+    gradePick(
+      p,
+      barsByTicker[p.ticker] || null,
+      gradingComplete,
+      intradayByTicker[p.ticker] || null,
+      livePriceByTicker[p.ticker] != null ? livePriceByTicker[p.ticker] : null
+    )
   );
 
   // Benchmark: SPY change from the first session on/after publish through
@@ -359,8 +518,12 @@ exports.handler = async (event) => {
   const responseBody = {
     week,
     methodologyVersion: picksData.methodologyVersion,
-    dataSource: 'Alpaca (' + (process.env.ALPACA_FEED || 'iex') + ' feed)',
+    dataSource: 'Alpaca SIP + Finnhub fallback (live), Alpaca SIP + Finnhub 1-min candles (trigger detection)',
     dataTimestamp: new Date().toISOString(),
+    // Auditability (item 4/8 of the 2026-07-28 fix): the exact instant
+    // trigger detection scanned from, so it's provable that premarket is
+    // in scope rather than starting at the 9:30 open.
+    triggerWindowStart: weekStartISO,
     gradingComplete,
     resultsGradeDate: picksData.resultsGradeDate,
     benchmark: { index: picksData.benchmarkIndex || 'SPY', returnPct: benchmarkReturn },
@@ -382,9 +545,10 @@ exports.handler = async (event) => {
 
   // Only cache a clean result. If any ticker came back data_unavailable,
   // that's exactly the kind of transient failure that should retry fresh
-  // next time, not get locked in as the cached answer for two minutes.
+  // next time, not get locked in as the cached answer.
   if (dataUnavailable === 0) {
-    scorecardCache.set(week, { expires: Date.now() + CACHE_TTL_MS, data: responseBody });
+    const ttl = getMarketSession(new Date()).session !== 'closed' ? ACTIVE_SESSION_TTL_MS : CACHE_TTL_MS;
+    scorecardCache.set(week, { expires: Date.now() + ttl, data: responseBody });
   }
 
   return ok({ ...responseBody, cached: false });

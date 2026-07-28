@@ -8,10 +8,20 @@
 
 'use strict';
 
+const { getMarketSession } = require('./_lib/market-session');
+const { getLiveTrade } = require('./_lib/live-trade');
+
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes
+// Flat 2-minute cache is still used when the market is closed (no need to
+// hammer providers for a price that isn't moving). During any active
+// session (premarket/regular/after-hours) the handler below uses a much
+// shorter TTL so a live extended-hours print shows up within ~15s instead
+// of being masked by a stale cached read for up to 2 minutes.
+const CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes — closed-market TTL
+const ACTIVE_SESSION_TTL_MS = 15 * 1000; // 15 seconds — premarket/regular/after-hours
+const STALE_TRADE_MS = 20 * 60 * 1000; // 20 minutes — flag as non-live beyond this
 const BENCH_TTL_MS = 5 * 60 * 1000; // 5 minutes — SPY/sector-ETF bars change slowly
 const FETCH_TIMEOUT_MS = 8000;
 const cache = new Map();      // symbol -> { expires, data }  (warm-container only)
@@ -626,13 +636,18 @@ async function getStock(symbol) {
   const fhUrl = (path) =>
     `https://finnhub.io/api/v1/${path}&token=${fh}`;
 
-  const [barsR, snapR, profR, metR, recR, spyR] = await Promise.allSettled([
+  const [barsR, snapR, profR, metR, recR, spyR, liveR] = await Promise.allSettled([
     getJSON(barsUrl, { headers: alpHeaders }),
     getJSON(snapUrl, { headers: alpHeaders }),
     fh ? getJSON(fhUrl(`stock/profile2?symbol=${symbol}`)) : Promise.resolve(null),
     fh ? getJSON(fhUrl(`stock/metric?symbol=${symbol}&metric=all`)) : Promise.resolve(null),
     fh ? getJSON(fhUrl(`stock/recommendation?symbol=${symbol}`)) : Promise.resolve(null),
     symbol === 'SPY' ? Promise.resolve(null) : getBenchCloses('SPY', key, secret, feed),
+    // SIP-first / Finnhub-fallback live trade — see _lib/live-trade.js.
+    // This is what actually resolves "the current price" now; the plain
+    // feed=iex snapshot above is kept only for open/high/low/volume and
+    // for the historical-bars fallback chain if this fails entirely.
+    getLiveTrade(symbol, { alpacaKey: key, alpacaSecret: secret, finnhubKey: fh }),
   ]);
 
   const barsData = barsR.status === 'fulfilled' ? barsR.value : null;
@@ -651,9 +666,24 @@ async function getStock(symbol) {
   const snap = snapR.status === 'fulfilled' ? snapR.value : null;
   const daily = snap && snap.dailyBar ? snap.dailyBar : null;
   const prev = snap && snap.prevDailyBar ? snap.prevDailyBar : null;
-  const trade = snap && snap.latestTrade ? snap.latestTrade : null;
 
-  const price = (trade && trade.p) || (daily && daily.c) || closes[n - 1];
+  // Live price resolution: SIP snapshot -> Finnhub quote -> IEX snapshot
+  // (see _lib/live-trade.js). Falls through to today's daily bar close,
+  // and only as a last resort to the prior historical close — and when it
+  // does, that gets flagged via `isStale`/`session` below rather than
+  // silently presented as a live tick.
+  const live = liveR.status === 'fulfilled' ? liveR.value : { price: null, ts: null, provider: null, feed: null };
+  const sessionInfo = getMarketSession(new Date());
+
+  const price = live.price != null ? live.price : ((daily && daily.c) || closes[n - 1]);
+  const priceTimestamp = live.ts ? new Date(live.ts) : null;
+  const tradeAgeMs = priceTimestamp ? (Date.now() - priceTimestamp.getTime()) : null;
+  // Stale during an active session if either: no live provider returned a
+  // trade at all (we're showing a historical close), or the trade we did
+  // get is older than the threshold. During a fully closed market,
+  // "last trade was hours ago" is expected and never flagged as stale.
+  const isStale = sessionInfo.session !== 'closed' && (live.price == null || (tradeAgeMs != null && tradeAgeMs > STALE_TRADE_MS));
+
   const previousClose = (prev && prev.c) || (n > 1 ? closes[n - 2] : price);
   const open = (daily && daily.o) || bars[n - 1].o;
   const high = (daily && daily.h) || highs[n - 1];
@@ -747,6 +777,15 @@ async function getStock(symbol) {
     open: round(open, 2),
     previousClose: round(previousClose, 2),
     volume: volume || null,
+    // Session/live-price transparency fields (additive — see
+    // netlify/functions/_lib/live-trade.js and _lib/market-session.js).
+    session: sessionInfo.session,
+    sessionLabel: sessionInfo.sessionLabel,
+    priceTimestamp: priceTimestamp ? priceTimestamp.toISOString() : null,
+    priceProvider: live.provider,
+    priceFeed: live.feed,
+    priceExchange: live.exchange || null,
+    isStale,
     avgVolume: d.avgVolume ? Math.round(d.avgVolume) : null,
     rvol: round(d.rvol, 2),
     rsi14: round(d.rsi14, 2),
@@ -912,19 +951,30 @@ exports.handler = async (event) => {
   const symbol = raw.trim().toUpperCase();
   if (!symbol) return fail(symbol, 'Missing required parameter: symbol');
 
+  const isCrypto = symbol.includes('/') || symbol in CRYPTO;
+
+  // Cache key is scoped by session, not just symbol, so a value cached
+  // right before the market opens (or right before it closes) can never
+  // be served across the boundary as if it were still fresh — and so a
+  // previous-close value cached while closed never gets reused once a
+  // new session's live trades start arriving. Crypto trades 24/7, so it
+  // isn't session-scoped.
+  const session = isCrypto ? 'crypto' : getMarketSession(new Date()).session;
+  const cacheKey = `${symbol}::${session}`;
+  const ttl = (!isCrypto && session !== 'closed') ? ACTIVE_SESSION_TTL_MS : CACHE_TTL_MS;
+
   // Serve from warm-container cache when fresh.
-  const cached = cache.get(symbol);
+  const cached = cache.get(cacheKey);
   if (cached && cached.expires > Date.now()) {
     return ok({ ...cached.data, cached: true });
   }
 
   try {
-    const isCrypto = symbol.includes('/') || symbol in CRYPTO;
     const base = symbol.includes('/') ? symbol.split('/')[0] : symbol;
 
     const data = isCrypto ? await getCrypto(base, symbol) : await getStock(symbol);
 
-    cache.set(symbol, { expires: Date.now() + CACHE_TTL_MS, data });
+    cache.set(cacheKey, { expires: Date.now() + ttl, data });
     return ok({ ...data, cached: false });
   } catch (err) {
     return fail(symbol, err && err.message ? err.message : 'Unknown error');
