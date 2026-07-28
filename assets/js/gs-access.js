@@ -40,17 +40,30 @@
     try { document.dispatchEvent(new CustomEvent('gs:unlocked')); } catch (e) {}
   }
 
-  /* ---------- Stripe success redirect: unlock on return ---------- */
+  /* ---------- Stripe success redirect: verify with the server, then unlock ----------
+     The old version unlocked purely because "?checkout=success" was present in the
+     URL, with no server check at all. This confirms the real, paid Checkout Session
+     with Stripe before unlocking anything. */
   function checkCheckoutSuccess() {
     try {
       var params = new URLSearchParams(window.location.search);
       if (params.get('checkout') === 'success') {
-        setUnlocked();
+        var sessionId = params.get('session_id');
         params.delete('checkout');
         params.delete('session_id');
         var qs = params.toString();
         var cleanUrl = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
         window.history.replaceState(null, '', cleanUrl);
+        if (sessionId) {
+          fetch('/.netlify/functions/verify-access', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId: sessionId })
+          }).then(function (r) { return r.json(); }).then(function (d) {
+            if (d && d.active) setUnlocked();
+          }).catch(function () {});
+        }
       }
     } catch (e) {}
   }
@@ -144,10 +157,14 @@
     m.className = 'gsx-msg' + (kind ? ' ' + kind : '');
   }
 
-  function goToStripe() {
+  function goToStripe(email) {
     var btn = document.getElementById('gsxSubmit');
     if (btn) { btn.disabled = true; btn.textContent = 'Redirecting\u2026'; }
-    fetch('/.netlify/functions/create-checkout-session', { method: 'POST' })
+    fetch('/.netlify/functions/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email || '' })
+    })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (d && d.url) { window.location.href = d.url; }
@@ -157,6 +174,17 @@
         setMsg('Could not reach checkout. Please try again.', 'err');
         if (btn) { btn.disabled = false; btn.textContent = 'Subscribe Now \u2192'; }
       });
+  }
+
+  function verifyEmail(email) {
+    return fetch('/.netlify/functions/verify-access', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function (r) { return r.json(); })
+      .then(function (d) { return !!(d && d.active); })
+      .catch(function () { return false; });
   }
 
   function onSubmit() {
@@ -178,10 +206,20 @@
         setTimeout(function () { hideModal(); btn.disabled = false; }, 900);
         return;
       }
-      // Non-allowlisted: capture to Kit then redirect to Stripe.
-      submitToKit(email).catch(function () { /* silent — proceed to Stripe regardless */ });
-      setMsg('Taking you to secure checkout\u2026', 'ok');
-      setTimeout(goToStripe, 600);
+      // Not allowlisted -- check for an existing active subscription first,
+      // so a returning subscriber on a new device isn't sent to pay again.
+      verifyEmail(email).then(function (active) {
+        if (active) {
+          setUnlocked();
+          updateCounters();
+          setMsg('Welcome back. Access restored.', 'ok');
+          setTimeout(function () { hideModal(); btn.disabled = false; }, 900);
+          return;
+        }
+        submitToKit(email).catch(function () { /* silent — proceed to Stripe regardless */ });
+        setMsg('Taking you to secure checkout\u2026', 'ok');
+        setTimeout(function () { goToStripe(email); }, 600);
+      });
     }).catch(function () {
       setMsg('Something went wrong. Try again.', 'err');
       btn.disabled = false;

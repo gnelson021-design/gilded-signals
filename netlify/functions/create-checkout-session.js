@@ -17,16 +17,24 @@ exports.handler = async (event) => {
 
   const stripe = new Stripe(secretKey);
 
+  let email = '';
+  try {
+    if (event.body) email = (JSON.parse(event.body).email || '').trim().toLowerCase();
+  } catch (e) {}
+
   try {
     const origin = (event.headers && event.headers.origin) || 'https://gildedsignals.com';
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams = {
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       allow_promotion_codes: true,
       success_url: origin + '/?checkout=success&session_id={CHECKOUT_SESSION_ID}',
       cancel_url: origin + '/?checkout=cancel',
-    });
+    };
+    if (email) sessionParams.customer_email = email;
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     return {
       statusCode: 200,
