@@ -1,0 +1,324 @@
+{
+  "weekOf": "2026-07-27",
+  "briefPublishedAt": "2026-07-26T23:00:00Z",
+  "resultsGradeDate": "2026-07-31",
+  "methodologyVersion": "v2-staged-entry",
+  "benchmarkIndex": "SPY",
+  "picks": [
+    {
+      "rank": 1,
+      "ticker": "NVDA",
+      "company": "Nvidia",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 207.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 195,
+          "weight": 0.6
+        },
+        {
+          "price": 178,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 2,
+      "ticker": "AVGO",
+      "company": "Broadcom",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 382.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 355,
+          "weight": 0.6
+        },
+        {
+          "price": 300,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 3,
+      "ticker": "AMD",
+      "company": "Advanced Micro Devices",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 522.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 480,
+          "weight": 0.6
+        },
+        {
+          "price": 420,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 4,
+      "ticker": "MRVL",
+      "company": "Marvell Technology",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 193.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 185,
+          "weight": 0.6
+        },
+        {
+          "price": 165,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 5,
+      "ticker": "ASML",
+      "company": "ASML Holding",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 1790.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 1750,
+          "weight": 0.6
+        },
+        {
+          "price": 1600,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 6,
+      "ticker": "LITE",
+      "company": "Lumentum Holdings",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 764.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 720,
+          "weight": 0.6
+        },
+        {
+          "price": 650,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 7,
+      "ticker": "COHR",
+      "company": "Coherent Corp",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 288.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 270,
+          "weight": 0.6
+        },
+        {
+          "price": 240,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 8,
+      "ticker": "MU",
+      "company": "Micron Technology",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 911.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 870,
+          "weight": 0.6
+        },
+        {
+          "price": 800,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 9,
+      "ticker": "VRT",
+      "company": "Vertiv Holdings",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 295.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 280,
+          "weight": 0.6
+        },
+        {
+          "price": 250,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 10,
+      "ticker": "CRDO",
+      "company": "Credo Technology",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 214.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 205,
+          "weight": 0.6
+        },
+        {
+          "price": 175,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 11,
+      "ticker": "GLW",
+      "company": "Corning",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 146.65,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 140,
+          "weight": 0.6
+        },
+        {
+          "price": 115,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 12,
+      "ticker": "BKR",
+      "company": "Baker Hughes",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 57.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 54,
+          "weight": 0.6
+        },
+        {
+          "price": 48,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 13,
+      "ticker": "FRVO",
+      "company": "Fervo Energy",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 24.58,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 23,
+          "weight": 0.6
+        },
+        {
+          "price": 19,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 14,
+      "ticker": "ORA",
+      "company": "Ormat Technologies",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 99.4,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 95,
+          "weight": 0.6
+        },
+        {
+          "price": 84,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    },
+    {
+      "rank": 15,
+      "ticker": "PANW",
+      "company": "Palo Alto Networks",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 324.55,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 310,
+          "weight": 0.6
+        },
+        {
+          "price": 270,
+          "weight": 0.4
+        }
+      ],
+      "status": "waiting_for_entry"
+    }
+  ]
+}
