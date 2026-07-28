@@ -13,11 +13,28 @@
    verified subscriber, rather than serve nothing or guess.
    ===================================================================== */
 'use strict';
-const fs = require('fs');
-const path = require('path');
 const { verify, sign, serializeCookie, parseCookies, COOKIE_NAME } = require('./_lib/access-token');
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type' };
+const FETCH_TIMEOUT_MS = 12000;
+
+// Same convention as scorecard.js: fetch the site's own public data file
+// over HTTP rather than reading the filesystem -- the function bundle
+// doesn't reliably include arbitrary data files, and this keeps exactly
+// one copy of the data, independently auditable at that URL.
+async function loadBrief(week) {
+  const site = process.env.URL || 'https://gildedsignals.com';
+  const url = `${site}/data/brief-${week}.json`;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } finally {
+    clearTimeout(t);
+  }
+}
 
 exports.handler = async (event) => {
   const week = event.queryStringParameters && event.queryStringParameters.week;
@@ -39,8 +56,7 @@ exports.handler = async (event) => {
 
   let brief;
   try {
-    const filePath = path.join(__dirname, '..', '..', 'data', 'brief-' + week + '.json');
-    brief = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    brief = await loadBrief(week);
   } catch (e) {
     return {
       statusCode: 200,
