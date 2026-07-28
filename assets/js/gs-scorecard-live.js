@@ -570,10 +570,13 @@
   function loadGlanceCard() {
     var card = document.getElementById('gs-glance-card');
     if (!card) return;
-    var wrap = card.closest('[data-live="true"]');
-    var week = wrap ? wrap.getAttribute('data-week') : null;
+    // Reads its own data-week/data-methodology directly, rather than
+    // walking up to an ancestor -- .gb-week-panel carries data-live but
+    // not data-week, which previously made this silently return before
+    // ever attempting a fetch. See patch changelog for the full story.
+    var week = card.getAttribute('data-week');
     if (!week) return;
-    var isV3 = wrap && wrap.getAttribute('data-methodology') === 'v3';
+    var isV3 = card.getAttribute('data-methodology') === 'v3';
 
     var buyingEl = card.querySelector('#gs-glance-buying .gs-glance-val');
     var watchingEl = card.querySelector('#gs-glance-watching .gs-glance-val');
