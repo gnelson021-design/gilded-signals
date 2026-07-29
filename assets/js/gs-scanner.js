@@ -564,7 +564,7 @@
   function loadGrid(gridEl, syms) {
     if (!gridEl) return;
     gridEl.innerHTML = '<div style="color:#7a7770;font-family:monospace;font-size:.72rem;letter-spacing:.15em;padding:20px 0;animation:gsPulse 1.4s infinite;">Pulling live data\u2026</div>';
-    var batchSize = 6, all = [];
+    var batchSize = 4, all = [];
     var seq = Promise.resolve();
     for (var i = 0; i < syms.length; i += batchSize) {
       (function (slice) {
@@ -573,7 +573,7 @@
           .then(function (batch) {
             all = all.concat(batch);
             renderSorted(gridEl, all);
-            return new Promise(function (res) { setTimeout(res, 250); });
+            return new Promise(function (res) { setTimeout(res, 1200); });
           });
       })(syms.slice(i, i + batchSize));
     }
