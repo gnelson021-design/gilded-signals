@@ -140,15 +140,26 @@
   function fetchQ(sym) {
     var s = toApi(sym);
     var c = cache[s];
-    if (c && (Date.now() - c.t) < CACHE_MS) return Promise.resolve(c.data);
+    if (c && (Date.now() - c.t) < CACHE_MS) { console.log('[GS]', s, 'CACHE HIT'); return Promise.resolve(c.data); }
+    var t0 = Date.now();
+    console.log('[GS]', s, 'REQUEST START');
     return fetch(API + encodeURIComponent(s))
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        var out = (d && d.price != null) ? { ok: true, data: d } : { ok: false };
+      .then(function (r) {
+        console.log('[GS]', s, 'HTTP', r.status, (Date.now()-t0)+'ms');
+        return r.json().then(function(d){ return {status:r.status, body:d}; });
+      })
+      .then(function (res) {
+        var d = res.body;
+        var ok = (d && d.price != null);
+        var out = ok ? { ok: true, data: d } : { ok: false, reason: 'no-price-field', status: res.status };
+        console.log('[GS]', s, ok ? 'OK' : 'FAILED - ' + out.reason, d);
         cache[s] = { t: Date.now(), data: out };
         return out;
       })
-      .catch(function () { return { ok: false }; });
+      .catch(function (err) {
+        console.log('[GS]', s, 'FETCH ERROR:', err.message, (Date.now()-t0)+'ms');
+        return { ok: false, reason: 'fetch-error: ' + err.message };
+      });
   }
 
   /* ---------- WATCHLIST ---------- */
