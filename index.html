@@ -3872,7 +3872,7 @@ function gsGoToBriefing(id){
       var retCls2 = row.ret!=null && row.ret>=0 ? 'up' : 'dn';
       var benchCls2 = row.bench!=null && row.bench>=0 ? 'up' : 'dn';
       return (
-        '<div class="gp-week-row" onclick="showPage(\\'results\\');gsResultsArchiveSwitch&&gsResultsArchiveSwitch(\\''+ (d.resultsGradeDate||row.w.week) +'\\')">' +
+        '<div class="gp-week-row" onclick="showPage(\'results\');gsResultsArchiveSwitch&&gsResultsArchiveSwitch(\''+ (d.resultsGradeDate||row.w.week) +'\')">' +
         '<div class="gp-week-main"><div class="gp-week-range">'+row.w.label+'</div><div class="gp-week-meta">Methodology '+(d.methodologyVersion||row.w.methodology)+'</div></div>' +
         '<div class="gp-week-stats">' +
           '<div><div class="gp-week-num '+retCls2+'">'+fmtPct(row.ret)+'</div><div class="gp-week-lbl">Return</div></div>' +
