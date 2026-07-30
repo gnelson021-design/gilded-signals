@@ -68,7 +68,7 @@
       fetch(API + encodeURIComponent(sym))
         .then(function (r) { return r.json(); })
         .then(function (d) {
-          if (d && d.price != null) updateBlock(el, d.price);
+          if (d && d.price != null && !d.isStale) updateBlock(el, d.price);
         })
         .catch(function () { /* leave the dated snapshot in place, no LIVE badge */ });
     });
