@@ -24,7 +24,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 189
     },
     {
       "rank": 2,
@@ -45,7 +46,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 369
     },
     {
       "rank": 3,
@@ -66,7 +68,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 425
     },
     {
       "rank": 4,
@@ -87,7 +90,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 163
     },
     {
       "rank": 5,
@@ -108,7 +112,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 1555
     },
     {
       "rank": 6,
@@ -129,7 +134,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 599
     },
     {
       "rank": 7,
@@ -150,7 +156,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 219
     },
     {
       "rank": 8,
@@ -171,7 +178,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 719
     },
     {
       "rank": 9,
@@ -192,7 +200,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 224.5
     },
     {
       "rank": 10,
@@ -213,7 +222,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 185
     },
     {
       "rank": 11,
@@ -234,7 +244,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 114
     },
     {
       "rank": 12,
@@ -255,7 +266,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 56
     },
     {
       "rank": 13,
@@ -276,7 +288,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 17.75
     },
     {
       "rank": 14,
@@ -297,7 +310,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 97.5
     },
     {
       "rank": 15,
@@ -318,7 +332,8 @@
           "weight": 0.4
         }
       ],
-      "status": "waiting_for_entry"
+      "status": "waiting_for_entry",
+      "myAvgEntry": 314
     }
   ]
 }

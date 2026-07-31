@@ -482,6 +482,16 @@
       return '<span class="gb-accumzone-chip"><b>' + Math.round(z.weight * 100) + '%</b> at $' + z.price + '</span>';
     }).join('');
     var noteHtml = p.note ? '<div class="gb-accumzone-note">' + p.note + '</div>' : '';
+    var myEntryHtml = '';
+    if (p.myAvgEntry != null && cur != null) {
+      var diffPct = ((cur - p.myAvgEntry) / p.myAvgEntry) * 100;
+      var diffCls = diffPct >= 0 ? 'up' : 'dn';
+      var diffSign = diffPct >= 0 ? '+' : '-';
+      myEntryHtml =
+        '<div class="gb-accumzone-myentry">My Avg Entry <b>$' +
+        p.myAvgEntry.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) +
+        '</b> <span class="' + diffCls + '">(' + diffSign + Math.abs(diffPct).toFixed(2) + '% from here)</span></div>';
+    }
 
     return (
       '<div class="gb-accumzone">' +
@@ -490,6 +500,7 @@
       '</div>' +
       '<div class="gb-accumzone-track">' + ticksHtml + curMarker + '</div>' +
       '<div class="gb-accumzone-chips">' + chips + '</div>' +
+      myEntryHtml +
       noteHtml +
       '</div>'
     );
