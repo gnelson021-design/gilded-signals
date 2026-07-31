@@ -31,10 +31,30 @@
     return (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2) + '%';
   }
 
+  // Marker position is derived from the two Buy-zone dots' own price/left%
+  // rather than data-min/data-max, so it always lines up with them exactly
+  // -- the dots are ground truth for this bar; data-min/max is only used
+  // below for the separate Min/Max upside percentages.
+  function dotScale(el) {
+    var dots = el.querySelectorAll('.tl-buy-dot');
+    var pts = [];
+    dots.forEach(function (d) {
+      var leftPct = parseFloat(d.style.left);
+      var priceEl = d.querySelector('.tl-buy-lbl .p');
+      var priceVal = priceEl ? parseFloat(priceEl.textContent.replace(/[^0-9.]/g, '')) : NaN;
+      if (!isNaN(leftPct) && !isNaN(priceVal)) pts.push({ price: priceVal, pct: leftPct });
+    });
+    if (pts.length < 2) return null;
+    pts.sort(function (a, b) { return a.price - b.price; });
+    var lo = pts[0], hi = pts[pts.length - 1];
+    if (hi.price === lo.price) return null;
+    return { lo: lo, hi: hi };
+  }
+
   function updateBlock(el, price) {
     var min = parseFloat(el.getAttribute('data-min'));
     var max = parseFloat(el.getAttribute('data-max'));
-    if (price == null || isNaN(price) || isNaN(min) || isNaN(max) || max <= min) return;
+    if (price == null || isNaN(price)) return;
 
     var cur = el.querySelector('.tl-cur');
     if (cur) cur.textContent = fmt(price);
@@ -46,11 +66,14 @@
     if (markerLive) markerLive.textContent = fmt(price);
 
     var marker = el.querySelector('.tl-cur-marker');
-    var clamped = Math.min(Math.max(((price - min) / (max - min)) * 100, 0), 100);
-    if (marker) marker.style.left = clamped.toFixed(1) + '%';
+    var scale = dotScale(el);
+    if (marker && scale) {
+      var pctPos = scale.lo.pct + ((price - scale.lo.price) * (scale.hi.pct - scale.lo.pct)) / (scale.hi.price - scale.lo.price);
+      marker.style.left = Math.min(Math.max(pctPos, 0), 100).toFixed(1) + '%';
+    }
 
     var ends = el.querySelectorAll('.tl-ends .v');
-    if (ends.length === 2) {
+    if (ends.length === 2 && !isNaN(min) && !isNaN(max) && max > min) {
       var minPct = ((min - price) / price) * 100;
       var maxPct = ((max - price) / price) * 100;
       ends[0].textContent = fmt(min) + ' \u00b7 ' + pct(minPct);
