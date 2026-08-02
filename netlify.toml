@@ -1,6 +1,10 @@
 [build]
   functions = "netlify/functions"
 
+[[edge_functions]]
+  path = "/data/*"
+  function = "protect-picks-data"
+
 # /api/* → /.netlify/functions/*
 [[redirects]]
   from   = "/api/*"
