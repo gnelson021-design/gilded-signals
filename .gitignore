@@ -1,8 +1,8 @@
 # Dependencies
 node_modules/
 
-# Scratch / debugging scripts
-*.py
+# Scratch / debugging scripts (root only -- versioned pipeline scripts live in /scripts)
+/*.py
 
 # HTML backups
 index-*.html
@@ -14,10 +14,17 @@ gs-logo-[0-9].png
 Screenshot*.png
 *-project-structure.txt
 
+# Root-level stray script duplicates (canonical copies live in assets/js/ and netlify/functions/)
+/gs-scanner*.js
+/quote-*.js
+*-BACKUP.js
+
+# News feature test/demo files
+gilded-news-live-test*.html
+
 # OS / editor junk
 .DS_Store
 *.swp
 
 # Local Netlify folder
 .netlify
-!index-LIVE.html
