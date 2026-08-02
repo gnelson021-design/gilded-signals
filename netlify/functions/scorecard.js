@@ -114,7 +114,7 @@ async function loadPicksData(week) {
   const site = process.env.URL || 'https://gildedsignals.com';
   const url = `${site}/data/picks-${week}.json`;
   try {
-    return await getJSON(url);
+    return await getJSON(url, { headers: { 'x-gs-internal': process.env.GS_INTERNAL_SECRET || '' } });
   } catch (e) {
     throw new Error(`Could not load ${url}: ${e.message}`);
   }
