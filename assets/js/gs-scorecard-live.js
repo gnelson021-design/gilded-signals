@@ -516,7 +516,7 @@
   function fetchStaticPicks(week) {
     var key = 'static:' + week;
     if (!pending[key]) {
-      pending[key] = timedFetch('/data/picks-' + week + '.json')
+      pending[key] = timedFetch('/api/picks-display?week=' + week)
         .catch(function () { return null; });
     }
     return pending[key];
