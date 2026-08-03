@@ -1116,7 +1116,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   .gs-live-status-sym{font-family:monospace;font-weight:700;font-size:.82rem;color:var(--text-primary);}
   .gs-live-status-badge{font-family:monospace;font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap;}
   .gs-live-status-action{flex-basis:100%;font-family:'DM Sans',sans-serif;font-size:.66rem;letter-spacing:.02em;color:var(--text-muted);line-height:1.3;}
-  .gs-live-status-badge.waiting{color:#9a9690;background:rgba(154,150,144,.12);}
+  .gs-live-status-badge.waiting{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.triggered{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.watch-closely{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.buy-zone{color:#3ECA7A;background:rgba(62,202,122,.14);}
@@ -1124,6 +1124,11 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   .gs-live-status-badge.no-entry{color:#7a7770;background:rgba(122,119,112,.1);}
   .gs-live-status-badge.breakout-pending{color:#7ba7c9;background:rgba(94,150,196,.12);}
   .gs-live-status-badge.breakout-triggered{color:#5eb3e8;background:rgba(94,179,232,.18);}
+  .gs-live-status-badge.watching-no-trade{color:#e8ca7a;background:rgba(212,175,55,.14);}
+  .gs-live-status-badge.buy-zone-triggered{color:#3ECA7A;background:rgba(62,202,122,.14);}
+  .gs-live-status-badge.active-position{color:#3ECA7A;background:rgba(62,202,122,.14);}
+  .gs-live-status-badge.target-reached{color:#3ECA7A;background:rgba(62,202,122,.14);}
+  .gs-live-status-badge.stopped-out{color:#E85555;background:rgba(232,85,85,.14);}
   .gs-live-status-legend{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:.72rem;line-height:1.6;color:var(--text-muted);}
   .gs-live-status-legend b{color:var(--text-secondary);font-weight:600;}
   .gs-live-status-ret{font-family:monospace;font-size:.76rem;font-weight:600;}
@@ -1776,7 +1781,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   .gs-live-status-sym{font-family:monospace;font-weight:700;font-size:.82rem;color:var(--text-primary);}
   .gs-live-status-badge{font-family:monospace;font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap;}
   .gs-live-status-action{flex-basis:100%;font-family:'DM Sans',sans-serif;font-size:.66rem;letter-spacing:.02em;color:var(--text-muted);line-height:1.3;}
-  .gs-live-status-badge.waiting{color:#9a9690;background:rgba(154,150,144,.12);}
+  .gs-live-status-badge.waiting{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.triggered{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.watch-closely{color:#e8ca7a;background:rgba(212,175,55,.14);}
   .gs-live-status-badge.buy-zone{color:#3ECA7A;background:rgba(62,202,122,.14);}
@@ -1784,6 +1789,11 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   .gs-live-status-badge.no-entry{color:#7a7770;background:rgba(122,119,112,.1);}
   .gs-live-status-badge.breakout-pending{color:#7ba7c9;background:rgba(94,150,196,.12);}
   .gs-live-status-badge.breakout-triggered{color:#5eb3e8;background:rgba(94,179,232,.18);}
+  .gs-live-status-badge.watching-no-trade{color:#e8ca7a;background:rgba(212,175,55,.14);}
+  .gs-live-status-badge.buy-zone-triggered{color:#3ECA7A;background:rgba(62,202,122,.14);}
+  .gs-live-status-badge.active-position{color:#3ECA7A;background:rgba(62,202,122,.14);}
+  .gs-live-status-badge.target-reached{color:#3ECA7A;background:rgba(62,202,122,.14);}
+  .gs-live-status-badge.stopped-out{color:#E85555;background:rgba(232,85,85,.14);}
   .gs-live-status-legend{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:.72rem;line-height:1.6;color:var(--text-muted);}
   .gs-live-status-legend b{color:var(--text-secondary);font-weight:600;}
   .gs-live-status-ret{font-family:monospace;font-size:.76rem;font-weight:600;}
@@ -4112,7 +4122,7 @@ function gsBriefUnlock(){
 .gr-live-pill.graded{color:#3ECA7A;background:rgba(62,202,122,.1);border-color:rgba(62,202,122,.35);}
 .gr-live-loading{color:var(--text-muted);font-family:monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 0;}
 .gr-live-meta{margin:14px 0;font-size:.72rem;color:var(--text-muted);}
-.gr-live-badge.waiting{color:#9a9690;}
+.gr-live-badge.waiting{color:#e8ca7a;}
 .gr-live-badge.triggered{color:#e8ca7a;}
 .gr-live-badge.watch-closely{color:#e8ca7a;}
 .gr-live-badge.buy-zone{color:#3ECA7A;}
@@ -4120,6 +4130,11 @@ function gsBriefUnlock(){
 .gr-live-badge.no-entry{color:#7a7770;}
 .gr-live-badge.breakout-pending{color:#7ba7c9;}
 .gr-live-badge.breakout-triggered{color:#5eb3e8;}
+.gr-live-badge.watching-no-trade{color:#e8ca7a;}
+.gr-live-badge.buy-zone-triggered{color:#3ECA7A;}
+.gr-live-badge.active-position{color:#3ECA7A;}
+.gr-live-badge.target-reached{color:#3ECA7A;}
+.gr-live-badge.stopped-out{color:#E85555;}
 .gr-status-banner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:14px 20px;border-radius:10px;margin:16px 0 22px;font-family:'DM Sans',sans-serif;}
 .gr-status-banner.live{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);}
 .gr-status-banner.graded{background:rgba(62,202,122,.07);border:1px solid rgba(62,202,122,.3);}
@@ -4480,6 +4495,7 @@ function gsGoToBriefing(id){
   // weeks this page can honestly aggregate without hand-typing numbers.
   // Add one line here each time a new week's picks JSON is published.
   var GP_WEEKS = [
+    { week: '2026-08-03', label: 'August 3\u20137, 2026', methodology: 'v3' },
     { week: '2026-07-13', label: 'July 13\u201317, 2026', methodology: 'v2' },
     { week: '2026-07-20', label: 'July 20\u201324, 2026', methodology: 'v2' },
     { week: '2026-07-27', label: 'July 27\u201331, 2026', methodology: 'v2' }
