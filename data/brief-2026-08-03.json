@@ -1,0 +1,372 @@
+{
+  "weekOf": "2026-08-03",
+  "dateline": "For the week of August 3\u20137, 2026 \u00b7 Updated Sundays",
+  "lead": "Two picks carry real earnings risk this week: AMD reports Tuesday after the close, and Ormat reports Wednesday before the open \u2014 both zones lock at publish regardless, so size those two accordingly. Outside of that, this week leans into a theme that's been building since late July: a broad, capex-driven pullback across AI infrastructure has knocked several genuinely strong businesses down to more attractive entries \u2014 Vertiv and Corning both just took double-digit, single-day earnings hits despite reporting real growth, and that's the setup behind both of them here. Amazon's the exception: it already had its move, rallying over 15% last Friday on a blowout quarter, so this week is about whether that strength holds rather than a fresh catalyst. Semis remain the core of the list \u2014 Nvidia, ASML, Marvell, Micron, Broadcom, TSMC \u2014 all still riding the same data-center buildout, just at different points in their own pullback-and-recover cycles right now.",
+  "crosslinkOnclick": "gsGoToResults('2026-07-31')",
+  "crosslinkText": "Week of July 27\u201331, 2026 \u00b7 Full Scorecard \u2192",
+  "weekAtGlance": {
+    "marketCatalyst": "AMD reports Tuesday after the close and Ormat reports Wednesday before the open \u2014 the two scheduled catalysts inside this week's window, with the broader AI-infrastructure sector still digesting late July's capex-driven pullback across NVDA, AVGO, DELL, and META."
+  },
+  "picks": {
+    "VRT": {
+      "convictionLabel": "Strong Buy",
+      "convictionClass": "strong",
+      "riskLabel": "High Risk",
+      "riskClass": "high",
+      "confidenceScore": 7,
+      "buyPlan": {
+        "firstBuyPrice": 225,
+        "secondBuyPrice": 205,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Vertiv is the clearest pure-play on AI data-center power and cooling, and last week's post-earnings drop looks more like a growth-scare overreaction than a broken thesis.",
+      "biggestRisk": "This isn't a fresh-catalyst pick \u2014 it's a bet the post-earnings selloff was overdone. If the broader AI-infrastructure pullback keeps going, this one keeps falling with it.",
+      "catalystHtml": "Stock fell 14\u201317% on July 29 despite an EPS beat, as revenue and Q3 guidance missed \u2014 several desks trimmed price targets but kept Buy/Outperform ratings, setting up a possible stabilization bounce this week.",
+      "chart": {
+        "currentPrice": 238,
+        "asOfDate": "08/01",
+        "chartMin": 195,
+        "chartMax": 345,
+        "analystAvg": 331,
+        "analystAvgCount": 25,
+        "note": "Targets moved fast post-earnings \u2014 confirm before lock."
+      }
+    },
+    "AMD": {
+      "convictionLabel": "Strong Buy",
+      "convictionClass": "strong",
+      "riskLabel": "High Risk",
+      "riskClass": "high",
+      "confidenceScore": 6,
+      "buyPlan": {
+        "firstBuyPrice": 470,
+        "secondBuyPrice": 420,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "AMD's AI GPU and EPYC server share gains are real and accelerating, but this is a binary week \u2014 Q2 earnings land Tuesday after the close.",
+      "biggestRisk": "AMD is up well over 100% over the past year at a rich multiple \u2014 a lot of good news may already be priced in, so any guidance softness could trigger a sharp reversal regardless of the headline beat.",
+      "catalystHtml": "Q2 report due <b>Tuesday, August 4, after market close</b>. Several desks raised targets into the print on server-CPU and early Instinct AI GPU shipment strength.",
+      "chart": {
+        "currentPrice": 500,
+        "asOfDate": "08/01",
+        "chartMin": 400,
+        "chartMax": 545,
+        "analystAvg": 530,
+        "analystAvgCount": 50,
+        "note": "LOW CONFIDENCE \u2014 sources disagreed on today's actual price ($476\u2013$534). Re-pull everything here before lock."
+      }
+    },
+    "NVDA": {
+      "convictionLabel": "Strong Buy",
+      "convictionClass": "strong",
+      "riskLabel": "Medium Risk",
+      "riskClass": "medium",
+      "confidenceScore": 7,
+      "buyPlan": {
+        "firstBuyPrice": 190,
+        "secondBuyPrice": 175,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Nvidia remains the central name in the AI buildout, and shares have lagged the broader chip rally this year even as data-center revenue keeps accelerating \u2014 a gap that tends to close.",
+      "biggestRisk": "China export restrictions remain an overhang, and NVDA's high beta means it takes the hardest hit whenever broader AI-bubble jitters resurface.",
+      "catalystHtml": "No earnings this week (next report August 26). Hyperscaler capex commentary and Blackwell/Rubin ramp headlines are the near-term swing factors.",
+      "chart": {
+        "currentPrice": 200,
+        "asOfDate": "08/01",
+        "chartMin": 165,
+        "chartMax": 310,
+        "analystAvg": 301.62,
+        "analystAvgCount": 61,
+        "note": ""
+      }
+    },
+    "ASML": {
+      "convictionLabel": "Strong Buy",
+      "convictionClass": "strong",
+      "riskLabel": "Medium Risk",
+      "riskClass": "medium",
+      "confidenceScore": 7,
+      "buyPlan": {
+        "firstBuyPrice": 1720,
+        "secondBuyPrice": 1600,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "ASML has zero real competition in EUV lithography, and management says order books are essentially full into 2027\u20132028 \u2014 this is a scarcity-value story, not a hype story.",
+      "biggestRisk": "Trading near 52-week highs at nearly 49x forward earnings \u2014 priced for perfection, so any wobble in the broader AI-capex narrative hits this one too.",
+      "catalystHtml": "No earnings this week (already reported July 15 with raised full-year guidance). Watch for capex commentary out of TSMC, Samsung, or SK Hynix.",
+      "chart": {
+        "currentPrice": 1800,
+        "asOfDate": "08/01",
+        "chartMin": 1550,
+        "chartMax": 2100,
+        "analystAvg": 2050,
+        "analystAvgCount": 20,
+        "note": "LOW CONFIDENCE \u2014 didn't find a clean fresh 12-month consensus figure today. This is a reasoned estimate, not a sourced one \u2014 pull a real TradingView screenshot before lock."
+      }
+    },
+    "MRVL": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "High Risk",
+      "riskClass": "high",
+      "confidenceScore": 7,
+      "buyPlan": {
+        "firstBuyPrice": 180,
+        "secondBuyPrice": 160,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Marvell's custom AI silicon and interconnect business is growing fast, and the stock's ~25% pullback over the last month looks more like sentiment than fundamentals \u2014 KeyBanc just reiterated Buy and raised its target.",
+      "biggestRisk": "Erste Group downgraded to Hold on real customer-concentration risk \u2014 a handful of hyperscaler customers drive most of the AI revenue here, and any one of them pulling back would hit hard.",
+      "catalystHtml": "No earnings this week (next report late August). Watch for custom-ASIC commentary and any read-through from AMD's Tuesday print given overlapping AI-infrastructure exposure.",
+      "chart": {
+        "currentPrice": 190,
+        "asOfDate": "08/01",
+        "chartMin": 145,
+        "chartMax": 405,
+        "analystAvg": 330,
+        "analystAvgCount": 29,
+        "note": ""
+      }
+    },
+    "MU": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "Medium Risk",
+      "riskClass": "medium",
+      "confidenceScore": 8,
+      "buyPlan": {
+        "firstBuyPrice": 760,
+        "secondBuyPrice": 680,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Micron's HBM memory is effectively sold out through 2026 on binding multi-year AI contracts, including a new Anthropic partnership \u2014 one of the tightest supply/demand setups in the entire AI stack.",
+      "biggestRisk": "Memory pricing can turn quickly if a competitor un-sells inventory, and CEO Sanjay Mehrotra's recent ~$37M insider sale is worth watching, though not disqualifying on its own.",
+      "catalystHtml": "No earnings this week (next report August 28). Memory pricing trends and hyperscaler capex updates are the near-term swing factors.",
+      "chart": {
+        "currentPrice": 812,
+        "asOfDate": "08/01",
+        "chartMin": 620,
+        "chartMax": 1050,
+        "analystAvg": 1000,
+        "analystAvgCount": 30,
+        "note": "LOW CONFIDENCE \u2014 sources disagreed sharply on today's actual price. Re-verify everything here before lock."
+      }
+    },
+    "AVGO": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "Medium Risk",
+      "riskClass": "medium",
+      "confidenceScore": 6,
+      "buyPlan": {
+        "firstBuyPrice": 365,
+        "secondBuyPrice": 330,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Broadcom's custom AI silicon franchise keeps landing marquee deals \u2014 Apple just extended a multi-year agreement worth over $30B, on top of existing hyperscaler ASIC relationships.",
+      "biggestRisk": "Several desks flagged 'AI-infrastructure charts breaking down' in late July \u2014 if that technical damage continues across the group, even the strongest fundamental stories get dragged lower.",
+      "catalystHtml": "No earnings this week (next report September 3). Watch for continued custom-chip order flow news.",
+      "chart": {
+        "currentPrice": 390,
+        "asOfDate": "08/01",
+        "chartMin": 270,
+        "chartMax": 530,
+        "analystAvg": 525.44,
+        "analystAvgCount": 48,
+        "note": ""
+      }
+    },
+    "DELL": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "Medium Risk",
+      "riskClass": "medium",
+      "confidenceScore": 6,
+      "buyPlan": {
+        "firstBuyPrice": 385,
+        "secondBuyPrice": 350,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Dell's AI server backlog just hit a record $51.3B with segment revenue up 757% year-over-year \u2014 the growth story is intact even though the stock has pulled back with the broader group.",
+      "biggestRisk": "Taiwanese investigators are actively probing alleged smuggling of Nvidia chips to China tied to AI server makers \u2014 a negative development there could hit sentiment hard regardless of the underlying business.",
+      "catalystHtml": "No earnings this week (next report September 3). Watch AI-server order flow and any update on the Taiwan customs investigation.",
+      "chart": {
+        "currentPrice": 410,
+        "asOfDate": "08/01",
+        "chartMin": 330,
+        "chartMax": 510,
+        "analystAvg": 505,
+        "analystAvgCount": 27,
+        "note": ""
+      }
+    },
+    "PANW": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "Medium Risk",
+      "riskClass": "medium",
+      "confidenceScore": 6,
+      "buyPlan": {
+        "firstBuyPrice": 300,
+        "secondBuyPrice": 275,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Palo Alto's Prisma AIRS AI-security product is its fastest-growing line as enterprises scale up AI security spend, and the RPO backlog keeps accelerating.",
+      "biggestRisk": "The stock has more than doubled off its lows over the past few months and some desks are already flagging it as overvalued \u2014 a lot of the good news looks priced in here.",
+      "catalystHtml": "No earnings this week (next report August 24). AI-cybersecurity budget headlines and peer read-through (CrowdStrike, Fortinet) are the near-term movers.",
+      "chart": {
+        "currentPrice": 319,
+        "asOfDate": "08/01",
+        "chartMin": 260,
+        "chartMax": 421,
+        "analystAvg": 380,
+        "analystAvgCount": 42,
+        "note": ""
+      }
+    },
+    "NOW": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "Medium Risk",
+      "riskClass": "medium",
+      "confidenceScore": 7,
+      "buyPlan": {
+        "firstBuyPrice": 103,
+        "secondBuyPrice": 92,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "ServiceNow is down over a third from its highs despite a genuine Q2 beat and AI-driven ACV crossing $1B for the first time \u2014 one of the more statistically cheap large-cap AI software names right now.",
+      "biggestRisk": "The stock has been in a real downtrend since its highs \u2014 buying here is a bet the selling is exhausted, not confirmation that it already has.",
+      "catalystHtml": "No earnings this week (next report late October). Watch for continued Now Assist adoption headlines and broader enterprise-software sentiment.",
+      "chart": {
+        "currentPrice": 110,
+        "asOfDate": "08/01",
+        "chartMin": 85,
+        "chartMax": 140,
+        "analystAvg": 139.80,
+        "analystAvgCount": 31,
+        "note": ""
+      }
+    },
+    "TSM": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "Low Risk",
+      "riskClass": "low",
+      "confidenceScore": 7,
+      "buyPlan": {
+        "firstBuyPrice": 390,
+        "secondBuyPrice": 360,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "TSMC makes the chips behind essentially every major AI accelerator on the market, and the stock is currently trading below even the most conservative analyst price target.",
+      "biggestRisk": "Geopolitical risk around Taiwan is the one variable no amount of fundamental strength fully offsets \u2014 it's priced into the discount, but it doesn't go away.",
+      "catalystHtml": "No earnings this week (already reported mid-July; next report mid-October). Watch for Taiwan-China geopolitical headlines and advanced-node capacity news.",
+      "chart": {
+        "currentPrice": 404,
+        "asOfDate": "08/02",
+        "chartMin": 345,
+        "chartMax": 700,
+        "analystAvg": 538,
+        "analystAvgCount": 19,
+        "note": ""
+      }
+    },
+    "GLW": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "High Risk",
+      "riskClass": "high",
+      "confidenceScore": 6,
+      "buyPlan": {
+        "firstBuyPrice": 130,
+        "secondBuyPrice": 115,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Corning just fell 13\u201320% on soft Q3 guidance despite a genuine Q2 beat and a real AI-optical growth story \u2014 Meta, Amazon, and Nvidia have all signed multi-billion-dollar supply deals here.",
+      "biggestRisk": "Analysts cut targets alongside the guidance miss (Citi to $220, Morgan Stanley to $165) \u2014 both still imply real upside from here, but confirm the framing is 'quality name, disappointing guide,' not something structurally broken.",
+      "catalystHtml": "No earnings this week (already reported July 28; next report late October). This week is about whether the post-earnings selling has run its course.",
+      "chart": {
+        "currentPrice": 138,
+        "asOfDate": "07/31",
+        "chartMin": 108,
+        "chartMax": 220,
+        "analystAvg": 190,
+        "analystAvgCount": 15,
+        "note": "Very volatile past week (fell 13-20% on 7/28) \u2014 re-confirm current price before lock."
+      }
+    },
+    "BKR": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "Low Risk",
+      "riskClass": "low",
+      "confidenceScore": 7,
+      "buyPlan": {
+        "firstBuyPrice": 57,
+        "secondBuyPrice": 52,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Baker Hughes is a quieter way to play the AI power buildout \u2014 gas turbines for data centers are driving record orders, and Q2 beat across the board.",
+      "biggestRisk": "As an energy-services name, BKR is more exposed to oil-price swings than the pure AI-infrastructure names on this list, even though data-center power is now a real growth driver.",
+      "catalystHtml": "No earnings this week (already reported July 27; next report late October). Watch natural gas and oil price action along with new data-center power contract announcements.",
+      "chart": {
+        "currentPrice": 60,
+        "asOfDate": "08/02",
+        "chartMin": 49,
+        "chartMax": 75,
+        "analystAvg": 68,
+        "analystAvgCount": 20,
+        "note": ""
+      }
+    },
+    "ORA": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "High Risk",
+      "riskClass": "high",
+      "confidenceScore": 5,
+      "buyPlan": {
+        "firstBuyPrice": 88,
+        "secondBuyPrice": 78,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Ormat is the only vertically integrated geothermal company in the U.S., offering 24/7 baseload power that's a genuine fit for AI data-center demand \u2014 but this pick carries real event risk this week.",
+      "biggestRisk": "Earnings land mid-week and this zone locks at publish regardless \u2014 size this one for the possibility of a guidance-driven gap in either direction.",
+      "catalystHtml": "Reports Q2 earnings <b>Wednesday, August 5, before market open</b> \u2014 right in the middle of this trading week.",
+      "chart": {
+        "currentPrice": 94,
+        "asOfDate": "08/01",
+        "chartMin": 74,
+        "chartMax": 142,
+        "analystAvg": 127,
+        "analystAvgCount": 12,
+        "note": "Earnings Wednesday 8/5 before the open \u2014 expect this zone to move once results land."
+      }
+    },
+    "AMZN": {
+      "convictionLabel": "Buy",
+      "convictionClass": "buy",
+      "riskLabel": "Medium Risk",
+      "riskClass": "medium",
+      "confidenceScore": 5,
+      "buyPlan": {
+        "firstBuyPrice": 258,
+        "secondBuyPrice": 238,
+        "ifItRuns": "waiting patiently instead of chasing"
+      },
+      "whyILikeIt": "Amazon just posted one of its best quarters in a decade \u2014 AWS growth accelerated to 37%, AI and chip revenue topped $25B annualized, and the stock already rallied over 15% on the news.",
+      "biggestRisk": "Most of this quarter's good news is already reflected in the price after Friday's move \u2014 a 'sell the news' pullback before the stock holds these gains is a real possibility.",
+      "catalystHtml": "No earnings this week (already reported July 30). This week is about whether last Friday's rally holds and consolidates rather than a fresh catalyst.",
+      "chart": {
+        "currentPrice": 271.58,
+        "asOfDate": "07/31",
+        "chartMin": 228,
+        "chartMax": 400,
+        "analystAvg": 321.95,
+        "analystAvgCount": 62,
+        "note": ""
+      }
+    }
+  }
+}

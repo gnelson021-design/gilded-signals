@@ -1,0 +1,369 @@
+{
+  "weekOf": "2026-08-03",
+  "briefPublishedAt": "2026-08-02T23:00:00Z",
+  "resultsGradeDate": "2026-08-07",
+  "methodologyVersion": "v3-target-invalidation",
+  "benchmarkIndex": "SPY",
+  "picks": [
+    {
+      "rank": 1,
+      "ticker": "VRT",
+      "company": "Vertiv Holdings",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 238.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 225.0,
+          "weight": 0.6
+        },
+        {
+          "price": 205.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 280.0,
+      "invalidationLevel": 198.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 242.0
+    },
+    {
+      "rank": 2,
+      "ticker": "AMD",
+      "company": "Advanced Micro Devices",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 500.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 470.0,
+          "weight": 0.6
+        },
+        {
+          "price": 420.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 565.0,
+      "invalidationLevel": 400.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 475.0
+    },
+    {
+      "rank": 3,
+      "ticker": "NVDA",
+      "company": "Nvidia",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 200.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 190.0,
+          "weight": 0.6
+        },
+        {
+          "price": 175.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 240.0,
+      "invalidationLevel": 168.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 192.5
+    },
+    {
+      "rank": 4,
+      "ticker": "ASML",
+      "company": "ASML Holding",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 1800.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 1720.0,
+          "weight": 0.6
+        },
+        {
+          "price": 1600.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 1950.0,
+      "invalidationLevel": 1550.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 1671.0
+    },
+    {
+      "rank": 5,
+      "ticker": "MRVL",
+      "company": "Marvell Technology",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 190.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 180.0,
+          "weight": 0.6
+        },
+        {
+          "price": 160.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 235.0,
+      "invalidationLevel": 150.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 185.0
+    },
+    {
+      "rank": 6,
+      "ticker": "MU",
+      "company": "Micron Technology",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 812.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 760.0,
+          "weight": 0.6
+        },
+        {
+          "price": 680.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 950.0,
+      "invalidationLevel": 640.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 800.0
+    },
+    {
+      "rank": 7,
+      "ticker": "AVGO",
+      "company": "Broadcom",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 390.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 365.0,
+          "weight": 0.6
+        },
+        {
+          "price": 330.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 450.0,
+      "invalidationLevel": 310.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 379.0
+    },
+    {
+      "rank": 8,
+      "ticker": "DELL",
+      "company": "Dell Technologies",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 410.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 385.0,
+          "weight": 0.6
+        },
+        {
+          "price": 350.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 470.0,
+      "invalidationLevel": 330.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 405.0
+    },
+    {
+      "rank": 9,
+      "ticker": "PANW",
+      "company": "Palo Alto Networks",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 319.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 300.0,
+          "weight": 0.6
+        },
+        {
+          "price": 275.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 360.0,
+      "invalidationLevel": 260.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 330.0
+    },
+    {
+      "rank": 10,
+      "ticker": "NOW",
+      "company": "ServiceNow",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 110.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 103.0,
+          "weight": 0.6
+        },
+        {
+          "price": 92.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 135.0,
+      "invalidationLevel": 85.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 102.0
+    },
+    {
+      "rank": 11,
+      "ticker": "TSM",
+      "company": "Taiwan Semiconductor",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 404.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 390.0,
+          "weight": 0.6
+        },
+        {
+          "price": 360.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 470.0,
+      "invalidationLevel": 345.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 404.0
+    },
+    {
+      "rank": 12,
+      "ticker": "GLW",
+      "company": "Corning",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 138.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 130.0,
+          "weight": 0.6
+        },
+        {
+          "price": 115.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 170.0,
+      "invalidationLevel": 108.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 135.0
+    },
+    {
+      "rank": 13,
+      "ticker": "BKR",
+      "company": "Baker Hughes",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 60.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 57.0,
+          "weight": 0.6
+        },
+        {
+          "price": 52.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 70.0,
+      "invalidationLevel": 49.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 58.0
+    },
+    {
+      "rank": 14,
+      "ticker": "ORA",
+      "company": "Ormat Technologies",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 94.0,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 88.0,
+          "weight": 0.6
+        },
+        {
+          "price": 78.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 118.0,
+      "invalidationLevel": 74.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 97.5
+    },
+    {
+      "rank": 15,
+      "ticker": "AMZN",
+      "company": "Amazon.com",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 271.58,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 258.0,
+          "weight": 0.6
+        },
+        {
+          "price": 238.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 310.0,
+      "invalidationLevel": 228.0,
+      "actionStatus": "adding_on_weakness",
+      "myAvgEntry": 270.0
+    }
+  ]
+}
