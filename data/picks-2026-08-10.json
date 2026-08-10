@@ -1,0 +1,354 @@
+{
+  "weekOf": "2026-08-10",
+  "briefPublishedAt": "2026-08-09T23:00:00Z",
+  "resultsGradeDate": "2026-08-14",
+  "methodologyVersion": "v3-target-invalidation",
+  "benchmarkIndex": "SPY",
+  "picks": [
+    {
+      "rank": 1,
+      "ticker": "CBRS",
+      "company": "Cerebras Systems",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 226.73,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 220.0,
+          "weight": 0.6
+        },
+        {
+          "price": 208.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 235.0,
+      "invalidationLevel": 200.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 2,
+      "ticker": "ALOY",
+      "company": "REalloys",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 12.27,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 12.2,
+          "weight": 0.6
+        },
+        {
+          "price": 11.25,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 13.25,
+      "invalidationLevel": 10.7,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 3,
+      "ticker": "USAR",
+      "company": "USA Rare Earth",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 19.33,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 18.75,
+          "weight": 0.6
+        },
+        {
+          "price": 17.5,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 20.25,
+      "invalidationLevel": 16.7,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 4,
+      "ticker": "MRVL",
+      "company": "Marvell Technology",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 218.72,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 213.0,
+          "weight": 0.6
+        },
+        {
+          "price": 203.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 225.0,
+      "invalidationLevel": 197.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 5,
+      "ticker": "VRT",
+      "company": "Vertiv Holdings",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 272.4,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 267.0,
+          "weight": 0.6
+        },
+        {
+          "price": 255.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 280.0,
+      "invalidationLevel": 249.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 6,
+      "ticker": "MP",
+      "company": "MP Materials",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 51.11,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 50.75,
+          "weight": 0.6
+        },
+        {
+          "price": 48.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 54.0,
+      "invalidationLevel": 46.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 7,
+      "ticker": "CRDO",
+      "company": "Credo Technology",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 249.89,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 240.0,
+          "weight": 0.6
+        },
+        {
+          "price": 225.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 255.0,
+      "invalidationLevel": 217.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 8,
+      "ticker": "GLW",
+      "company": "Corning",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 165.68,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 162.0,
+          "weight": 0.6
+        },
+        {
+          "price": 155.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 170.0,
+      "invalidationLevel": 150.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 9,
+      "ticker": "FRVO",
+      "company": "Fervo Energy",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 25.85,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 25.5,
+          "weight": 0.6
+        },
+        {
+          "price": 23.5,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 28.0,
+      "invalidationLevel": 22.5,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 10,
+      "ticker": "NVDA",
+      "company": "Nvidia",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 223.96,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 221.0,
+          "weight": 0.6
+        },
+        {
+          "price": 212.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 230.0,
+      "invalidationLevel": 206.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 11,
+      "ticker": "AVGO",
+      "company": "Broadcom",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 427.76,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 421.0,
+          "weight": 0.6
+        },
+        {
+          "price": 407.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 440.0,
+      "invalidationLevel": 398.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 12,
+      "ticker": "AMD",
+      "company": "Advanced Micro Devices",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 483.36,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 475.0,
+          "weight": 0.6
+        },
+        {
+          "price": 455.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 505.0,
+      "invalidationLevel": 438.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 13,
+      "ticker": "PANW",
+      "company": "Palo Alto Networks",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 363.86,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 357.0,
+          "weight": 0.6
+        },
+        {
+          "price": 342.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 380.0,
+      "invalidationLevel": 329.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 14,
+      "ticker": "GOOGL",
+      "company": "Alphabet",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 354.3,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 348.0,
+          "weight": 0.6
+        },
+        {
+          "price": 334.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 368.0,
+      "invalidationLevel": 322.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 15,
+      "ticker": "PLTR",
+      "company": "Palantir Technologies",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 172.01,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 164.0,
+          "weight": 0.6
+        },
+        {
+          "price": 153.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 175.0,
+      "invalidationLevel": 147.0,
+      "actionStatus": "adding_on_weakness"
+    }
+  ]
+}
