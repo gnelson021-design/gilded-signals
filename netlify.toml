@@ -16,3 +16,8 @@
   from   = "/*"
   to     = "/index.html"
   status = 200
+
+# Official weekly-briefing trigger capture — every 15 minutes, weekdays,
+# spanning US regular market hours in UTC across both EDT and EST.
+[functions."trigger-capture"]
+  schedule = "*/15 13-21 * * 1-5"
