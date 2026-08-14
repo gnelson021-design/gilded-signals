@@ -1063,7 +1063,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   </div>
 
     <div class="gb-week-panel" id="gb-week-2026-08-10" data-live="true">
-    <div class="gb-dateline">For the week of <b>August 10&ndash;14, 2026</b> &middot; Updated Sundays</div>
+    <div class="gb-dateline">For the week of <b>August 10&ndash;14, 2026</b> &middot; <b style="color:#B0ABA5;">Week Completed &mdash; Final Scorecard Posted</b></div>
 
   <div class="gb-rule"></div>
 
@@ -1104,8 +1104,8 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 
   <!-- ============ RESULTS CROSSLINK ============ -->
   <div class="gb-crosslink">
-    <span class="gb-crosslink-lbl">Last Week&rsquo;s Results</span>
-    <a id="gb-lastweek-link" onclick="gsGoToResults('2026-08-07')">Week of August 3&ndash;7, 2026 &middot; Full Scorecard &rarr;</a>
+    <span class="gb-crosslink-lbl">This Week&rsquo;s Final Results</span>
+    <a id="gb-lastweek-link" onclick="gsGoToResults('2026-08-14')">Week of August 10&ndash;14, 2026 &middot; Full Scorecard &rarr;</a>
   </div>
   <style>
   .gs-live-status{margin:24px 0 36px;padding:20px 22px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.16);}
@@ -4871,7 +4871,9 @@ function gsBriefUnlock(){
   <div class="gb-archive-bar">
     <span class="gb-archive-lbl">Browse past weeks:</span>
     <select class="gb-archive-select" onchange="gsResultsArchiveSwitch(this.value)">
-      <option value="2026-07-31">Most Recent &mdash; July 27&ndash;31, 2026</option>
+      <option value="2026-08-14">Most Recent &mdash; August 10&ndash;14, 2026</option>
+      <option value="2026-08-07">August 3&ndash;7, 2026</option>
+      <option value="2026-07-31">July 27&ndash;31, 2026</option>
       <option value="2026-07-24">July 20&ndash;24, 2026</option>
       <option value="2026-07-17">July 13&ndash;17, 2026</option>
       <option value="2026-07-10">July 6&ndash;10, 2026</option>
@@ -4922,7 +4924,56 @@ function gsBriefUnlock(){
     </div>
   </div>
 
-    <div class="gr-week-panel" id="gr-week-2026-08-07" data-week="2026-08-07">
+    <div class="gr-week-panel" id="gr-week-2026-08-14" data-week="2026-08-14">
+    <div class="gb-dateline">Week of <b>August 10&ndash;14, 2026</b></div>
+    <div class="gb-rule"></div>
+    <p class="gb-lead">The busiest graded week yet under the v3 methodology &mdash; and the first full week verified on SIP consolidated data. 11 of the fifteen published buy zones triggered as the market chopped sideways (S&amp;P 500 +0.47%), and the system did real work on both sides of the ledger. 6 positions ran to their published first targets &mdash; CBRS +6.82%, ALOY +8.61%, USAR +8.00%, MRVL +5.63%, CRDO +6.25%, and AMD +6.32%. 2 hit invalidation and were closed at the published level &mdash; FRVO &minus;8.91% and AVGO &minus;4.19%. 3 remain open into next week, marked at Friday&rsquo;s close &mdash; GLW +2.41%, NVDA +1.86%, and GOOGL &minus;0.60%. The remaining 4 zones were never touched and no capital went to work there. Model return of +3.57% on entered trades against the S&amp;P&rsquo;s +0.47% &mdash; every number below measured exactly as published: entries at locked zone prices, exits at published targets or invalidation levels, no hindsight edits.</p>
+
+    <div class="gr-stats-v2">
+      <div class="gr-stat-box"><div class="wrh-stat-num">15</div><div class="wrh-stat-lbl">Total Published</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#3ECA7A;">11</div><div class="wrh-stat-lbl">Trades Entered</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num up">+3.57%</div><div class="wrh-stat-lbl">Average Return (Model, Entered Trades)</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num">4</div><div class="wrh-stat-lbl">Never Triggered</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num up">+0.47%</div><div class="wrh-stat-lbl">S&amp;P 500 Benchmark</div></div>
+    </div>
+
+    <div class="gb-section-lbl">Position Status at Friday&rsquo;s Close</div>
+    <div class="gr-stats-v2">
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#3ECA7A;">6</div><div class="wrh-stat-lbl">Winners (Target Reached)</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num" style="color:#E85555;">2</div><div class="wrh-stat-lbl">Losers (Invalidation Hit)</div></div>
+      <div class="gr-stat-box"><div class="wrh-stat-num">3</div><div class="wrh-stat-lbl">Still Active</div></div>
+    </div>
+    <p class="gb-lead" style="font-size:.85rem;">A triggered zone means the published entry condition occurred &mdash; nothing more. Zones locked at publish on Sunday night and were never adjusted. Winners and losers are both measured at their published exit levels &mdash; never at a better intraday print.</p>
+
+    <div class="gb-section-lbl">Full Scorecard</div>
+    <h2 class="gb-section-title">15 Picks, Graded</h2>
+
+    <div class="gb-score"><div class="gb-rank">01</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">CBRS</span><span class="gb-company">Cerebras Systems</span><span class="gs-live-status-badge target-reached">Target Reached</span></div><span class="gb-scorepct up">+6.82%</span></div><div class="gb-scoreline">Triggered $220 (8/13) &rarr; first target $235 reached 8/13 &middot; measured at the published exit level &middot; invalidation $200 never hit</div></div></div>
+    <div class="gb-score"><div class="gb-rank">02</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">ALOY</span><span class="gb-company">REalloys</span><span class="gs-live-status-badge target-reached">Target Reached</span></div><span class="gb-scorepct up">+8.61%</span></div><div class="gb-scoreline">Triggered $12.20 (8/13) &rarr; first target $13.25 reached 8/13 &middot; measured at the published exit level &middot; invalidation $10.70 never hit</div></div></div>
+    <div class="gb-score"><div class="gb-rank">03</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">USAR</span><span class="gb-company">USA Rare Earth</span><span class="gs-live-status-badge target-reached">Target Reached</span></div><span class="gb-scorepct up">+8.00%</span></div><div class="gb-scoreline">Triggered $18.75 (8/11) &rarr; first target $20.25 reached 8/14 &middot; measured at the published exit level &middot; invalidation $16.70 never hit</div></div></div>
+    <div class="gb-score"><div class="gb-rank">04</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MRVL</span><span class="gb-company">Marvell Technology</span><span class="gs-live-status-badge target-reached">Target Reached</span></div><span class="gb-scorepct up">+5.63%</span></div><div class="gb-scoreline">Triggered $213 (8/10) &rarr; first target $225 reached 8/12 &middot; measured at the published exit level &middot; invalidation $197 never hit</div></div></div>
+    <div class="gb-score"><div class="gb-rank">05</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">VRT</span><span class="gb-company">Vertiv Holdings</span><span class="gs-live-status-badge watching-no-trade">Watching &middot; No Trade</span></div></div><div class="gb-scoreline gb-pending">Buy zone never triggered &mdash; no capital at work. Published $267 &middot; first target $280 &middot; invalidation $249.</div></div></div>
+    <div class="gb-score"><div class="gb-rank">06</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">MP</span><span class="gb-company">MP Materials</span><span class="gs-live-status-badge watching-no-trade">Watching &middot; No Trade</span></div></div><div class="gb-scoreline gb-pending">Buy zone never triggered &mdash; no capital at work. Published $50.75 &middot; first target $54 &middot; invalidation $46.</div></div></div>
+    <div class="gb-score"><div class="gb-rank">07</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">CRDO</span><span class="gb-company">Credo Technology</span><span class="gs-live-status-badge target-reached">Target Reached</span></div><span class="gb-scorepct up">+6.25%</span></div><div class="gb-scoreline">Triggered $240 (8/10) &rarr; first target $255 reached 8/12 &middot; measured at the published exit level &middot; invalidation $217 never hit</div></div></div>
+    <div class="gb-score"><div class="gb-rank">08</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">GLW</span><span class="gb-company">Corning</span><span class="gs-live-status-badge active-position">Active Position</span></div><span class="gb-scorepct up">+2.41%</span></div><div class="gb-scoreline">Open position &middot; triggered $162 (8/10) &rarr; marked $165.91 at Friday&rsquo;s close &middot; first target $170 &middot; invalidation $150 &middot; return is unrealized</div></div></div>
+    <div class="gb-score"><div class="gb-rank">09</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">FRVO</span><span class="gb-company">Fervo Energy</span><span class="gs-live-status-badge stopped-out">Invalidation Hit</span></div><span class="gb-scorepct dn">&minus;8.91%</span></div><div class="gb-scoreline">Staged entries $25.50 &amp; $23.50 (8/10 &amp; 8/11), blended $24.70 &rarr; invalidation $22.50 hit 8/12 &middot; closed at the published level &middot; first target $28 never reached</div></div></div>
+    <div class="gb-score"><div class="gb-rank">10</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">NVDA</span><span class="gb-company">Nvidia</span><span class="gs-live-status-badge active-position">Active Position</span></div><span class="gb-scorepct up">+1.86%</span></div><div class="gb-scoreline">Open position &middot; triggered $221 (8/10) &rarr; marked $225.12 at Friday&rsquo;s close &middot; first target $230 &middot; invalidation $206 &middot; return is unrealized</div></div></div>
+    <div class="gb-score"><div class="gb-rank">11</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AVGO</span><span class="gb-company">Broadcom</span><span class="gs-live-status-badge stopped-out">Invalidation Hit</span></div><span class="gb-scorepct dn">&minus;4.19%</span></div><div class="gb-scoreline">Staged entries $421 &amp; $407 (8/10 &amp; 8/14), blended $415.40 &rarr; invalidation $398 hit 8/14 &middot; closed at the published level &middot; first target $440 never reached</div></div></div>
+    <div class="gb-score"><div class="gb-rank">12</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">AMD</span><span class="gb-company">Advanced Micro Devices</span><span class="gs-live-status-badge target-reached">Target Reached</span></div><span class="gb-scorepct up">+6.32%</span></div><div class="gb-scoreline">Triggered $475 (8/10) &rarr; first target $505 reached 8/14 &middot; measured at the published exit level &middot; invalidation $438 never hit</div></div></div>
+    <div class="gb-score"><div class="gb-rank">13</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">PANW</span><span class="gb-company">Palo Alto Networks</span><span class="gs-live-status-badge watching-no-trade">Watching &middot; No Trade</span></div></div><div class="gb-scoreline gb-pending">Buy zone never triggered &mdash; no capital at work. Published $357 &middot; first target $380 &middot; invalidation $329.</div></div></div>
+    <div class="gb-score"><div class="gb-rank">14</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">GOOGL</span><span class="gb-company">Alphabet</span><span class="gs-live-status-badge active-position">Active Position</span></div><span class="gb-scorepct dn">&minus;0.60%</span></div><div class="gb-scoreline">Open position &middot; triggered $348 (8/11) &rarr; marked $345.90 at Friday&rsquo;s close &middot; first target $368 &middot; invalidation $322 &middot; return is unrealized</div></div></div>
+    <div class="gb-score"><div class="gb-rank">15</div><div><div class="gb-scoretop"><div class="gb-pick-head"><span class="gb-ticker">PLTR</span><span class="gb-company">Palantir Technologies</span><span class="gs-live-status-badge watching-no-trade">Watching &middot; No Trade</span></div></div><div class="gb-scoreline gb-pending">Buy zone never triggered &mdash; no capital at work. Published $164 &middot; first target $175 &middot; invalidation $147.</div></div></div>
+
+    <p class="gb-scorefoot">11 of 15 published zones triggered during the week. <b>6 winners closed at published targets (CBRS +6.82%, ALOY +8.61%, USAR +8.00%, MRVL +5.63%, CRDO +6.25%, and AMD +6.32%), 2 closed at published invalidation (FRVO &minus;8.91% and AVGO &minus;4.19%), and 3 positions carry forward open (GLW +2.41%, NVDA +1.86%, and GOOGL &minus;0.60%) &mdash; model return +3.57% vs S&amp;P 500 +0.47%.</b> Open positions carry forward under the v3 methodology and will be tracked to target or invalidation.</p>
+    <p class="gb-scorefoot" style="font-size:.72rem;color:#7a7770;">Graded at Friday&rsquo;s close, August 14, 2026 &middot; Methodology v3.1 (target &amp; invalidation) &middot; Data: Alpaca historical SIP 5-minute bars, regular session only &middot; Entry zones locked at publish Sunday, August 9 &mdash; no hindsight edits.</p>
+
+    <div class="gb-crosslink">
+      <span class="gb-crosslink-lbl">This Week&rsquo;s Picks</span>
+      <a onclick="gsGoToBriefing('2026-08-10')">Week of August 10&ndash;14, 2026 &middot; 15 Names, 3 Tiers &rarr;</a>
+    </div>
+  </div>
+
+  <div class="gr-week-panel" id="gr-week-2026-08-07" data-week="2026-08-07" style="display:none;">
     <div class="gb-dateline">Week of <b>August 3&ndash;7, 2026</b></div>
     <div class="gb-rule"></div>
     <p class="gb-lead">First week graded under the new v3 target-and-invalidation methodology &mdash; and a textbook lesson in letting price come to you. Monday&rsquo;s dip was deep enough to trigger exactly three of the fifteen published buy zones: AMD at $470, ASML across both staged tranches, and Marvell at $180. The market then ran all week without looking back &mdash; the S&amp;P 500 gained 3.16% &mdash; so the other twelve zones never got touched and no capital went to work there. All three positions entered remain open into next week and all three are green, marked at Friday&rsquo;s close: Marvell +21.46%, ASML +4.13%, AMD +2.82% &mdash; an average of +9.47% unrealized. No stops were hit and no first targets have been reached yet. Under v3, open positions carry forward and are tracked to target or invalidation &mdash; these returns are marks, not booked results.</p>
