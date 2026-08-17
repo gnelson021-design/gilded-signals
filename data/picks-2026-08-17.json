@@ -1,0 +1,354 @@
+{
+  "weekOf": "2026-08-17",
+  "briefPublishedAt": "2026-08-16T23:00:00Z",
+  "resultsGradeDate": "2026-08-21",
+  "methodologyVersion": "v3-target-invalidation",
+  "benchmarkIndex": "SPY",
+  "picks": [
+    {
+      "rank": 1,
+      "ticker": "NVDA",
+      "company": "Nvidia",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 225.68,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 222.0,
+          "weight": 0.6
+        },
+        {
+          "price": 212.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 235.0,
+      "invalidationLevel": 202.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 2,
+      "ticker": "MU",
+      "company": "Micron Technology",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 964.11,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 945.0,
+          "weight": 0.6
+        },
+        {
+          "price": 895.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 1020.0,
+      "invalidationLevel": 840.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 3,
+      "ticker": "GLW",
+      "company": "Corning",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 165.11,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 162.0,
+          "weight": 0.6
+        },
+        {
+          "price": 155.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 175.0,
+      "invalidationLevel": 146.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 4,
+      "ticker": "MRVL",
+      "company": "Marvell Technology",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 220.8,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 217.0,
+          "weight": 0.6
+        },
+        {
+          "price": 208.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 235.0,
+      "invalidationLevel": 196.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 5,
+      "ticker": "AVGO",
+      "company": "Broadcom",
+      "tier": 1,
+      "tierName": "Primary Picks",
+      "assetClass": "stock",
+      "priceAtPublish": 395.4,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 392.0,
+          "weight": 0.6
+        },
+        {
+          "price": 376.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 415.0,
+      "invalidationLevel": 358.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 6,
+      "ticker": "VRT",
+      "company": "Vertiv Holdings",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 293.85,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 288.0,
+          "weight": 0.6
+        },
+        {
+          "price": 274.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 312.0,
+      "invalidationLevel": 258.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 7,
+      "ticker": "AMD",
+      "company": "Advanced Micro Devices",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 514.39,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 503.0,
+          "weight": 0.6
+        },
+        {
+          "price": 486.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 535.0,
+      "invalidationLevel": 466.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 8,
+      "ticker": "COHR",
+      "company": "Coherent",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 325.83,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 320.0,
+          "weight": 0.6
+        },
+        {
+          "price": 304.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 348.0,
+      "invalidationLevel": 284.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 9,
+      "ticker": "LITE",
+      "company": "Lumentum Holdings",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 926.14,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 905.0,
+          "weight": 0.6
+        },
+        {
+          "price": 855.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 990.0,
+      "invalidationLevel": 800.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 10,
+      "ticker": "ANET",
+      "company": "Arista Networks",
+      "tier": 2,
+      "tierName": "Secondary Watchlist",
+      "assetClass": "stock",
+      "priceAtPublish": 198.82,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 196.0,
+          "weight": 0.6
+        },
+        {
+          "price": 184.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 215.0,
+      "invalidationLevel": 172.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 11,
+      "ticker": "CRDO",
+      "company": "Credo Technology",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 257.33,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 250.0,
+          "weight": 0.6
+        },
+        {
+          "price": 236.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 275.0,
+      "invalidationLevel": 220.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 12,
+      "ticker": "TSM",
+      "company": "Taiwan Semiconductor",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 426.73,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 421.0,
+          "weight": 0.6
+        },
+        {
+          "price": 406.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 445.0,
+      "invalidationLevel": 388.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 13,
+      "ticker": "ALAB",
+      "company": "Astera Labs",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 318.8,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 313.0,
+          "weight": 0.6
+        },
+        {
+          "price": 295.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 345.0,
+      "invalidationLevel": 274.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 14,
+      "ticker": "FN",
+      "company": "Fabrinet",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 570.22,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 520.0,
+          "weight": 0.6
+        },
+        {
+          "price": 485.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 620.0,
+      "invalidationLevel": 450.0,
+      "actionStatus": "adding_on_weakness"
+    },
+    {
+      "rank": 15,
+      "ticker": "WMT",
+      "company": "Walmart",
+      "tier": 3,
+      "tierName": "Buy-On-Dip Candidates",
+      "assetClass": "stock",
+      "priceAtPublish": 115.27,
+      "entryType": "dip_zone",
+      "zones": [
+        {
+          "price": 114.0,
+          "weight": 0.6
+        },
+        {
+          "price": 109.0,
+          "weight": 0.4
+        }
+      ],
+      "firstTarget": 121.0,
+      "invalidationLevel": 103.0,
+      "actionStatus": "adding_on_weakness"
+    }
+  ]
+}
