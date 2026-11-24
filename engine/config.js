@@ -5,7 +5,7 @@
 'use strict';
 
 module.exports = {
-  DISCOVERY_VERSION: 'd0-shadow',
+  DISCOVERY_VERSION: 'd1-shadow',
 
   universe: {
     exchanges: ['NYSE', 'NASDAQ', 'AMEX'],
@@ -26,20 +26,25 @@ module.exports = {
     keepHeadlines: 8, // per candidate, for the Phase 3 AI read
   },
 
-  analysts: { topK: 150 },        // Finnhub calls limited to the strongest pre-ranked names
+  // Finnhub calls: strongest pre-ranked names PLUS the most-covered names,
+  // so heavily discussed stocks in a pullback still get analyst data.
+  analysts: { topK: 150, topAttention: 100 },
   earnings: { lookaheadDays: 21 },
 
-  board: { size: 40 },
+  // Two lanes: 'leaders' = best overall d1 score; 'inFocus' = the most
+  // talked-about names not already listed, whatever their trend. Pullbacks in
+  // heavily covered names are prime buy-zone candidates for Phase 2 scoring.
+  board: { leaders: 25, inFocus: 15 },
 
   // Component weights for the d0 discovery rank (sum = 100). Missing
   // components are dropped and the rest re-normalised; coverage is reported.
   weights: {
     attention: 30,   // news volume + news surge + most-active presence
-    catalysts: 10,   // headline catalyst tags + upcoming earnings
-    trend: 20,       // EMA stack posture + weekly confirmation
-    momentum: 15,    // RSI regime + MACD histogram
+    catalysts: 15,   // headline catalyst tags + upcoming earnings
+    trend: 15,       // EMA stack posture + weekly confirmation
+    momentum: 10,    // RSI regime + MACD histogram
     relStrength: 15, // 63-day return vs SPY (percentile)
-    analysts: 10,    // consensus level + 3-month drift
+    analysts: 15,    // consensus level + 3-month drift
   },
 
   // Headline catalyst tags. Matched case-insensitively on headline text.

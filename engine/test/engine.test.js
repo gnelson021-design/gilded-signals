@@ -53,3 +53,14 @@ test('retry then give up on persistent 429 without leaking the token', async () 
   await assert.rejects(http.getJSON('https://finnhub.io/api/v1/x?token=SECRET123', { fetchImpl: f, retries: 2, backoffMs: 1 }), (e) => !String(e.message + e.url).includes('SECRET123'));
   assert.strictEqual(calls, 3);
 });
+
+test('board has a Leader lane and an In Focus lane with no duplicates', async () => {
+  const { RunLog } = require('../lib/runlog');
+  const { rows } = await liveRun({}, new RunLog('test'));
+  const b = discovery.board(discovery.rank(rows));
+  const cfg = require('../config');
+  assert.strictEqual(b.filter((r) => r.lane === 'leader').length, cfg.board.leaders);
+  assert.ok(b.filter((r) => r.lane === 'in_focus').length > 0);
+  assert.strictEqual(new Set(b.map((r) => r.symbol)).size, b.length);
+});
+

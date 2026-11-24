@@ -143,8 +143,13 @@ GitHub Actions (scheduled, America/Chicago gated)        Netlify (existing)
 
 Phase status log:
 - Phase 0 — docs, backup tag, bundle, `automation/dev` branch (2026-11-24). Graham to run the commands.
-- Phase 1 — discovery engine built and offline-tested (2026-11-24). **Not yet run on live data.**
-  Exit test still open: first live manual run in GitHub Actions, universe ≥ 500, replay hash MATCH.
+- Phase 1 — discovery engine built, offline-tested, and **verified live 2026-11-24** (GitHub Actions run #1,
+  9m34s): 14,448 assets → 1,478-stock universe, 31,181 news articles (21d), 373 earnings events,
+  150/150 analyst pulls, zero errors. Ranking hash `f290c9157c3412ad` (d0).
+- d1 (2026-11-24): board split into **Leaders** (top 25 overall) and **In Focus** (15 most-covered
+  remaining names, any trend — e.g. NVDA, META, AMZN, MSFT pullbacks). Weights rebalanced toward
+  catalysts/analysts; analyst data also pulled for the 100 most-covered names; today's still-forming
+  daily bar is dropped on weekday runs before 16:20 ET.
 
 ### Phase 1 — what exists now (`engine/`)
 | File | Role |
@@ -159,7 +164,7 @@ Phase status log:
 | `engine/stages/universe.js` | Common stocks on NYSE/NASDAQ/AMEX, price ≥ $10, 20-day $ volume ≥ $25M, top 1,500 |
 | `engine/stages/features.js` | Trend, RSI, MACD, ATR, returns, RS vs SPY, RVOL, 52-week levels; rejects stale/short history |
 | `engine/stages/news.js` | 21-day news sweep: 7-day count, surge vs prior baseline, catalyst tags, top headlines |
-| `engine/stages/discovery.js` | d0 rank: attention 30, catalysts 10, trend 20, momentum/RSI 15, RS 15, analysts 10 |
+| `engine/stages/discovery.js` | d1 rank: attention 30, catalysts 15, trend 15, momentum/RSI 10, RS 15, analysts 15; two-lane board |
 | `engine/test/` | Offline end-to-end test on synthetic fixtures + mock fetch |
 | `.github/workflows/gs-discovery.yml` | Manual run; uploads the board as a 7-day artifact. No schedule, no publishing |
 

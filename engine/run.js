@@ -27,6 +27,23 @@ const { RunLog } = require('./lib/runlog');
 const http = require('./lib/http');
 
 const DAY = 86400000;
+const ET_DATE = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' });
+const ET_HM = new Intl.DateTimeFormat('en-GB', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', weekday: 'short', hour12: false });
+
+// During a weekday before the close settles (16:20 ET), today's daily bar is
+// still forming. Drop it so every indicator uses completed sessions only.
+function dropIncompleteBar(barsMap, now) {
+  const parts = Object.fromEntries(ET_HM.formatToParts(new Date(now)).map((p) => [p.type, p.value]));
+  const weekend = parts.weekday === 'Sat' || parts.weekday === 'Sun';
+  const mins = Number(parts.hour) * 60 + Number(parts.minute);
+  if (weekend || mins >= 16 * 60 + 20) return 0;
+  const today = ET_DATE.format(new Date(now));
+  let dropped = 0;
+  for (const bars of Object.values(barsMap)) {
+    if (bars.length && ET_DATE.format(new Date(bars[bars.length - 1].t)) === today) { bars.pop(); dropped++; }
+  }
+  return dropped;
+}
 const ymd = (d) => new Date(d).toISOString().slice(0, 10);
 
 function args() {
@@ -51,16 +68,17 @@ function summaryMarkdown(meta, ranked) {
   L.push(`Run: ${meta.startedAt} · version ${cfg.DISCOVERY_VERSION} · universe ${meta.universeSize} · ranking hash \`${meta.rankingHash}\``);
   L.push(`Data: Alpaca SIP daily bars through ${meta.barsThrough}; Alpaca news ${meta.newsArticles} articles (${meta.newsWindow}); Finnhub analysts/earnings.`);
   L.push('');
-  L.push('| # | Ticker | Score | Attn | Cat | Trend | Mom | RS | Anl | Price | RSI | 7d news | Surge | Earnings | Sector |');
-  L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
-  for (const r of ranked.slice(0, cfg.board.size)) {
+  L.push('| # | Lane | Ticker | Score | Attn | Cat | Trend | Mom | RS | Anl | Price | RSI | 7d news | Surge | Earnings | Sector |');
+  L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+  for (const r of discovery.board(ranked)) {
     const c = r.components;
     const f = r.features;
     const v = (x) => (x == null ? '—' : x);
-    L.push(`| ${r.discoveryRank} | ${r.symbol} | ${v(r.discoveryScore)} | ${v(c.attention)} | ${v(c.catalysts)} | ${v(c.trend)} | ${v(c.momentum)} | ${v(c.relStrength)} | ${v(c.analysts)} | ${v(f.price)} | ${v(f.rsi14)} | ${r.attention ? r.attention.news7 : 0} | ${r.attention ? r.attention.surge : '—'} | ${r.earnings ? r.earnings.date : '—'} | ${r.industry || '—'} |`);
+    L.push(`| ${r.discoveryRank} | ${r.lane === 'leader' ? 'Leader' : 'In Focus'} | ${r.symbol} | ${v(r.discoveryScore)} | ${v(c.attention)} | ${v(c.catalysts)} | ${v(c.trend)} | ${v(c.momentum)} | ${v(c.relStrength)} | ${v(c.analysts)} | ${v(f.price)} | ${v(f.rsi14)} | ${r.attention ? r.attention.news7 : 0} | ${r.attention ? r.attention.surge : '—'} | ${r.earnings ? r.earnings.date : '—'} | ${r.industry || '—'} |`);
   }
   L.push('');
   L.push('Components are 0–100. Missing components are excluded and the remaining weights re-normalised.');
+  L.push('Leader = top 25 overall scores. In Focus = the 15 most talked-about remaining names, whatever their trend (pullback candidates).');
   L.push('This board decides what gets researched. It is not a published pick list and carries no buy zones.');
   return L.join('\n') + '\n';
 }
@@ -88,6 +106,8 @@ async function liveRun(opts, log) {
   const hist = await alpaca.dailyBars(Array.from(new Set([...syms, 'SPY'])), {
     start: ymd(now - 400 * DAY), end, batch: 100,
   });
+  const droppedIncomplete = dropIncompleteBar(hist, now);
+  if (droppedIncomplete) log.stage('session', { droppedIncompleteTodayBars: droppedIncomplete });
   const spy = (hist.SPY || []).map((b) => b.c);
   if (spy.length < 200) throw new Error('SPY benchmark history unavailable — aborting');
   const barsThrough = hist.SPY[hist.SPY.length - 1].t;
@@ -128,7 +148,10 @@ async function liveRun(opts, log) {
   let rows = featRows.map((r) => ({ ...r, attention: att[r.symbol] || null, mostActive: active.has(r.symbol), earnings: earnMap[r.symbol] || null, analysts: null }));
 
   // 7 — analysts + industry for the strongest pre-ranked names only (rate limits)
-  const pre = discovery.rank(rows).slice(0, cfg.analysts.topK).map((r) => r.symbol);
+  const preRanked = discovery.rank(rows);
+  const byAttention = preRanked.filter((r) => r.components.attention != null)
+    .sort((a, b) => b.components.attention - a.components.attention).slice(0, cfg.analysts.topAttention);
+  const pre = Array.from(new Set([...preRanked.slice(0, cfg.analysts.topK), ...byAttention].map((r) => r.symbol)));
   const anMap = {};
   const indMap = {};
   let anFail = 0;
@@ -174,7 +197,7 @@ async function main() {
       ...meta,
     });
     writeJSON(outDir, 'inputs.json', { discoveryVersion: cfg.DISCOVERY_VERSION, rows });
-    writeJSON(outDir, 'board.json', ranked.slice(0, cfg.board.size));
+    writeJSON(outDir, 'board.json', discovery.board(ranked));
     writeJSON(outDir, 'run-log.json', doc);
     fs.writeFileSync(path.join(outDir, 'summary.md'), summaryMarkdown({ ...doc, ...meta }, ranked));
     console.log(`\nDone → ${outDir}  (hash ${doc.rankingHash})`);

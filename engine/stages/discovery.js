@@ -108,4 +108,25 @@ function rank(rows) {
   return scored;
 }
 
-module.exports = { rank, analystScore, momentumScore, trendScore, catalystScore, percentileMap };
+// Board = two lanes. Leaders: top d1 scores. In Focus: most news coverage
+// among the rest (no trend requirement), so the most talked-about names are
+// always reviewed even when they are pulling back.
+// Raw "most talked about" measure: weighted 7-day article count, plus a
+// bump for appearing on Alpaca's most-active lists.
+function coverage(r) {
+  return (r.attention ? r.attention.weighted7 : 0) + (r.mostActive ? 3 : 0);
+}
+
+function board(ranked) {
+  const B = cfg.board;
+  const leaders = ranked.slice(0, B.leaders).map((r) => ({ ...r, lane: 'leader' }));
+  const taken = new Set(leaders.map((r) => r.symbol));
+  const inFocus = ranked
+    .filter((r) => !taken.has(r.symbol) && r.attention && r.attention.news7 > 0)
+    .sort((a, b) => coverage(b) - coverage(a) || a.symbol.localeCompare(b.symbol))
+    .slice(0, B.inFocus)
+    .map((r) => ({ ...r, lane: 'in_focus' }));
+  return [...leaders, ...inFocus];
+}
+
+module.exports = { board, rank, analystScore, momentumScore, trendScore, catalystScore, percentileMap };
