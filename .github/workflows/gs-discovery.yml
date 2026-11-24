@@ -5,6 +5,8 @@
 name: GS Discovery (shadow)
 
 on:
+  push:
+    branches: [automation/dev]
   workflow_dispatch:
     inputs:
       max_universe:
