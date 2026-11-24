@@ -28,7 +28,7 @@ function barsFor(sym, startMs) {
   const r = rng([...sym].reduce((a, c) => a * 31 + c.charCodeAt(0), 7));
   let p = sym === 'PENY' ? 3 : 20 + r() * 200;
   const out = [];
-  for (let t = NOW - 390 * DAY; t < NOW - DAY / 2; t += DAY) {
+  for (let t = NOW - 900 * DAY; t < NOW - DAY / 2; t += DAY) {
     const dow = new Date(t).getUTCDay();
     if (dow === 0 || dow === 6) continue;
     p *= 1 + (r() - 0.48) * 0.04;

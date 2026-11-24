@@ -23,6 +23,7 @@ const universe = require('./stages/universe');
 const features = require('./stages/features');
 const newsStage = require('./stages/news');
 const discovery = require('./stages/discovery');
+const { research } = require('./stages/research');
 const { RunLog } = require('./lib/runlog');
 const http = require('./lib/http');
 
@@ -59,6 +60,29 @@ function rankingHash(ranked) {
 
 function writeJSON(dir, name, obj) {
   fs.writeFileSync(path.join(dir, name), JSON.stringify(obj, null, 1));
+}
+
+function picksHash(preview) {
+  const core = preview.picks.map((p) => [p.ticker, p.tier, p.zones, p.firstTarget, p.invalidationLevel, p.convictionScore, p.entryScore]);
+  return crypto.createHash('sha256').update(JSON.stringify([cfg.SCORING_VERSION, preview.weekOf, core])).digest('hex').slice(0, 16);
+}
+
+function researchMarkdown(res) {
+  const p = res.preview;
+  const L = ['', `## Selection preview — week of ${p.weekOf} (SHADOW, not published)`, ''];
+  L.push(`Scoring ${p.scoringVersion} · market posture (SPY): ${p.marketPosture || 'unknown'} · ${p.picks.filter((x) => x.tier === 1).length} primary, ${p.picks.filter((x) => x.tier === 2).length} watchlist`);
+  L.push('');
+  L.push('| # | Tier | Ticker | Conviction | Entry | Risk | Price | Buy zone 1 | Buy zone 2 | Target 1 | Target 2 | Invalidation | R:R | Earnings in week |');
+  L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+  for (const x of p.picks) {
+    L.push(`| ${x.rank} | ${x.tier === 1 ? 'Primary' : 'Watchlist'} | ${x.ticker} | ${x.convictionScore} | ${x.entryScore} | ${x.riskClass} | ${x.priceAtPublish} | ${x.zones[0].price} | ${x.zones[1].price} | ${x.firstTarget} | ${x.secondTarget} | ${x.invalidationLevel} | ${x.riskReward} | ${x.eventGated ? x.earningsDate : '—'} |`);
+  }
+  if (!p.picks.length) L.push('_No names met the bar this week — nothing would be published._');
+  L.push('');
+  L.push('All levels are computed from completed daily bars by versioned code (SCORING_METHODOLOGY.md). Hypothetical model research, not personal trades.');
+  const uniq = [...new Map(res.skipped.map((s) => [s.symbol, s])).values()];
+  if (uniq.length) L.push(`Skipped for concentration/correlation (${uniq.length}): ${uniq.slice(0, 12).map((s) => `${s.symbol} (${s.reason})`).join(', ')}${uniq.length > 12 ? ' …' : ''}`);
+  return L.join('\n') + '\n';
 }
 
 function summaryMarkdown(meta, ranked) {
@@ -117,9 +141,11 @@ async function liveRun(opts, log) {
   for (const a of liq.kept) {
     const f = features.computeOne(hist[a.symbol], spy, now);
     if (f.reject) { featRejected[f.reject] = (featRejected[f.reject] || 0) + 1; continue; }
-    featRows.push({ symbol: a.symbol, name: a.name, exchange: a.exchange, avgDollarVolume: Math.round(a.avgDollarVolume), features: f });
+    featRows.push({ symbol: a.symbol, name: a.name, exchange: a.exchange, avgDollarVolume: Math.round(a.avgDollarVolume), features: f, closes63: hist[a.symbol].slice(-64).map((b) => b.c) });
   }
-  log.stage('features', { kept: featRows.length, rejected: featRejected, barsThrough });
+  const spyF = features.computeOne(hist.SPY, spy, now);
+  const marketPosture = spyF.reject ? null : spyF.posture;
+  log.stage('features', { kept: featRows.length, rejected: featRejected, barsThrough, marketPosture });
 
   // 4 — news attention across the whole universe in one sweep
   const nw = await alpaca.news({ start: new Date(now - cfg.news.windowDays * DAY).toISOString(), end: new Date(now).toISOString(), maxPages: cfg.news.maxPages });
@@ -149,8 +175,8 @@ async function liveRun(opts, log) {
 
   // 7 — analysts + industry for the strongest pre-ranked names only (rate limits)
   const preRanked = discovery.rank(rows);
-  const byAttention = preRanked.filter((r) => r.components.attention != null)
-    .sort((a, b) => b.components.attention - a.components.attention).slice(0, cfg.analysts.topAttention);
+  const byAttention = preRanked.filter((r) => r.attention && r.attention.news7 > 0)
+    .sort((a, b) => discovery.coverage(b) - discovery.coverage(a)).slice(0, cfg.analysts.topAttention);
   const pre = Array.from(new Set([...preRanked.slice(0, cfg.analysts.topK), ...byAttention].map((r) => r.symbol)));
   const anMap = {};
   const indMap = {};
@@ -163,7 +189,7 @@ async function liveRun(opts, log) {
   log.stage('analysts', { requested: pre.length, ok: pre.length - anFail });
   rows = rows.map((r) => ({ ...r, analysts: anMap[r.symbol] || null, industry: indMap[r.symbol] || null }));
 
-  return { rows, meta: { barsThrough, newsArticles: nw.articles.length, newsWindow: `${cfg.news.windowDays}d`, universeSize: featRows.length } };
+  return { rows, meta: { marketPosture, barsThrough, newsArticles: nw.articles.length, newsWindow: `${cfg.news.windowDays}d`, universeSize: featRows.length } };
 }
 
 async function main() {
@@ -177,15 +203,26 @@ async function main() {
       const saved = JSON.parse(fs.readFileSync(path.join(outDir, 'inputs.json'), 'utf8'));
       const ranked = discovery.rank(saved.rows);
       const h = rankingHash(ranked);
-      const prior = JSON.parse(fs.readFileSync(path.join(outDir, 'run-log.json'), 'utf8')).rankingHash;
-      console.log(`replay hash ${h} · original ${prior} · ${h === prior ? 'MATCH' : 'MISMATCH'}`);
-      process.exit(h === prior ? 0 : 2);
+      const priorLog = JSON.parse(fs.readFileSync(path.join(outDir, 'run-log.json'), 'utf8'));
+      const prior = priorLog.rankingHash;
+      console.log(`replay ranking hash ${h} · original ${prior} · ${h === prior ? 'MATCH' : 'MISMATCH'}`);
+      let ok = h === prior;
+      if (saved.meta && priorLog.picksHash) {
+        const res = research(ranked, saved.meta, Date.parse(priorLog.startedAt));
+        const ph = picksHash(res.preview);
+        console.log(`replay picks hash ${ph} · original ${priorLog.picksHash} · ${ph === priorLog.picksHash ? 'MATCH' : 'MISMATCH'}`);
+        ok = ok && ph === priorLog.picksHash;
+      }
+      process.exit(ok ? 0 : 2);
     }
 
     const r = await liveRun(opts, log);
     rows = r.rows;
     meta = r.meta;
     const ranked = discovery.rank(rows);
+    const res = research(ranked, meta, Date.parse(log.doc.startedAt));
+    meta.weekOf = res.preview.weekOf;
+    log.stage('research', { candidates: res.candidates.length, rejected: res.rejected.length, picks: res.preview.picks.length, primary: res.preview.picks.filter((p) => p.tier === 1).length, weekOf: res.preview.weekOf });
     const stamp = new Date().toISOString().replace(/[:]/g, '').slice(0, 15);
     outDir = opts.out || path.join('engine-out', stamp);
     fs.mkdirSync(outDir, { recursive: true });
@@ -193,13 +230,17 @@ async function main() {
     const doc = log.finish('ok', {
       discoveryVersion: cfg.DISCOVERY_VERSION,
       rankingHash: rankingHash(ranked),
+      scoringVersion: cfg.SCORING_VERSION,
+      picksHash: picksHash(res.preview),
       http: http.stats,
       ...meta,
     });
-    writeJSON(outDir, 'inputs.json', { discoveryVersion: cfg.DISCOVERY_VERSION, rows });
+    writeJSON(outDir, 'inputs.json', { discoveryVersion: cfg.DISCOVERY_VERSION, meta, rows });
+    writeJSON(outDir, `picks-preview-${res.preview.weekOf}.json`, res.preview);
+    writeJSON(outDir, 'research.json', { candidates: res.candidates, rejected: res.rejected, skipped: res.skipped });
     writeJSON(outDir, 'board.json', discovery.board(ranked));
     writeJSON(outDir, 'run-log.json', doc);
-    fs.writeFileSync(path.join(outDir, 'summary.md'), summaryMarkdown({ ...doc, ...meta }, ranked));
+    fs.writeFileSync(path.join(outDir, 'summary.md'), summaryMarkdown({ ...doc, ...meta }, ranked) + researchMarkdown(res));
     console.log(`\nDone → ${outDir}  (hash ${doc.rankingHash})`);
   } catch (e) {
     log.error(e.message);
@@ -214,4 +255,4 @@ async function main() {
 
 if (require.main === module) main();
 
-module.exports = { rankingHash, summaryMarkdown, liveRun };
+module.exports = { rankingHash, picksHash, summaryMarkdown, researchMarkdown, liveRun };

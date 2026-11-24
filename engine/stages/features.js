@@ -56,6 +56,7 @@ function computeOne(bars, spyCloses, now = Date.now()) {
     ret63: r(ret63),
     relStrength63: r(ret63 != null && spy63 != null ? ret63 - spy63 : null),
     rvol: r(avgVol20 ? vols[vols.length - 1] / avgVol20 : null),
+    support10: r(Math.min(...lows.slice(-10))),
     support20: r(Math.min(...lows.slice(-20))),
     resistance20: r(Math.max(...highs.slice(-20))),
     high52: r(high52),

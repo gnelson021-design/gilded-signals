@@ -64,3 +64,47 @@ test('board has a Leader lane and an In Focus lane with no duplicates', async ()
   assert.strictEqual(new Set(b.map((r) => r.symbol)).size, b.length);
 });
 
+test('levels are ordered, rounded, and R:R is consistent', () => {
+  const levels = require('../stages/levels');
+  const f = { price: 100, atr14: 2, ema20: 98.6, ema50: 95, support10: 97.9, support20: 96, resistance20: 104, high52: 110 };
+  const l = levels.compute(f);
+  assert.ok(l.zones[0].price < 100 && l.zones[1].price < l.zones[0].price && l.invalidationLevel < l.zones[1].price);
+  assert.ok(l.firstTarget > 100 && l.secondTarget > l.firstTarget);
+  for (const x of [l.zones[0].price, l.zones[1].price, l.firstTarget, l.invalidationLevel]) assert.strictEqual(Math.round(x / 0.5) * 0.5, x);
+  const avg = 0.6 * l.zones[0].price + 0.4 * l.zones[1].price;
+  assert.ok(Math.abs(l.riskReward - (l.firstTarget - avg) / (avg - l.invalidationLevel)) < 0.01);
+});
+
+test('backtest simulator: no trigger, target, invalidation, same-bar rule', () => {
+  const { simulate } = require('../backtest');
+  const lv = { zones: [{ price: 98, weight: 0.6 }, { price: 95, weight: 0.4 }], firstTarget: 103, invalidationLevel: 92 };
+  const bar = (o, h, l, c) => ({ o, h, l, c });
+  assert.strictEqual(simulate(lv, [bar(100, 101, 99, 100), bar(100, 102, 99, 101)]).kind, 'no_trigger');
+  const win = simulate(lv, [bar(100, 104, 97.5, 99), bar(99, 103.5, 98.5, 103)]);
+  assert.strictEqual(win.kind, 'target'); // target on the entry bar did not count; next bar did
+  assert.ok(win.ret > 0);
+  const loss = simulate(lv, [bar(100, 100, 97, 97.5), bar(97, 104, 91, 95)]);
+  assert.strictEqual(loss.kind, 'invalidated'); // same bar touched both → invalidation wins
+  assert.ok(loss.ret < 0);
+});
+
+test('entry score applies the earnings discount consistently', () => {
+  const scoring = require('../stages/scoring');
+  const row = { features: { rsi14: 50, posture: 'bull' } };
+  const lv = { zone1DistanceAtr: 1, riskReward: 1.6 };
+  assert.strictEqual(scoring.entry(row, lv, false).score - scoring.entry(row, lv, true).score, 10);
+});
+
+test('selection never exceeds limits, respects sector cap, never forces picks', () => {
+  const { select } = require('../stages/select');
+  const mk = (s, conv, sector, lane = 'leader') => ({ symbol: s, industry: sector, lane, conviction: conv, entry: 80, riskClass: 'Moderate', levels: { riskReward: 1.5 }, closes63: null });
+  const many = Array.from({ length: 30 }, (_, i) => mk('S' + i, 90 - i, 'Sec' + (i % 4)));
+  const r = select(many, 'bull');
+  assert.ok(r.picks.filter((p) => p.tier === 1).length <= 5);
+  assert.ok(r.picks.filter((p) => p.tier === 2).length <= 10);
+  const perSec = {}; r.picks.filter((p) => p.tier === 1).forEach((p) => { perSec[p.industry] = (perSec[p.industry] || 0) + 1; });
+  assert.ok(Object.values(perSec).every((n) => n <= 2));
+  assert.strictEqual(select([mk('X', 40, 'A'), mk('Y', 50, 'B')], 'bull').picks.length, 0);
+  assert.ok(select(many, 'bear').picks.filter((p) => p.tier === 1).length <= 3);
+});
+

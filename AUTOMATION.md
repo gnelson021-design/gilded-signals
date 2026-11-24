@@ -151,6 +151,11 @@ Phase status log:
   catalysts/analysts; analyst data also pulled for the 100 most-covered names; today's still-forming
   daily bar is dropped on weekday runs before 16:20 ET.
 
+- Phase 2 — scoring s1 built and offline-tested (2026-11-24): levels, Conviction, Entry, risk class,
+  selection preview in the existing picks schema, replay of both hashes, 52-week backtest in every run.
+  Rules: `SCORING_METHODOLOGY.md`. **Exit test still open:** review the live backtest report and the first
+  live selection preview.
+
 ### Phase 1 — what exists now (`engine/`)
 | File | Role |
 |---|---|
@@ -165,6 +170,11 @@ Phase status log:
 | `engine/stages/features.js` | Trend, RSI, MACD, ATR, returns, RS vs SPY, RVOL, 52-week levels; rejects stale/short history |
 | `engine/stages/news.js` | 21-day news sweep: 7-day count, surge vs prior baseline, catalyst tags, top headlines |
 | `engine/stages/discovery.js` | d1 rank: attention 30, catalysts 15, trend 15, momentum/RSI 10, RS 15, analysts 15; two-lane board |
+| `engine/stages/levels.js` | Buy zones, targets, invalidation, R:R (s1) |
+| `engine/stages/scoring.js` | Conviction, Entry, risk class (s1) |
+| `engine/stages/select.js` | ≤5 primary / ≤10 watchlist, sector caps, correlation filter |
+| `engine/stages/research.js` | Board → scored candidates → `picks-preview-{week}.json` (existing schema) |
+| `engine/backtest.js` | Point-in-time 52-week backtest of levels + Entry Score |
 | `engine/test/` | Offline end-to-end test on synthetic fixtures + mock fetch |
 | `.github/workflows/gs-discovery.yml` | Manual run; uploads the board as a 7-day artifact. No schedule, no publishing |
 

@@ -6,6 +6,35 @@
 
 module.exports = {
   DISCOVERY_VERSION: 'd1-shadow',
+  SCORING_VERSION: 's1-shadow',
+
+  conviction: {
+    // 0–100 each; missing parts dropped and weights re-normalised.
+    weights: { structure: 25, relStrength: 20, analysts: 20, news: 20, momentum: 15 },
+    minCoverage: 60, // need at least 60% of the weight to have real data
+  },
+
+  selection: {
+    maxPrimary: 5,
+    maxPrimaryInWeakMarket: 3, // SPY in a bearish EMA stack → fewer primary picks
+    maxWatchlist: 10,
+    convictionWeight: 0.65,    // watchlist order = 0.65·Conviction + 0.35·Entry
+    // Primary picks are ordered by Conviction alone and must also have a
+    // workable entry, an acceptable R:R, and not be in the High risk class.
+    primaryMinConviction: 70,
+    primaryMinEntry: 60,
+    primaryMinRR: 1.2,
+    primaryExcludeRisk: ['High'],
+    // Up to 3 watchlist slots go first to the most talked-about (In Focus)
+    // names that still clear a lower conviction bar.
+    inFocusWatchSlots: 3,
+    inFocusMinConviction: 55,
+    watchMinConviction: 60,
+    watchMinRR: 1.0,
+    primarySectorCap: 2,
+    totalSectorCap: 3,
+    maxCorrelation: 0.85,      // 63-day daily-return correlation
+  },
 
   universe: {
     exchanges: ['NYSE', 'NASDAQ', 'AMEX'],

@@ -129,4 +129,4 @@ function board(ranked) {
   return [...leaders, ...inFocus];
 }
 
-module.exports = { board, rank, analystScore, momentumScore, trendScore, catalystScore, percentileMap };
+module.exports = { coverage, board, rank, analystScore, momentumScore, trendScore, catalystScore, percentileMap };

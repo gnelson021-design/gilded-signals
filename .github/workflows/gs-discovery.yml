@@ -43,6 +43,15 @@ jobs:
           MAX_UNIVERSE: ${{ inputs.max_universe }}
         run: node engine/run.js --out engine-out/run --max-universe "$MAX_UNIVERSE"
 
+      - name: Replay check (ranking + picks must reproduce exactly)
+        run: node engine/run.js --replay engine-out/run
+
+      - name: Backtest levels and Entry Score (400 stocks × 52 weeks)
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: node engine/backtest.js --inputs engine-out/run/inputs.json --out engine-out/run --symbols 400 --weeks 52
+
       - name: Upload board
         if: always()
         uses: actions/upload-artifact@v4
