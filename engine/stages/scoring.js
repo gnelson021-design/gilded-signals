@@ -52,6 +52,36 @@ function entry(row, lv, eventInWeek) {
   return { score: r1(clamp(s)), adjustments: adj };
 }
 
+// s2 CANDIDATE Entry Score — built from the s1 backtest, which showed that
+// zones further below price (1–2.5 ATR pullbacks) produced more expected
+// return per published setup than zones hugging the price, that R:R 1–1.6
+// beat more ambitious targets, and that bullish structure helped. Scored in
+// the backtest side by side with s1; selection keeps s1 until s2 validates.
+function entryV2(row, lv, eventInWeek) {
+  const f = row.features;
+  const d = lv.zone1DistanceAtr;
+  let s = 50;
+  const adj = [];
+  const add = (v, why) => { s += v; adj.push(why); };
+  if (d < 0.5) add(-15, 'zone_too_close');
+  else if (d < 1) add(0, 'zone_shallow');
+  else if (d < 1.5) add(10, 'zone_1_1.5atr');
+  else if (d <= 2.5) add(15, 'zone_1.5_2.5atr');
+  else add(5, 'zone_deep');
+  if (f.rsi14 != null) {
+    if (f.rsi14 > 70) add(-15, 'rsi_extended');
+    else if (f.rsi14 >= 40 && f.rsi14 <= 60) add(10, 'rsi_40_60');
+    else if (f.rsi14 < 30) add(-10, 'rsi_broken');
+  }
+  if (f.posture === 'bull') add(10, 'bull_structure');
+  else if (f.posture === 'bear') add(-10, 'bear_structure');
+  if (lv.riskReward < 1) add(-15, 'rr_below_1');
+  else if (lv.riskReward <= 1.6) add(10, 'rr_1_1.6');
+  else if (lv.riskReward > 2) add(-5, 'rr_above_2');
+  if (eventInWeek) add(-10, 'earnings_in_week');
+  return { score: r1(clamp(s)), adjustments: adj };
+}
+
 function riskClass(row, eventInWeek) {
   const f = row.features;
   const levels = ['Low', 'Moderate', 'Elevated', 'High'];
@@ -64,4 +94,4 @@ function riskClass(row, eventInWeek) {
   return levels[i];
 }
 
-module.exports = { conviction, entry, riskClass };
+module.exports = { conviction, entry, entryV2, riskClass };

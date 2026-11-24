@@ -97,6 +97,9 @@ function stats(rows) {
     invalidatedPct: pctT(n('invalidated')),
     stillOpenPct: pctT(n('open')),
     winRatePct: pctT(trig.filter((r) => r.ret > 0).length),
+    // Expected return per PUBLISHED setup (untriggered setups count as 0%) —
+    // the number that matters to a subscriber reading the whole list.
+    evPerSetupPct: rows.length ? r2(trig.reduce((s, r) => s + r.ret, 0) / rows.length) : null,
     avgReturnPct: r2(avg),
     medianReturnPct: r2(rets.length ? rets[Math.floor(rets.length / 2)] : null),
   };
@@ -109,6 +112,18 @@ function bucket(rows, key, edges) {
     out.push({ range: `${lo}–${hi}`, ...stats(rows.filter((r) => r[key] != null && r[key] >= lo && r[key] < hi)) });
   }
   return out;
+}
+
+// Does a score rank outcomes? Looks at buckets with ≥200 setups and checks
+// that EV per setup rises with the score (no inversions) and that the top
+// bucket beats the bottom bucket.
+function validate(buckets) {
+  const b = buckets.filter((x) => x.setups >= 200 && x.evPerSetupPct != null);
+  if (b.length < 2) return { verdict: 'insufficient_data', buckets: b.length };
+  let inversions = 0;
+  for (let i = 1; i < b.length; i++) if (b[i].evPerSetupPct < b[i - 1].evPerSetupPct) inversions++;
+  const spread = Math.round((b[b.length - 1].evPerSetupPct - b[0].evPerSetupPct) * 100) / 100;
+  return { verdict: inversions === 0 && spread > 0 ? 'PASS' : 'FAIL', inversions, topMinusBottomEvPct: spread, buckets: b.length };
 }
 
 function lastBarOfWeekIdx(bars) {
@@ -147,8 +162,14 @@ async function main() {
       const lv = levels.compute(f);
       if (lv.reject) continue;
       const e = scoring.entry({ features: f }, lv, false);
+      const e2 = scoring.entryV2({ features: f }, lv, false);
       const sim = simulate(lv, fwd);
-      rows.push({ symbol: s, week: bars[i].t.slice(0, 10), entryScore: e.score, techConviction: techConviction(f), rr: lv.riskReward, posture: f.posture, ...sim });
+      rows.push({
+        symbol: s, week: bars[i].t.slice(0, 10), entryScore: e.score, entryScoreV2: e2.score,
+        techConviction: techConviction(f), rr: lv.riskReward, posture: f.posture,
+        distAtr: lv.zone1DistanceAtr, rsi: f.rsi14, atrPct: f.atrPct, ret21: f.ret21, fromHigh52: f.pctFromHigh52,
+        ...sim,
+      });
     }
   }
 
@@ -164,6 +185,15 @@ async function main() {
     scope: { symbols: syms.length, weeks: o.weeks, triggerSessions: TRIGGER_SESSIONS, holdSessions: HOLD_SESSIONS },
     overall: stats(rows),
     byEntryScore: bucket(rows, 'entryScore', [0, 40, 60, 80, 101]),
+    byEntryScoreV2: bucket(rows, 'entryScoreV2', [0, 40, 55, 70, 85, 101]),
+    entryScoreValidation: null,
+    calibration: {
+      zoneDistanceAtr: bucket(rows, 'distAtr', [0, 0.5, 1, 1.5, 2, 2.5, 99]),
+      rsi: bucket(rows, 'rsi', [0, 30, 40, 50, 60, 70, 101]),
+      atrPct: bucket(rows, 'atrPct', [0, 1.5, 2.5, 3.5, 5, 99]),
+      ret21: bucket(rows, 'ret21', [-99, -10, -3, 0, 3, 10, 999]),
+      fromHigh52: bucket(rows, 'fromHigh52', [-99, -30, -15, -7, -3, 0.01]),
+    },
     byTechConviction: bucket(rows, 'techConviction', [0, 40, 60, 80, 101]),
     byRiskReward: bucket(rows, 'rr', [0, 1, 1.5, 2, 99]),
     byPosture: ['bull', 'lean-bull', 'mixed', 'lean-bear', 'bear'].map((p) => ({ posture: p, ...stats(rows.filter((r) => r.posture === p)) })),
@@ -175,6 +205,7 @@ async function main() {
       'Hypothetical model results, not brokerage returns.',
     ],
   };
+  report.entryScoreValidation = { s1: validate(report.byEntryScore), s2: validate(report.byEntryScoreV2) };
   fs.mkdirSync(o.out, { recursive: true });
   fs.writeFileSync(path.join(o.out, 'backtest.json'), JSON.stringify(report, null, 1));
   fs.writeFileSync(path.join(o.out, 'backtest.md'), markdown(report));
@@ -183,10 +214,14 @@ async function main() {
 
 function markdown(r) {
   const L = [`# Backtest — scoring s1 levels (${r.scope.symbols} stocks × ${r.scope.weeks} weeks)`, ''];
-  const row = (label, s) => `| ${label} | ${s.setups} | ${s.triggerRatePct ?? '—'}% | ${s.targetHitPct ?? '—'}% | ${s.invalidatedPct ?? '—'}% | ${s.stillOpenPct ?? '—'}% | ${s.winRatePct ?? '—'}% | ${s.avgReturnPct ?? '—'}% |`;
-  const head = '| Group | Setups | Triggered | Target hit | Invalidated | Open at +15d | Win rate | Avg return |\n|---|---|---|---|---|---|---|---|';
+  const row = (label, s) => `| ${label} | ${s.setups} | ${s.triggerRatePct ?? '—'}% | ${s.targetHitPct ?? '—'}% | ${s.invalidatedPct ?? '—'}% | ${s.stillOpenPct ?? '—'}% | ${s.winRatePct ?? '—'}% | ${s.avgReturnPct ?? '—'}% | ${s.evPerSetupPct ?? '—'}% |`;
+  const head = '| Group | Setups | Triggered | Target hit | Invalidated | Open at +15d | Win rate | Avg return (triggered) | EV per setup |\n|---|---|---|---|---|---|---|---|---|';
   L.push(head, row('All', r.overall), '');
+  const v = r.entryScoreValidation;
+  if (v) L.push(`**Entry Score validation** (EV per setup must rise with the score): s1 **${v.s1.verdict}** (inversions ${v.s1.inversions ?? '—'}, top − bottom ${v.s1.topMinusBottomEvPct ?? '—'}%) · s2 candidate **${v.s2.verdict}** (inversions ${v.s2.inversions ?? '—'}, top − bottom ${v.s2.topMinusBottomEvPct ?? '—'}%)`, '');
   L.push('### By Entry Score', head, ...r.byEntryScore.map((b) => row(b.range, b)), '');
+  L.push('### By Entry Score — s2 candidate', head, ...r.byEntryScoreV2.map((b) => row(b.range, b)), '');
+  for (const [k, v] of Object.entries(r.calibration)) L.push(`### Calibration — ${k}`, head, ...v.map((b) => row(b.range, b)), '');
   L.push('### By technical Conviction', head, ...r.byTechConviction.map((b) => row(b.range, b)), '');
   L.push('### By risk-to-reward', head, ...r.byRiskReward.map((b) => row(b.range, b)), '');
   L.push('### By trend posture at publish', head, ...r.byPosture.map((b) => row(b.posture, b)), '');
@@ -197,4 +232,4 @@ function markdown(r) {
 
 if (require.main === module) main().catch((e) => { console.error('BACKTEST FAILED:', e.message); process.exit(1); });
 
-module.exports = { simulate, stats, techConviction };
+module.exports = { simulate, stats, techConviction, validate };

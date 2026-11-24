@@ -50,6 +50,14 @@ RSI > 70 −8, RSI 40–55 +5. Bearish EMA stack −10. R:R < 1 −15, R:R ≥ 1
 **Earnings inside the publish week −10, applied to every such name** (earned-entry discount).
 Conviction and Entry are independent: high conviction never means "buy now".
 
+### 4b. Entry Score s2 — CANDIDATE (not used for selection until it validates)
+Built from the s1 backtest, which showed s1 rewarding zones that hug the price and those setups underperforming.
+Base 50. Distance to zone 1: under 0.5 ATR −15, 0.5–1 ATR 0, 1–1.5 ATR +10, 1.5–2.5 ATR +15, over 2.5 ATR +5.
+RSI over 70 −15, RSI 40–60 +10, RSI under 30 −10. Bullish stack +10, bearish −10. R:R under 1 −15, 1–1.6 +10, over 2 −5.
+Earnings in the week −10. The backtest scores s1 and s2 on the same setups.
+**Validation rule:** expected return per published setup must rise from bucket to bucket (no inversions in
+buckets with at least 200 setups), and the top bucket must beat the bottom one. Only a version that passes may drive selection.
+
 ## 5. Risk class
 High: ATR above 4% of price, or a bearish stack. Elevated: ATR above 2.75%, or lean-bear. Moderate:
 ATR above 1.75%, or not bullish. Low: everything else. Earnings in the publish week raises the class one step.

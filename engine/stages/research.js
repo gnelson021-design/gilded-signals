@@ -48,6 +48,7 @@ function research(ranked, meta, now) {
       convictionParts: conv.parts,
       entry: ent.score,
       entryAdjustments: ent.adjustments,
+      entryV2Candidate: scoring.entryV2(row, lv, eventInWeek).score, // s2 candidate, shown for comparison only
       riskClass: scoring.riskClass(row, eventInWeek),
       eventInWeek,
       earnings: e || null,

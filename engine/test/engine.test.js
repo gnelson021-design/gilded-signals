@@ -108,3 +108,15 @@ test('selection never exceeds limits, respects sector cap, never forces picks', 
   assert.ok(select(many, 'bear').picks.filter((p) => p.tier === 1).length <= 3);
 });
 
+test('s2 entry candidate spreads scores and backtest validator detects inversions', () => {
+  const scoring = require('../stages/scoring');
+  const { validate } = require('../backtest');
+  const row = (posture, rsi14) => ({ features: { posture, rsi14 } });
+  const good = scoring.entryV2(row('bull', 50), { zone1DistanceAtr: 1.8, riskReward: 1.4 }, false).score;
+  const bad = scoring.entryV2(row('bear', 78), { zone1DistanceAtr: 0.3, riskReward: 0.8 }, false).score;
+  assert.ok(good - bad >= 50, `spread ${good} vs ${bad}`);
+  const mk = (ev) => ({ setups: 500, evPerSetupPct: ev });
+  assert.strictEqual(validate([mk(0.2), mk(0.5), mk(0.9)]).verdict, 'PASS');
+  assert.strictEqual(validate([mk(0.9), mk(0.5), mk(0.2)]).verdict, 'FAIL');
+});
+
