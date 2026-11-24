@@ -120,3 +120,43 @@ test('s2 entry candidate spreads scores and backtest validator detects inversion
   assert.strictEqual(validate([mk(0.9), mk(0.5), mk(0.2)]).verdict, 'FAIL');
 });
 
+test('narrative gates: verified numbers pass, invented numbers and personal-trade language fail', () => {
+  const g = require('../stages/gates');
+  const facts = { rsi14: 58.2, invalidation: 164, ret21: -4.3, earningsDate: '2026-12-02', untrustedHeadlines: ['Sales up 99%'] };
+  assert.deepStrictEqual(g.unverifiedNumbers('RSI 58.2, down 4.3% on the month, earnings December 2, 2026; invalidation $164.', facts), []);
+  assert.deepStrictEqual(g.unverifiedNumbers('Sales grew 99% and margins hit 41.5%.', facts), ['99%', '41.5%']);
+  assert.ok(g.narrativeGates('X', 'We bought shares here because the setup looks great for the week ahead.', facts).some((c) => !c.pass));
+  assert.ok(g.narrativeGates('X', 'This setup is guaranteed to work and carries little downside for holders.', facts).some((c) => !c.pass));
+});
+
+test('brief is READY with clean write-ups and HELD when a number is invented', async () => {
+  const { RunLog } = require('../lib/runlog');
+  const { research } = require('../stages/research');
+  const { narrate } = require('../stages/narrate');
+  const gates = require('../stages/gates');
+  process.env.ANTHROPIC_API_KEY = 'ANTHROPIC_SHOULD_NOT_LEAK';
+  const log = new RunLog('test');
+  const { rows, meta } = await liveRun({}, log);
+  const res = research(discovery.rank(rows), meta, Date.now());
+  assert.ok(res.preview.picks.length > 0);
+  const run = async () => {
+    const checks = gates.dataGates(res.preview, meta, Date.now());
+    checks.push(...await gates.priceCrossCheck(res.preview, require('../providers/finnhub')));
+    const n = await narrate(res, meta, log);
+    checks.push(...n.checks);
+    return { n, failed: checks.filter((c) => !c.pass) };
+  };
+  delete process.env.MOCK_FABRICATE;
+  const clean = await run();
+  assert.deepStrictEqual(clean.failed.map((c) => c.name), []);
+  const t = res.preview.picks[0].ticker;
+  assert.ok(clean.n.brief.picks[t].whyILikeIt && clean.n.brief.lead);
+  assert.ok(!JSON.stringify(clean.n.brief).includes('SHOULD_NOT_LEAK'));
+  process.env.MOCK_FABRICATE = '1';
+  const dirty = await run();
+  delete process.env.MOCK_FABRICATE;
+  assert.ok(dirty.failed.some((c) => c.name.startsWith('narrative_numbers_verified')), 'invented number caught');
+  assert.strictEqual(dirty.n.brief.picks[t].whyILikeIt, null, 'failed write-up is not kept');
+  delete process.env.ANTHROPIC_API_KEY;
+});
+

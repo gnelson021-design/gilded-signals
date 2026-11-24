@@ -40,6 +40,7 @@ jobs:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MAX_UNIVERSE: ${{ inputs.max_universe }}
         run: node engine/run.js --out engine-out/run --max-universe "$MAX_UNIVERSE"
 

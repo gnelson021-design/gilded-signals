@@ -31,4 +31,10 @@ async function earningsCalendar(from, to, opts) {
   return (r && Array.isArray(r.earningsCalendar)) ? r.earningsCalendar : [];
 }
 
-module.exports = { recommendations, profile, earningsCalendar };
+// {c: current/last, pc: previous close, t: unix time}
+async function quote(symbol, opts) {
+  const r = await getJSON(url(`quote?symbol=${encodeURIComponent(symbol)}`), opts);
+  return r && typeof r === 'object' ? r : {};
+}
+
+module.exports = { recommendations, profile, earningsCalendar, quote };

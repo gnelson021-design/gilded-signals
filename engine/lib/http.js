@@ -14,6 +14,7 @@ const HOST_SPACING = {
   'api.alpaca.markets': 330,
   'paper-api.alpaca.markets': 330,
   'finnhub.io': 1100,
+  'api.anthropic.com': 1500,
 };
 const nextSlot = new Map();
 const stats = { requests: 0, retries: 0, failures: 0, byHost: {} };
@@ -50,9 +51,11 @@ async function getJSON(url, opts = {}) {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
-      const res = await (opts.fetchImpl || fetch)(url, { headers, signal: ctrl.signal });
+      const init = { headers, signal: ctrl.signal };
+      if (opts.body != null) { init.method = 'POST'; init.body = typeof opts.body === 'string' ? opts.body : JSON.stringify(opts.body); }
+      const res = await (opts.fetchImpl || fetch)(url, init);
       if (res.ok) return await res.json();
-      const retryable = res.status === 429 || res.status >= 500;
+      const retryable = res.status === 429 || res.status >= 500; // incl. 529 overloaded
       lastErr = new HttpError(`HTTP ${res.status} ${safeUrl(url).split('?')[0]}`, res.status, safeUrl(url));
       if (!retryable) break;
       const ra = Number(res.headers && res.headers.get && res.headers.get('retry-after'));

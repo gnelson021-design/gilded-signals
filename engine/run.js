@@ -24,6 +24,8 @@ const features = require('./stages/features');
 const newsStage = require('./stages/news');
 const discovery = require('./stages/discovery');
 const { research } = require('./stages/research');
+const gates = require('./stages/gates');
+const { narrate } = require('./stages/narrate');
 const { RunLog } = require('./lib/runlog');
 const http = require('./lib/http');
 
@@ -82,6 +84,21 @@ function researchMarkdown(res) {
   L.push('All levels are computed from completed daily bars by versioned code (SCORING_METHODOLOGY.md). Hypothetical model research, not personal trades.');
   const uniq = [...new Map(res.skipped.map((s) => [s.symbol, s])).values()];
   if (uniq.length) L.push(`Skipped for concentration/correlation (${uniq.length}): ${uniq.slice(0, 12).map((s) => `${s.symbol} (${s.reason})`).join(', ')}${uniq.length > 12 ? ' …' : ''}`);
+  return L.join('\n') + '\n';
+}
+
+function briefMarkdown(brief, checks) {
+  const failed = checks.filter((c) => !c.pass);
+  const L = ['', `## Brief preview — status: **${String(brief.status).toUpperCase()}** (${checks.length} safety checks, ${failed.length} failed)`, ''];
+  if (failed.length) L.push('Failed checks:', ...failed.slice(0, 15).map((c) => `- ${c.name}${c.detail ? ` — ${c.detail}` : ''}`), '');
+  L.push(`_${brief.dateline}_`, '');
+  if (brief.lead) L.push(brief.lead, '');
+  if (brief.weekAtGlance && brief.weekAtGlance.marketCatalyst) L.push(`**Week at a glance:** ${brief.weekAtGlance.marketCatalyst}`, '');
+  for (const [t, p] of Object.entries(brief.picks)) {
+    if (!p.whyILikeIt) continue;
+    L.push(`**${t}** · ${p.convictionLabel} · ${p.riskLabel}`, `- Thesis: ${p.whyILikeIt}`, `- Biggest risk: ${p.biggestRisk}`, `- Catalysts: ${p.catalystHtml}`, '');
+  }
+  L.push(`_${brief.disclosure}_`);
   return L.join('\n') + '\n';
 }
 
@@ -145,6 +162,7 @@ async function liveRun(opts, log) {
   }
   const spyF = features.computeOne(hist.SPY, spy, now);
   const marketPosture = spyF.reject ? null : spyF.posture;
+  const spyFacts = spyF.reject ? null : { lastClose: spyF.price, rsi14: spyF.rsi14, return1MonthPct: spyF.ret21, return3MonthPct: spyF.ret63, pctFrom52WeekHigh: spyF.pctFromHigh52 };
   log.stage('features', { kept: featRows.length, rejected: featRejected, barsThrough, marketPosture });
 
   // 4 — news attention across the whole universe in one sweep
@@ -189,7 +207,7 @@ async function liveRun(opts, log) {
   log.stage('analysts', { requested: pre.length, ok: pre.length - anFail });
   rows = rows.map((r) => ({ ...r, analysts: anMap[r.symbol] || null, industry: indMap[r.symbol] || null }));
 
-  return { rows, meta: { marketPosture, barsThrough, newsArticles: nw.articles.length, newsWindow: `${cfg.news.windowDays}d`, universeSize: featRows.length } };
+  return { rows, meta: { marketPosture, spy: spyFacts, barsThrough, newsArticles: nw.articles.length, newsWindow: `${cfg.news.windowDays}d`, universeSize: featRows.length } };
 }
 
 async function main() {
@@ -223,6 +241,16 @@ async function main() {
     const res = research(ranked, meta, Date.parse(log.doc.startedAt));
     meta.weekOf = res.preview.weekOf;
     log.stage('research', { candidates: res.candidates.length, rejected: res.rejected.length, picks: res.preview.picks.length, primary: res.preview.picks.filter((p) => p.tier === 1).length, weekOf: res.preview.weekOf });
+    // Phase 3: safety gates + write-ups. A brief is 'ready' only if EVERY check passes.
+    const runNow = Date.parse(log.doc.startedAt);
+    const gateChecks = gates.dataGates(res.preview, meta, runNow);
+    gateChecks.push(...await gates.priceCrossCheck(res.preview, finnhub));
+    const nar = await narrate(res, meta, log);
+    gateChecks.push(...nar.checks);
+    const failed = gateChecks.filter((c) => !c.pass);
+    const briefStatus = res.preview.picks.length === 0 ? 'no_picks' : failed.length ? 'held' : 'ready';
+    nar.brief.status = briefStatus;
+    log.stage('gates', { checks: gateChecks.length, failed: failed.length, briefStatus, failedNames: failed.slice(0, 10).map((c) => c.name) });
     const stamp = new Date().toISOString().replace(/[:]/g, '').slice(0, 15);
     outDir = opts.out || path.join('engine-out', stamp);
     fs.mkdirSync(outDir, { recursive: true });
@@ -238,9 +266,11 @@ async function main() {
     writeJSON(outDir, 'inputs.json', { discoveryVersion: cfg.DISCOVERY_VERSION, meta, rows });
     writeJSON(outDir, `picks-preview-${res.preview.weekOf}.json`, res.preview);
     writeJSON(outDir, 'research.json', { candidates: res.candidates, rejected: res.rejected, skipped: res.skipped });
+    writeJSON(outDir, `brief-preview-${res.preview.weekOf}.json`, nar.brief);
+    writeJSON(outDir, 'gates.json', { briefStatus, checks: gateChecks });
     writeJSON(outDir, 'board.json', discovery.board(ranked));
     writeJSON(outDir, 'run-log.json', doc);
-    fs.writeFileSync(path.join(outDir, 'summary.md'), summaryMarkdown({ ...doc, ...meta }, ranked) + researchMarkdown(res));
+    fs.writeFileSync(path.join(outDir, 'summary.md'), summaryMarkdown({ ...doc, ...meta }, ranked) + researchMarkdown(res) + briefMarkdown(nar.brief, gateChecks));
     console.log(`\nDone → ${outDir}  (hash ${doc.rankingHash})`);
   } catch (e) {
     log.error(e.message);

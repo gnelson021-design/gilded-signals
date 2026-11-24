@@ -14,6 +14,16 @@ module.exports = {
     minCoverage: 60, // need at least 60% of the weight to have real data
   },
 
+  gates: {
+    maxDataAgeDays: 4,   // newest completed bar must be this recent at publish
+    maxPriceDiffPct: 2.5, // Alpaca close vs Finnhub second source
+  },
+
+  narrative: {
+    maxCharsPerField: 320,
+    strongConviction: 85, // 'Strong Buy' label threshold (existing brief vocabulary)
+  },
+
   selection: {
     maxPrimary: 5,
     maxPrimaryInWeakMarket: 3, // SPY in a bearish EMA stack → fewer primary picks

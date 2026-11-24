@@ -156,6 +156,26 @@ Phase status log:
   Rules: `SCORING_METHODOLOGY.md`. **Exit test still open:** review the live backtest report and the first
   live selection preview.
 
+- Phase 3 — write-ups + safety gates built and offline-tested (2026-11-24). Runs on every engine run;
+  write-ups need GitHub secret `ANTHROPIC_API_KEY` (model: `GS_NARRATIVE_MODEL`, default `claude-sonnet-5-5`).
+  Without the key the brief is HELD by design.
+
+### Safety gates (every run; brief is `ready` only if ALL pass, otherwise `held`)
+| Gate | Rule |
+|---|---|
+| data_fresh | newest completed bar ≤ 4 days old |
+| pick_limits / unique_tickers | ≤5 primary, ≤10 watchlist, no duplicates |
+| pick_complete / levels_ordered / scores_in_range | every field present; invalidation < Z2 < Z1 < price < T1; scores 0–100 |
+| price_cross_check | Alpaca close within 2.5% of Finnhub last or previous close |
+| narrative_numbers_verified | every number the AI writes must exist in the verified fact sheet (headline numbers never count) |
+| narrative_promissory / personal_trade / directive_advice / markup_injection | banned language and markup |
+| narrative regeneration | a failing write-up is regenerated once; still failing → dropped and the brief is held |
+
+Outputs per run: `brief-preview-{week}.json` (existing `data/brief-*.json` editorial schema: dateline, lead,
+weekAtGlance, picks{TICKER:{convictionLabel, riskLabel, buyPlan, whyILikeIt, biggestRisk, catalystHtml, chart}}),
+and `gates.json` (every check with pass/fail and detail). Labels come from scores, never from AI.
+Note for Phase 4: the site's "Why I like it" label must become neutral wording before automated briefs publish.
+
 ### Phase 1 — what exists now (`engine/`)
 | File | Role |
 |---|---|
@@ -174,6 +194,9 @@ Phase status log:
 | `engine/stages/scoring.js` | Conviction, Entry, risk class (s1) |
 | `engine/stages/select.js` | ≤5 primary / ≤10 watchlist, sector caps, correlation filter |
 | `engine/stages/research.js` | Board → scored candidates → `picks-preview-{week}.json` (existing schema) |
+| `engine/stages/gates.js` | Data, price cross-check, and narrative safety gates |
+| `engine/stages/narrate.js` | Fact sheet → Claude write-ups (brief schema), regenerate-once, hold on failure |
+| `engine/providers/anthropic.js` | Claude Messages API (narrative only) |
 | `engine/backtest.js` | Point-in-time 52-week backtest of levels + Entry Score |
 | `engine/test/` | Offline end-to-end test on synthetic fixtures + mock fetch |
 | `.github/workflows/gs-discovery.yml` | Manual run; uploads the board as a 7-day artifact. No schedule, no publishing |

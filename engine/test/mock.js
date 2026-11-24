@@ -32,8 +32,9 @@ function barsFor(sym, startMs) {
     const dow = new Date(t).getUTCDay();
     if (dow === 0 || dow === 6) continue;
     p *= 1 + (r() - 0.48) * 0.04;
+    const v = Math.round(5e5 + r() * 4e6); // draw before the start filter so every window sees the same series
     if (t < startMs) continue;
-    out.push({ t: new Date(t).toISOString(), o: p, h: p * 1.01, l: p * 0.99, c: p, v: Math.round(5e5 + r() * 4e6) });
+    out.push({ t: new Date(t).toISOString(), o: p, h: p * 1.01, l: p * 0.99, c: p, v });
   }
   return out;
 }
@@ -64,7 +65,25 @@ global.fetch = async (url, opts) => {
   if (u.pathname.includes('most-actives')) return respond({ most_actives: SYMS.slice(0, 10).map((symbol) => ({ symbol })) });
   if (u.pathname === '/api/v1/calendar/earnings') return respond({ earningsCalendar: [{ symbol: SYMS[1], date: '2026-12-02', hour: 'amc' }] });
   if (u.pathname === '/api/v1/stock/recommendation') return respond([{ period: '2026-11-01', strongBuy: 5, buy: 10, hold: 4, sell: 1, strongSell: 0 }, {}, {}, { period: '2026-08-01', strongBuy: 3, buy: 8, hold: 7, sell: 2, strongSell: 0 }]);
-  if (u.pathname === '/api/v1/stock/profile2') return respond({ finnhubIndustry: 'Semiconductors' });
+  if (u.pathname === '/api/v1/stock/profile2') return respond({ finnhubIndustry: SYMS.indexOf(u.searchParams.get('symbol')) % 2 ? 'Semiconductors' : 'Banking' });
+  if (u.pathname === '/api/v1/quote') {
+    const b = barsFor(u.searchParams.get('symbol'), NOW - 10 * DAY);
+    return respond({ c: b[b.length - 1].c, pc: b[b.length - 2].c, t: 0 });
+  }
+  if (u.host === 'api.anthropic.com') {
+    const body = JSON.parse(opts.body);
+    const user = body.messages[0].content;
+    const facts = JSON.parse(user.slice(user.indexOf('{'), user.lastIndexOf('}', user.indexOf('Write JSON')) + 1));
+    const fab = process.env.MOCK_FABRICATE === '1' ? ' Revenue grew 37.3% last quarter.' : '';
+    const text = user.includes('whyItQualifies')
+      ? JSON.stringify({
+        whyItQualifies: `${facts.company} ranks on a ${facts.trendStructure} trend structure with RSI at ${facts.rsi14} and a conviction score of ${facts.convictionScore}.${fab}`,
+        biggestRisk: `A close below the ${facts.invalidation} invalidation level would end the setup; buy zone 1 sits at ${facts.buyZone1}.`,
+        catalysts: facts.earningsInsidePublishWeek ? `Earnings on ${facts.earningsDate} fall inside the week.` : 'No scheduled earnings this week; news flow is the main driver.',
+      })
+      : JSON.stringify({ lead: `This week's list holds ${facts.primaryPicks.length} primary names with SPY in a ${facts.spyTrendStructure} structure, and news flow concentrated in the most-covered names.${fab}`, marketCatalyst: facts.earningsInsideWeek.length ? 'Scheduled earnings inside the week are flagged on each affected name.' : 'No scheduled earnings fall inside the week among the picks.' });
+    return respond({ model: body.model, content: [{ type: 'text', text }], usage: { input_tokens: 1, output_tokens: 1 } });
+  }
   return { ok: false, status: 404, headers: { get: () => null }, json: async () => ({}) };
 };
 
