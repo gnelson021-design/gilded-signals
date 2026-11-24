@@ -1,6 +1,13 @@
 # GILDED SIGNALS — SESSION NOTES
 # Save this file and paste into any new Claude chat to restore context.
 
+## LATEST — 2026-11-24 (automation upgrade)
+- Full-automation work started. Read CLAUDE.md (rules) and AUTOMATION.md (audit, plan, status) first.
+- Branch: automation/dev. Rollback tag: backup-pre-automation-20261124 (= 6940463, last production commit).
+- Phase 1 built: engine/ discovery run (shadow only), offline tests passing, manual GitHub workflow.
+- Next: add GitHub Secrets, run "GS Discovery (shadow)" by hand, review the board, then Phase 2 scoring.
+- Sections below are older reference notes (pre-August) and may be outdated.
+
 ## SITE
 - URL: gildedsignals.com
 - Repo: ~/gilded-signals (GitHub: gnelson021-design/gilded-signals)

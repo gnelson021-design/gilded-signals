@@ -1,0 +1,64 @@
+// engine/config.js
+// All thresholds and weights in one versioned place. Any change to a value
+// here that affects ranking MUST bump DISCOVERY_VERSION.
+
+'use strict';
+
+module.exports = {
+  DISCOVERY_VERSION: 'd0-shadow',
+
+  universe: {
+    exchanges: ['NYSE', 'NASDAQ', 'AMEX'],
+    minPrice: 10,
+    minAvgDollarVolume: 25e6, // 20-day average close × volume
+    maxSymbols: 1500,         // top N by dollar volume after filters
+    minHistoryBars: 200,
+    maxStaleDays: 6,          // last bar older than this (calendar days) → reject
+    // Non-common-stock instruments excluded by name.
+    excludeName: /\b(ETF|ETN|ETNs|Fund|iShares|SPDR|ProShares|Direxion|Leveraged|Ultra(Pro|Short)?|Daily [23]X|Warrants?|Rights?|Units?|Preferred|Notes? due|Acquisition Corp)\b/i,
+    symbolPattern: /^[A-Z]{1,5}(\.[A-Z])?$/,
+  },
+
+  news: {
+    windowDays: 21,   // recent 7 days vs prior 14-day baseline
+    recentDays: 7,
+    maxPages: 1200,   // 50 articles/page
+    keepHeadlines: 8, // per candidate, for the Phase 3 AI read
+  },
+
+  analysts: { topK: 150 },        // Finnhub calls limited to the strongest pre-ranked names
+  earnings: { lookaheadDays: 21 },
+
+  board: { size: 40 },
+
+  // Component weights for the d0 discovery rank (sum = 100). Missing
+  // components are dropped and the rest re-normalised; coverage is reported.
+  weights: {
+    attention: 30,   // news volume + news surge + most-active presence
+    catalysts: 10,   // headline catalyst tags + upcoming earnings
+    trend: 20,       // EMA stack posture + weekly confirmation
+    momentum: 15,    // RSI regime + MACD histogram
+    relStrength: 15, // 63-day return vs SPY (percentile)
+    analysts: 10,    // consensus level + 3-month drift
+  },
+
+  // Headline catalyst tags. Matched case-insensitively on headline text.
+  catalystTags: {
+    positive: {
+      upgrade: /\bupgrade[sd]?\b|raises? (price )?target|initiates? .*\b(buy|outperform|overweight)\b/i,
+      guidanceRaise: /raises? (its )?(guidance|outlook|forecast)|boosts? (guidance|outlook)/i,
+      beat: /\bbeats?\b.*\b(estimates|expectations)\b|tops (estimates|expectations)/i,
+      contract: /\b(wins?|awarded|secures?|lands?)\b.*\b(contract|deal|order)\b|partnership with/i,
+      buyback: /\b(buyback|repurchase)\b/i,
+      approval: /\bFDA (approv|clear)|\bapproval\b/i,
+      ma: /\b(to acquire|acquisition of|merger|takeover|buyout)\b/i,
+    },
+    negative: {
+      downgrade: /\bdowngrade[sd]?\b|cuts? (price )?target|lowers? (price )?target/i,
+      guidanceCut: /(cuts?|lowers?|slashes?) (its )?(guidance|outlook|forecast)|warns?/i,
+      miss: /\bmiss(es|ed)?\b.*\b(estimates|expectations)\b/i,
+      offering: /\b(stock|share|secondary|equity) offering\b|\bdilut/i,
+      legal: /\b(lawsuit|probe|investigation|subpoena|SEC charges|class action)\b/i,
+    },
+  },
+};

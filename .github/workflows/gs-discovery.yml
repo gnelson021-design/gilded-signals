@@ -1,0 +1,50 @@
+# GS Research Engine — Phase 1 discovery run (SHADOW ONLY).
+# Manual trigger only for now. Nothing here publishes to the website:
+# output is uploaded as a short-lived workflow artifact for review.
+# The Saturday 9 AM CT schedule is enabled in Phase 5, after shadow testing.
+name: GS Discovery (shadow)
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_universe:
+        description: "Max symbols in the universe (default 1500)"
+        required: false
+        default: "1500"
+
+concurrency:
+  group: gs-discovery
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Offline engine tests
+        run: node --test engine/test/engine.test.js
+
+      - name: Discovery run
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          MAX_UNIVERSE: ${{ inputs.max_universe }}
+        run: node engine/run.js --out engine-out/run --max-universe "$MAX_UNIVERSE"
+
+      - name: Upload board
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gs-discovery-${{ github.run_id }}
+          path: engine-out/
+          retention-days: 7

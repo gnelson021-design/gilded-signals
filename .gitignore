@@ -28,3 +28,6 @@ gilded-news-live-test*.html
 
 # Local Netlify folder
 .netlify
+
+# GS Research Engine shadow output (never committed)
+engine-out/
