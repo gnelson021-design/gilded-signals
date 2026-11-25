@@ -10,7 +10,7 @@
 | Workflow | Trigger | Writes |
 |---|---|---|
 | `gs-daily-dryrun.yml` "GS Daily Top 20 (dry run)" | push to automation/dev, manual | artifact only, never publishes |
-| `gs-daily.yml` "GS Daily Top 20 (publish)" | manual; weekdays 7:30 a.m. CT **only if `GS_DAILY_SCHEDULE` = on** and the file is on main | `data/daily/{date}.json` + `data/daily/index.json` on `GS_PUBLISH_BRANCH`, write-once |
+| `gs-daily.yml` "GS Daily Top 20 (publish)" | manual; weekdays from 6:45 a.m. CT, released 7:30 a.m. CT, **only if `GS_DAILY_SCHEDULE` = on** and the file is on main | `data/daily/{date}.json` + `data/daily/index.json` on `GS_PUBLISH_BRANCH`, write-once |
 
 **Retired, do not restore:** `gs-schedule.yml` (weekly Saturday/Sunday/Friday cycle), `gs-discovery.yml`, the Netlify
 `trigger-capture` schedule, `engine/run.js`, `engine/schedule.js` and `engine/backtest.js`. A test fails if any weekly job or
@@ -26,11 +26,14 @@ for failure emails. **Not needed any more:** `ANTHROPIC_API_KEY` (the daily list
 (there is no weekly grading).
 Variables: `GS_PUBLISH_BRANCH` (default `automation/dev`), `GS_PRODUCTION_APPROVED` (`yes` only after sign-off).
 
-## Morning publication time — 7:30 a.m. CT (schedule OFF until you switch it on)
-`gs-daily.yml` runs at 12:30 and 13:30 UTC, Monday–Friday (7:30 a.m. CT in summer and in winter). The gate lets
-only the slot at or after 7:30 a.m. America/Chicago publish; the other slot does nothing. Holidays are skipped by
-the official trading calendar, a scheduled run never publishes after the 8:30 a.m. CT open, and a second publish
-on the same day is refused.
+## Morning publication time — readers see it at 7:30 a.m. CT (schedule OFF until you switch it on)
+`gs-daily.yml` runs at 11:45, 12:45 and 13:15 UTC, Monday–Friday. The gate lets a slot build only from 6:45 a.m.
+America/Chicago until the 8:30 a.m. CT open, so in summer (CDT) the 11:45 UTC slot builds and in winter (CST) the
+12:45 UTC slot builds; the other slots are backups that do nothing once the day is published (write-once — never a
+duplicate). Each published list carries `visibleFrom` = 7:30 a.m. America/Chicago on its trading day (DST-aware), and
+`/api/daily-top20` hides it from everyone until then, so readers see the new list at 7:30 regardless of build time,
+deploy time or GitHub's cron delays. Early-close days publish normally; holidays are skipped by the official
+calendar. A late recovery publish (after 7:30) is visible as soon as it deploys.
 
 Three things must all be true before a scheduled list is published:
 1. `gs-daily.yml` is on the default branch (`main`) — GitHub ignores schedules on any other branch.

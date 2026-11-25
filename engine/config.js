@@ -5,15 +5,18 @@
 'use strict';
 
 module.exports = {
-  METHODOLOGY_VERSION: 'm1-shadow',
+  METHODOLOGY_VERSION: 'm2-shadow', // m2: confirmed pending buyouts excluded; law-firm solicitations dropped from news
   LIST_SIZE: 20,
   FREE_RANKS: [11, 20],          // shown in full to everyone; #1–10 need a subscription
 
   // Publication time (not a ranking input — changing it does not change the methodology).
-  // GitHub cron is UTC-only, so gs-daily.yml has two weekday slots (12:30 and 13:30 UTC);
-  // the gate lets only the slot at or after 07:30 Central Time publish. The schedule only
-  // runs when the repository variable GS_DAILY_SCHEDULE = on.
-  PUBLISH: { timeZone: 'America/Chicago', time: '07:30', label: '7:30 a.m. CT' },
+  // Readers see the list at RELEASE time (07:30 America/Chicago): the list is built
+  // and deployed ahead of it (from BUILD time, 06:45 CT) and /api/daily-top20 keeps it
+  // hidden until 07:30 CT. GitHub cron is UTC-only, so gs-daily.yml has three weekday
+  // slots (11:45, 12:45, 13:15 UTC); the gate lets a slot run only from 06:45 CT until
+  // the open, and write-once makes every later slot a no-op. The schedule only runs
+  // when the repository variable GS_DAILY_SCHEDULE = on.
+  PUBLISH: { timeZone: 'America/Chicago', buildTime: '06:45', time: '07:30', label: '7:30 a.m. CT' },
 
   universe: {
     exchanges: ['NYSE', 'NASDAQ', 'AMEX'],

@@ -50,6 +50,7 @@ function shape(doc, unlocked) {
     methodologyVersion: doc.methodologyVersion,
     dataCutoff: doc.dataCutoff,
     publishedAt: doc.publishedAt || null,
+    visibleFrom: doc.visibleFrom || null,
     universeSize: doc.universeSize,
     eligibleCount: doc.eligibleCount,
     freeRanks: [freeLo, freeHi],
@@ -60,16 +61,27 @@ function shape(doc, unlocked) {
   };
 }
 
-async function handle(event, fetchImpl) {
+// A day's list is published (built and deployed) shortly before its release
+// time and is invisible to everyone — free or subscriber — until visibleFrom
+// (7:30 a.m. America/Chicago on its trading day). Until then the previous
+// trading day's list stays up.
+function released(d, now) {
+  if (!d || !DATE_RE.test(d.tradingDate)) return false;
+  const v = d.visibleFrom ? Date.parse(d.visibleFrom) : NaN;
+  return !isFinite(v) || v <= now;
+}
+
+async function handle(event, fetchImpl, now = Date.now()) {
   const q = event.queryStringParameters || {};
   if (q.date && !DATE_RE.test(q.date)) return { available: false, error: 'invalid date' };
   const index = await loadData('index.json', fetchImpl);
-  const days = index && Array.isArray(index.days) ? index.days.map((d) => d.tradingDate).filter((d) => DATE_RE.test(d)).sort() : [];
+  const days = index && Array.isArray(index.days) ? index.days.filter((d) => released(d, now)).map((d) => d.tradingDate).sort() : [];
   if (!days.length) return { available: false, days: [] };
   const date = q.date || days[days.length - 1];
   if (!days.includes(date)) return { available: false, days, error: 'no list published for that date' };
   const doc = await loadData(`${date}.json`, fetchImpl);
   if (!doc) return { available: false, days, error: 'list file missing' };
+  if (!released(doc, now)) return { available: false, days, error: 'no list published for that date' };
   const cookieHeader = event.headers && (event.headers.cookie || event.headers.Cookie);
   let unlocked = false;
   try { unlocked = Boolean(verify(parseCookies(cookieHeader)[COOKIE_NAME])); } catch (e) { unlocked = false; }
@@ -85,4 +97,4 @@ exports.handler = async (event) => {
   }
 };
 
-exports._test = { shape, handle };
+exports._test = { shape, handle, released };

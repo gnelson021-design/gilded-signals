@@ -55,8 +55,12 @@ Automation design, status and phase plan live in `AUTOMATION.md`.
 - Factual research only: no buy/sell or pick language, no personal-portfolio comparisons. Show the trading date, data
   cutoff, rank drivers, dated headlines, and confirmed catalysts, or say "no verified catalyst".
 - Ranks #11–20 free; #1–10 only through the subscription cookie, enforced server-side in `daily-top20.js`.
-- Publishes at 7:30 a.m. America/Chicago on trading days (`gs-daily.yml`, two UTC slots, gate picks the 7:30 CT one);
-  scheduled runs are skipped unless the repo variable `GS_DAILY_SCHEDULE` = `on`.
+- Readers see each trading day's list at 7:30 a.m. America/Chicago: built from 6:45 CT (`gs-daily.yml`, three UTC
+  slots, write-once), hidden by `/api/daily-top20` until `visibleFrom`. Scheduled runs are skipped unless the repo
+  variable `GS_DAILY_SCHEDULE` = `on`.
+- Methodology m2: companies with a confirmed, pending buyout (signed deal, company is the target) are not eligible;
+  rumours never exclude. Law-firm shareholder-solicitation releases are dropped from news. Display names drop a
+  trailing "Common Stock" only.
 - Scanner: 5 free comparisons (gs-access.js), unlimited for subscribers. News: world news free; market-news headlines
   free for everyone; outbound links to outside reporting free; full articles published by Gilded Signals are
   subscriber-only (server-side check required for any such page).

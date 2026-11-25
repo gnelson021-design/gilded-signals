@@ -22,6 +22,14 @@ const TAG_LABEL = {
   offering: 'share offering / dilution', legal: 'lawsuit or investigation',
 };
 
+// Display name: drop only a trailing "Common Stock" label. Share-class wording
+// ("Alphabet Inc. Class A") and the ticker are kept exactly.
+function displayName(name) {
+  if (name == null) return name;
+  const s = String(name).replace(/\s+Common Stock\s*$/i, '').trim();
+  return s || String(name);
+}
+
 function eligible(f) {
   const E = cfg.eligibility;
   const reasons = [];
@@ -111,6 +119,7 @@ function rank(rows, tradingDate) {
   const excluded = {};
   for (const r of rows) {
     const why = eligible(r.features);
+    if (r.pendingBuyout) why.push('confirmed pending buyout');
     if (why.length) { for (const w of why) excluded[w] = (excluded[w] || 0) + 1; continue; }
     elig.push(r);
   }
@@ -148,7 +157,7 @@ function entry(x, rankNo) {
   return {
     rank: rankNo,
     ticker: x.r.symbol,
-    company: x.r.name,
+    company: displayName(x.r.name),
     sector: x.r.industry || null,
     score: x.score,
     coveragePct: x.coveragePct,
@@ -164,4 +173,4 @@ function entry(x, rankNo) {
   };
 }
 
-module.exports = { rank, entry, eligible, catalysts, rsiScore, trendScore, percentileMap, TAG_LABEL };
+module.exports = { rank, entry, eligible, catalysts, rsiScore, trendScore, percentileMap, displayName, TAG_LABEL };

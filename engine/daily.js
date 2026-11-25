@@ -4,7 +4,7 @@
 //   node engine/daily.js build --out DIR [--max-universe N]   build today's list (writes nothing public)
 //   node engine/daily.js replay DIR                           re-rank saved inputs; hash must match
 //   node engine/daily.js gate [--allow-late|--scheduled]      should a publish run now? (run=true|false)
-//                                                            --scheduled: only at/after 07:30 CT, never after the open
+//                                                            --scheduled: only from 06:45 CT (release 07:30 CT), never after the open
 //   node engine/daily.js publish --run DIR [--allow-late]     write-once data/daily/{date}.json + index
 //   node engine/daily.js health                               data sources + missed-list check
 //   node engine/daily.js alert "<subject>" "<text>"
@@ -25,6 +25,7 @@ const finnhub = require('./providers/finnhub');
 const universe = require('./stages/universe');
 const features = require('./stages/features');
 const newsStage = require('./stages/news');
+const deals = require('./stages/deals');
 const optionsStage = require('./stages/options');
 const dailyRank = require('./stages/daily-rank');
 const calendar = require('./lib/calendar');
@@ -94,8 +95,16 @@ async function build(opts, log) {
 
   const nw = await alpaca.news({ start: new Date(now - cfg.news.windowDays * DAY).toISOString(), end: new Date(now).toISOString(), maxPages: cfg.news.maxPages });
   if (nw.truncated) log.warn(`News sweep hit maxPages (${cfg.news.maxPages}); baseline window is partial`);
-  const att = newsStage.attention(nw.articles, rows.map((r) => r.symbol), now);
-  log.stage('news', { articles: nw.articles.length, pages: nw.pages, truncated: nw.truncated, symbolsWithNews: Object.keys(att).length, newsThrough: new Date(now).toISOString() });
+  const lawFirm = nw.articles.filter((a) => newsStage.isLawFirmSolicitation(a.headline)).length;
+  const articles = nw.articles.filter((a) => !newsStage.isLawFirmSolicitation(a.headline));
+  const att = newsStage.attention(articles, rows.map((r) => r.symbol), now);
+  log.stage('news', { articles: nw.articles.length, lawFirmSolicitationsDropped: lawFirm, pages: nw.pages, truncated: nw.truncated, symbolsWithNews: Object.keys(att).length, newsThrough: new Date(now).toISOString() });
+
+  // Confirmed, pending buyouts (company is the target of a signed deal) are not
+  // eligible: their price tracks the deal terms. Rumours never exclude.
+  const buyouts = deals.pendingBuyouts(articles, rows);
+  for (const r of rows) r.pendingBuyout = buyouts[r.symbol] || null;
+  log.stage('deals', { confirmedPendingBuyouts: Object.keys(buyouts).length, symbols: Object.keys(buyouts) });
 
   const active = new Set();
   for (const by of ['volume', 'trades']) {
@@ -140,7 +149,8 @@ async function build(opts, log) {
   }
   log.stage('rank', { eligible: ranked.eligibleCount, excluded: ranked.excluded, listed: top.length });
 
-  const meta = { tradingDate: ctx.tradingDate, cutoff: ctx.cutoff, newsThrough: new Date(now).toISOString(), calendarOfficial: ctx.calendarOfficial, universeSize: rows.length, eligibleCount: ranked.eligibleCount, generatedAt: new Date(now).toISOString() };
+  const excludedBuyouts = rows.filter((r) => r.pendingBuyout && dailyRank.eligible(r.features).length === 0).map((r) => ({ ticker: r.symbol, company: dailyRank.displayName(r.name), ...r.pendingBuyout }));
+  const meta = { tradingDate: ctx.tradingDate, cutoff: ctx.cutoff, newsThrough: new Date(now).toISOString(), calendarOfficial: ctx.calendarOfficial, universeSize: rows.length, eligibleCount: ranked.eligibleCount, excludedBuyouts, generatedAt: new Date(now).toISOString() };
   return { rows, meta, top: top.map((x, i) => dailyRank.entry(x, i + 1)) };
 }
 
@@ -158,6 +168,7 @@ function listDoc(meta, top) {
     generatedAt: meta.generatedAt,
     universeSize: meta.universeSize,
     eligibleCount: meta.eligibleCount,
+    excludedPendingBuyouts: meta.excludedBuyouts || [],
     freeRanks: cfg.FREE_RANKS,
     sources: ['Alpaca SIP daily bars (completed sessions only)', 'Alpaca news (Benzinga)', 'Alpaca most-active screeners', 'Alpaca options snapshots + contracts (when available)', 'Finnhub earnings calendar', 'Finnhub company profile'],
     disclosure: 'Factual momentum research generated automatically from verified market data. Rankings describe recent price, volume and news activity; they are not recommendations to buy or sell and not personal trades.',
@@ -179,6 +190,10 @@ function targetAllowed(branch) {
   return true;
 }
 
+// Readers see a day's list from 7:30 a.m. America/Chicago (DST-aware). A list
+// published later than that (manual recovery) is visible as soon as it deploys.
+function releaseUtc(tradingDate) { return clock.zonedToUtc(tradingDate, cfg.PUBLISH.time, cfg.PUBLISH.timeZone); }
+
 async function gate(now, opts = {}) {
   const today = clock.parts(now, 'America/New_York').date;
   const cal = await calendar.sessions(today, today);
@@ -188,9 +203,9 @@ async function gate(now, opts = {}) {
   const openUtc = Date.parse(clock.zonedToUtc(today, s.open));
   if (now >= Date.parse(s.closeUtc)) return { run: false, reason: 'session already closed' };
   if (opts.scheduled) {
-    const [ph, pm] = cfg.PUBLISH.time.split(':').map(Number);
+    const [bh, bm] = cfg.PUBLISH.buildTime.split(':').map(Number);
     const ct = clock.parts(now, cfg.PUBLISH.timeZone);
-    if (ct.minutes < ph * 60 + pm) return { run: false, reason: `before the ${cfg.PUBLISH.label} publication time — the later slot publishes` };
+    if (ct.minutes < bh * 60 + bm) return { run: false, reason: `before the ${cfg.PUBLISH.buildTime} CT build window (list released at ${cfg.PUBLISH.label}) — a later slot publishes` };
     if (now >= openUtc) return { run: false, reason: 'market already open — a scheduled run never publishes after the open' };
   }
   if (now >= openUtc && !opts.allowLate) return { run: false, reason: 'market already open — the morning list must publish before the open (use --allow-late for a recovery publish built from the same prior-close data)' };
@@ -218,9 +233,10 @@ async function publish(runDir, now, opts = {}) {
   const file = path.join(dir, `${today}.json`);
   if (fs.existsSync(file)) return { published: false, tradingDate: today, reason: 'already published (write-once)' };
   const stamp = new Date(now).toISOString();
-  fs.writeFileSync(file, JSON.stringify({ ...doc, status: 'published', publishedAt: stamp, listHash: listHash(doc) }, null, 1) + '\n', { flag: 'wx' });
+  const visibleFrom = releaseUtc(today);
+  fs.writeFileSync(file, JSON.stringify({ ...doc, status: 'published', publishedAt: stamp, visibleFrom, listHash: listHash(doc) }, null, 1) + '\n', { flag: 'wx' });
   const idx = loadIndex(opts);
-  idx.days.push({ tradingDate: today, publishedAt: stamp, count: doc.entries.length, methodologyVersion: doc.methodologyVersion, pricesThroughSession: doc.dataCutoff.pricesThroughSession });
+  idx.days.push({ tradingDate: today, publishedAt: stamp, visibleFrom, count: doc.entries.length, methodologyVersion: doc.methodologyVersion, pricesThroughSession: doc.dataCutoff.pricesThroughSession });
   idx.days.sort((a, b) => (a.tradingDate < b.tradingDate ? -1 : 1));
   idx.updatedAt = stamp;
   fs.writeFileSync(path.join(dir, 'index.json'), JSON.stringify(idx, null, 1) + '\n');
@@ -329,4 +345,4 @@ async function main() {
 
 if (require.main === module) main();
 
-module.exports = { build, listDoc, listHash, gate, publish, health, tradingContext, targetAllowed };
+module.exports = { build, listDoc, listHash, gate, publish, health, tradingContext, targetAllowed, releaseUtc };

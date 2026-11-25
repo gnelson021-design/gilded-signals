@@ -7,12 +7,18 @@
 # on the same day is refused. Publishing to main additionally requires the
 # repository variable GS_PRODUCTION_APPROVED = yes.
 #
-# Publication time: 7:30 a.m. America/Chicago, Monday–Friday, trading days only.
-# GitHub cron is UTC-only, so there are two weekday slots:
-#   12:30 UTC = 7:30 a.m. CDT (summer)   13:30 UTC = 7:30 a.m. CST (winter)
-# The gate lets only the slot at or after 7:30 CT publish; the other slot is a
-# no-op (too early, already published, or after the open). Holidays are
-# refused by the official trading calendar.
+# Readers see the list at 7:30 a.m. America/Chicago, Monday–Friday, trading
+# days only (early-close days included). The list is built and deployed ahead
+# of that and /api/daily-top20 hides it until 7:30 CT, so build time and
+# GitHub's cron delays don't change when readers see it.
+# GitHub cron is UTC-only, so there are three weekday slots:
+#   11:45 UTC = 6:45 a.m. CDT (summer build)  | 5:45 a.m. CST (too early, no-op)
+#   12:45 UTC = 7:45 a.m. CDT (backup, no-op) | 6:45 a.m. CST (winter build)
+#   13:15 UTC = 8:15 a.m. CDT (backup, no-op) | 7:15 a.m. CST (backup, no-op)
+# The gate lets a slot run only from 6:45 CT until the 8:30 CT open; once a
+# list is published every later slot that day is a no-op (write-once), so
+# there is never a duplicate publish. Holidays are refused by the official
+# trading calendar.
 #
 # OFF SWITCH: scheduled runs do nothing unless the repository variable
 # GS_DAILY_SCHEDULE is set to "on". GitHub only runs schedules from the
@@ -22,8 +28,9 @@ name: GS Daily Top 20 (publish)
 
 on:
   schedule:
-    - cron: "30 12 * * 1-5"
-    - cron: "30 13 * * 1-5"
+    - cron: "45 11 * * 1-5"
+    - cron: "45 12 * * 1-5"
+    - cron: "15 13 * * 1-5"
   workflow_dispatch:
     inputs:
       job:
@@ -79,7 +86,7 @@ jobs:
         if: env.JOB == 'health'
         run: node engine/daily.js health
 
-      - name: Gate (trading day, 7:30 CT slot when scheduled, before the open, not yet published)
+      - name: Gate (trading day, from 6:45 CT when scheduled, before the open, not yet published)
         id: gate
         if: env.JOB == 'publish'
         run: node engine/daily.js gate $GATE_FLAGS

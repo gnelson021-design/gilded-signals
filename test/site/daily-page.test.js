@@ -65,6 +65,27 @@ test('endpoint: no list yet, latest day, archive day, invalid date', async () =>
   assert.ok(forged.entries.slice(0, 10).every((e) => e.locked), 'forged cookie stays locked');
 });
 
+test('release: a published list stays hidden from everyone until 7:30 a.m. CT, then the previous day is replaced', async () => {
+  const v30 = '2026-11-30T13:30:00.000Z'; // 7:30 a.m. CST
+  const files = { 'index.json': { days: [{ tradingDate: '2026-11-27', visibleFrom: '2026-11-27T13:30:00.000Z' }, { tradingDate: '2026-11-30', visibleFrom: v30 }] },
+    '2026-11-30.json': { ...doc(), visibleFrom: v30 }, '2026-11-27.json': { ...doc(), tradingDate: '2026-11-27', visibleFrom: '2026-11-27T13:30:00.000Z' } };
+  const fake = async (url) => { const f = url.split('/data/daily/')[1]; return files[f] ? { ok: true, json: async () => files[f] } : { ok: false, json: async () => ({}) }; };
+  const at = (iso, q = {}) => fn.handle({ queryStringParameters: q, headers: {} }, fake, Date.parse(iso));
+  const before = await at('2026-11-30T13:29:00Z');
+  assert.strictEqual(before.tradingDate, '2026-11-27', '7:29 CT: still the previous trading day');
+  assert.deepStrictEqual(before.days, ['2026-11-27'], 'not even listed in the archive yet');
+  assert.strictEqual((await at('2026-11-30T13:29:00Z', { date: '2026-11-30' })).available, false, 'direct date request refused before release');
+  const after = await at('2026-11-30T13:30:00Z');
+  assert.strictEqual(after.tradingDate, '2026-11-30', '7:30 CT: today\'s list');
+  assert.strictEqual(after.visibleFrom, v30);
+  assert.ok(after.entries.slice(10).every((e) => !e.locked && e.ticker) && after.entries.slice(0, 10).every((e) => e.locked && !e.ticker), 'free: #11–20 open, #1–10 withheld');
+  // Summer: 7:30 CDT = 12:30 UTC.
+  const sFiles = { 'index.json': { days: [{ tradingDate: '2027-06-14', visibleFrom: '2027-06-14T12:30:00.000Z' }] }, '2027-06-14.json': { ...doc(), tradingDate: '2027-06-14', visibleFrom: '2027-06-14T12:30:00.000Z' } };
+  const sFake = async (url) => { const f = url.split('/data/daily/')[1]; return sFiles[f] ? { ok: true, json: async () => sFiles[f] } : { ok: false, json: async () => ({}) }; };
+  assert.strictEqual((await fn.handle({ queryStringParameters: {}, headers: {} }, sFake, Date.parse('2027-06-14T12:29:00Z'))).available, false);
+  assert.strictEqual((await fn.handle({ queryStringParameters: {}, headers: {} }, sFake, Date.parse('2027-06-14T12:30:00Z'))).tradingDate, '2027-06-14');
+});
+
 test('page: free view shows dated, explained ranks #11–20 and a lock over #1–10', () => {
   const html = R.render({ ...fn.shape(doc(), false), days: ['2026-11-27', '2026-11-30'] });
   assert.ok(balanced(html));

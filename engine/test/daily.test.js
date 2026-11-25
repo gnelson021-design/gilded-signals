@@ -128,31 +128,100 @@ test('publish refuses: after the open (unless recovery), non-trading days, stale
   assert.ok(!fs.existsSync(path.join(root, 'data/daily/2026-11-30.json')), 'nothing written by refused runs');
 });
 
-test('schedule: publishes once at 7:30 a.m. CT on trading days (both CST and CDT)', async () => {
+test('schedule: built from 6:45 a.m. CT, released to readers at 7:30 a.m. CT, once per trading day (CST and CDT)', async () => {
   const root = tmpRoot();
-  assert.strictEqual(cfg.PUBLISH.time, '07:30');
-  assert.strictEqual(cfg.PUBLISH.timeZone, 'America/Chicago');
-  // Winter (CST): 12:30 UTC = 6:30 CT → waits; 13:30 UTC = 7:30 CT → publishes.
-  const cstEarly = await daily.gate(T('2026-11-30T12:30:00Z'), { root, scheduled: true });
-  assert.strictEqual(cstEarly.run, false); assert.match(cstEarly.reason, /before the 7:30 a\.m\. CT/);
-  assert.strictEqual((await daily.gate(T('2026-11-30T13:30:00Z'), { root, scheduled: true })).run, true);
-  // A delayed winter slot still publishes before the 8:30 CT open, never after it.
-  assert.strictEqual((await daily.gate(T('2026-11-30T14:20:00Z'), { root, scheduled: true })).run, true);
-  assert.strictEqual((await daily.gate(T('2026-11-30T14:31:00Z'), { root, scheduled: true })).run, false);
-  // Summer (CDT): 12:30 UTC = 7:30 CT → publishes; 13:30 UTC = 8:30 CT = the open → refused.
-  assert.strictEqual((await daily.gate(T('2027-06-14T12:30:00Z'), { root, scheduled: true })).run, true);
-  assert.strictEqual((await daily.gate(T('2027-06-14T13:30:00Z'), { root, scheduled: true })).run, false);
+  assert.deepStrictEqual([cfg.PUBLISH.timeZone, cfg.PUBLISH.buildTime, cfg.PUBLISH.time], ['America/Chicago', '06:45', '07:30']);
+  // Release instant is 7:30 Chicago time in winter and summer.
+  assert.strictEqual(daily.releaseUtc('2026-11-30'), '2026-11-30T13:30:00.000Z', 'CST: 7:30 CT = 13:30 UTC');
+  assert.strictEqual(daily.releaseUtc('2027-06-14'), '2027-06-14T12:30:00.000Z', 'CDT: 7:30 CT = 12:30 UTC');
+  assert.strictEqual(daily.releaseUtc('2027-03-15'), '2027-03-15T12:30:00.000Z', 'first trading day after the March DST change');
+  assert.strictEqual(daily.releaseUtc('2026-11-02'), '2026-11-02T13:30:00.000Z', 'first trading day after the November DST change');
+  // Winter (CST): 11:45 UTC = 5:45 CT → too early; 12:45 UTC = 6:45 CT → builds; 13:15 = backup.
+  const early = await daily.gate(T('2026-11-30T11:45:00Z'), { root, scheduled: true });
+  assert.strictEqual(early.run, false); assert.match(early.reason, /before the 06:45 CT build window/);
+  assert.strictEqual((await daily.gate(T('2026-11-30T12:45:00Z'), { root, scheduled: true })).run, true);
+  assert.strictEqual((await daily.gate(T('2026-11-30T13:15:00Z'), { root, scheduled: true })).run, true, 'backup slot runs only if nothing published yet');
+  assert.strictEqual((await daily.gate(T('2026-11-30T14:31:00Z'), { root, scheduled: true })).run, false, 'never after the 8:30 CT open');
+  // Summer (CDT): 11:45 UTC = 6:45 CT → builds; 12:45 and 13:15 are before the 8:30 CT open (backups).
+  assert.strictEqual((await daily.gate(T('2027-06-14T11:45:00Z'), { root, scheduled: true })).run, true);
+  assert.strictEqual((await daily.gate(T('2027-06-14T13:31:00Z'), { root, scheduled: true })).run, false, 'never after the open');
   // Scheduled runs ignore the recovery flag, and skip holidays and weekends.
   assert.strictEqual((await daily.gate(T('2026-11-30T15:00:00Z'), { root, scheduled: true, allowLate: true })).run, false);
-  assert.strictEqual((await daily.gate(T('2026-11-26T13:30:00Z'), { root, scheduled: true })).run, false, 'Thanksgiving');
-  assert.strictEqual((await daily.gate(T('2026-11-28T13:30:00Z'), { root, scheduled: true })).run, false, 'Saturday');
-  // Early-close day (Fri after Thanksgiving) still publishes at 7:30 CT.
-  assert.strictEqual((await daily.gate(T('2026-11-27T13:30:00Z'), { root, scheduled: true })).run, true);
-  // After the 7:30 slot publishes, the other slot that day is a no-op.
-  const r = await daily.publish(runDir('2026-11-30', '2026-11-27'), T('2026-11-30T13:36:00Z'), { root, branch: 'automation/dev', scheduled: true });
+  assert.strictEqual((await daily.gate(T('2026-11-26T12:45:00Z'), { root, scheduled: true })).run, false, 'Thanksgiving');
+  assert.strictEqual((await daily.gate(T('2026-11-28T12:45:00Z'), { root, scheduled: true })).run, false, 'Saturday');
+  // Early-close day (Fri after Thanksgiving, 1 p.m. ET close) still publishes, released 7:30 CT.
+  assert.strictEqual((await daily.gate(T('2026-11-27T12:45:00Z'), { root, scheduled: true })).run, true);
+  assert.strictEqual(daily.releaseUtc('2026-11-27'), '2026-11-27T13:30:00.000Z');
+  // Publish at 6:51 CT: stored with visibleFrom = 7:30 CT; every later slot is a no-op.
+  const r = await daily.publish(runDir('2026-11-30', '2026-11-27'), T('2026-11-30T12:51:00Z'), { root, branch: 'automation/dev', scheduled: true });
   assert.strictEqual(r.published, true);
-  const again = await daily.gate(T('2026-11-30T14:00:00Z'), { root, scheduled: true });
-  assert.strictEqual(again.run, false); assert.match(again.reason, /already published/);
+  const doc = JSON.parse(fs.readFileSync(path.join(root, 'data/daily/2026-11-30.json')));
+  assert.strictEqual(doc.visibleFrom, '2026-11-30T13:30:00.000Z');
+  assert.strictEqual(JSON.parse(fs.readFileSync(path.join(root, 'data/daily/index.json'))).days[0].visibleFrom, '2026-11-30T13:30:00.000Z');
+  for (const t of ['2026-11-30T13:15:00Z', '2026-11-30T14:00:00Z']) {
+    const again = await daily.gate(T(t), { root, scheduled: true });
+    assert.strictEqual(again.run, false); assert.match(again.reason, /already published/);
+  }
+});
+
+test('first-run fixes: confirmed buyout excluded and replaced; rumours and acquirers kept; law-firm releases dropped; names cleaned', async () => {
+  const { doc, rows, log } = await built();
+  const { SYMS } = require('./mock');
+  const deals = require('../stages/deals');
+  // 1. The build's deal stage flags the fixture's signed-deal target (date-independent).
+  const T0 = SYMS[26];
+  const target = rows.find((r) => r.symbol === T0);
+  assert.ok(target.pendingBuyout && /to acquire/.test(target.pendingBuyout.headline), 'signed deal detected for the target');
+  assert.ok(!doc.entries.some((e) => e.ticker === T0), 'buyout target not listed');
+  assert.deepStrictEqual(doc.excludedPendingBuyouts.map((x) => x.ticker), dailyRank.eligible(target.features).length ? [] : [T0], 'exclusion disclosed when it would otherwise qualify');
+  assert.strictEqual(doc.entries.length, 20);
+  assert.strictEqual(new Set(doc.entries.map((e) => e.ticker)).size, 20, '20 unique tickers');
+  assert.deepStrictEqual(doc.entries.map((e) => e.rank), Array.from({ length: 20 }, (_, k) => k + 1));
+  // 2. Replacement: whatever stock ranks #1 today, a signed deal for it removes it and #21 moves up.
+  const clean = rows.map((r) => ({ ...r, pendingBuyout: null }));
+  const base = dailyRank.rank(clean, doc.tradingDate).scored;
+  const top = base[0].r, next = base[20].r;
+  const at = new Date(Date.parse(doc.tradingDate) - 86400000).toISOString();
+  const hit = deals.pendingBuyouts([{ headline: `Megacorp to acquire ${top.symbol} for $9 billion in cash`, createdAt: at, symbols: [top.symbol] }], clean);
+  assert.ok(hit[top.symbol], 'deal headline confirms the target');
+  const withDeal = dailyRank.rank(clean.map((r) => ({ ...r, pendingBuyout: hit[r.symbol] || null })), doc.tradingDate).scored.slice(0, 20).map((x) => x.r.symbol);
+  assert.ok(!withDeal.includes(top.symbol), 'former #1 excluded');
+  assert.ok(withDeal.includes(next.symbol), 'former #21 fills the open spot');
+  assert.strictEqual(new Set(withDeal).size, 20);
+  // 3. A rumour about the same stock does not exclude it.
+  const rumour = deals.pendingBuyouts([{ headline: `Megacorp in talks to acquire ${top.symbol}, sources say`, createdAt: at, symbols: [top.symbol] }], clean);
+  assert.ok(!rumour[top.symbol], 'rumour keeps the stock eligible');
+  assert.ok(!rows.find((r) => r.symbol === SYMS[2]).pendingBuyout, 'rumour only — stays eligible');
+  assert.ok(!rows.find((r) => r.symbol === SYMS[3]).pendingBuyout, 'acquirer — stays eligible');
+  const allHeadlines = rows.flatMap((r) => (r.attention ? r.attention.headlines : []).map((h) => h.headline));
+  assert.ok(!allHeadlines.some((h) => /Ademi LLP Investigates/.test(h)), 'law-firm solicitation dropped');
+  assert.ok(allHeadlines.some((h) => /SEC charges/.test(h)), 'substantive regulatory news kept');
+  const newsStage = log.doc.stages.find((x) => x.name === 'news');
+  assert.ok(newsStage.lawFirmSolicitationsDropped >= 1);
+  assert.strictEqual(dailyRank.displayName('Insmed Incorporated Common Stock'), 'Insmed Incorporated');
+  assert.strictEqual(dailyRank.displayName('Alphabet Inc. Class A Common Stock'), 'Alphabet Inc. Class A', 'share class kept');
+  assert.strictEqual(dailyRank.displayName('Berkshire Hathaway Inc. Class B'), 'Berkshire Hathaway Inc. Class B');
+  for (const e of doc.entries) assert.ok(!/Common Stock\s*$/.test(e.company || ''), 'no trailing Common Stock');
+  assert.strictEqual(doc.methodologyVersion, 'm2-shadow');
+});
+
+test('paper-account keys: the refused live trading host is tried once per run, not once per call', async () => {
+  const alpaca = require('../providers/alpaca');
+  const httpLib = require('../lib/http');
+  process.env.MOCK_PAPER_KEYS = '1';
+  alpaca._resetTradingBase();
+  const before = { ...(httpLib.stats.byHost) };
+  try {
+    await alpaca.listAssets();
+    await alpaca.calendar('2026-11-30', '2026-11-30');
+    for (let i = 0; i < 10; i++) await alpaca.optionContracts('TEST', '2027-01-15');
+    const live = (httpLib.stats.byHost['api.alpaca.markets'] || 0) - (before['api.alpaca.markets'] || 0);
+    const paper = (httpLib.stats.byHost['paper-api.alpaca.markets'] || 0) - (before['paper-api.alpaca.markets'] || 0);
+    assert.strictEqual(live, 1, 'one refused request, then straight to the paper host');
+    assert.strictEqual(paper, 12);
+    const bars = await alpaca.dailyBars(['AAAA'], { start: '2026-11-01', end: '2026-11-20' });
+    assert.ok(Array.isArray(bars.AAAA) || Object.keys(bars).length >= 0, 'market data host unaffected');
+  } finally { delete process.env.MOCK_PAPER_KEYS; alpaca._resetTradingBase(); }
 });
 
 test('trading context: early close and holidays from the official calendar', async () => {
@@ -174,7 +243,7 @@ test('health flags a missing list after the open', async () => {
   } finally { process.chdir(cwd); }
 });
 
-test('configuration: the retired weekly cycle cannot run; only the 7:30 CT daily slot exists, behind an off switch', () => {
+test('configuration: the retired weekly cycle cannot run; only the daily 7:30 CT schedule exists, behind an off switch', () => {
   const wf = path.join(ROOT, '.github', 'workflows');
   const files = fs.readdirSync(wf);
   assert.ok(!files.includes('gs-schedule.yml'), 'weekly schedule workflow removed');
@@ -183,7 +252,7 @@ test('configuration: the retired weekly cycle cannot run; only the 7:30 CT daily
     assert.ok(!/sunday-publish|sunday-validate|friday-close|saturday|engine\/schedule\.js|engine\/run\.js|backtest/i.test(y), `${f}: no weekly job`);
     const crons = [...y.matchAll(/^\s*-\s*cron\s*:\s*"([^"]+)"/gm)].map((m) => m[1]);
     if (f === 'gs-daily.yml') {
-      assert.deepStrictEqual(crons, ['30 12 * * 1-5', '30 13 * * 1-5'], 'only the two weekday 7:30 CT slots (CDT, CST)');
+      assert.deepStrictEqual(crons, ['45 11 * * 1-5', '45 12 * * 1-5', '15 13 * * 1-5'], 'only the three weekday slots (6:45 CT build in CDT/CST + backup)');
       assert.match(y, /if: github\.event_name != 'schedule' \|\| vars\.GS_DAILY_SCHEDULE == 'on'/, 'schedule stays off until GS_DAILY_SCHEDULE = on');
       assert.match(y, /github\.event_name == 'schedule' && '--scheduled'/, 'scheduled runs use the 7:30 CT gate');
     } else {

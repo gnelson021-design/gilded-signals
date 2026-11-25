@@ -17,6 +17,20 @@ function tagHeadline(text) {
   return { pos, neg };
 }
 
+// Shareholder-solicitation press releases from plaintiff law firms
+// ("Ademi LLP Investigates Proposed Acquisition of Insmed", "SHAREHOLDER
+// ALERT: Rosen Law Firm reminds investors of class action deadline"). They are
+// advertising, not news, so they are dropped before counting, tagging and
+// display. Substantive legal and regulatory news (an SEC charge, a court
+// ruling, an FTC suit, a DOJ probe) has no law-firm sponsor and is kept.
+const LAW_FIRM = /\b(LLP|L\.L\.P\.|P\.C\.|PLLC|Law Firm|Law Offices?|Law Group|Attorneys? at Law|Rosen Law|Pomerantz|Levi & Korsinsky|Bragar Eagel|Kahn Swick|Halper Sadeh|Ademi|Bronstein, Gewirtz|Faruqi|Glancy Prongay|Robbins Geller|Schall Law|Gross Law|Kirby McInerney|Johnson Fistel|Monteverde|Rigrodsky|Wohl & Fruchter|Block & Leviton|Bernstein Liebhard|Kessler Topaz|Portnoy Law|Howard G\. Smith|Frank R\. Cruz|Holzer & Holzer|Hagens Berman|Brodsky & Smith|Rowley Law|Lowey Dannenberg|Edelson Lechtzin|Scott\+Scott|Bernstein Litowitz|Labaton|Saxena White|Weiss Law|Zhang Investor Law|DJS Law|Lieff Cabraser|Pomerantz Law)\b/i;
+const SOLICIT = /\b(investigat\w*|class action|lead plaintiff|deadline|reminds?|encourag\w*|urg\w*|alert|on behalf of|have you (lost|suffered)|losses|shareholders? (rights|of)|investors? (who|in|of))\b/i;
+const ALWAYS = /\b(shareholder|investor|stockholder)s?\s+alert\b|\blead[- ]plaintiff deadline\b|\bclass action (lawsuit )?(filed|reminder)\b.*\b(investors|shareholders)\b/i;
+function isLawFirmSolicitation(headline) {
+  const h = String(headline || '');
+  return ALWAYS.test(h) || (LAW_FIRM.test(h) && SOLICIT.test(h));
+}
+
 // articles: [{headline, createdAt, symbols[], source, url}]
 // Returns (recent = last cfg.news.recentDays days) { SYM: { recentCount, newsPrior, surge, tagsPos, tagsNeg, headlines[] } }
 function attention(articles, universeSymbols, now = Date.now()) {
@@ -28,6 +42,7 @@ function attention(articles, universeSymbols, now = Date.now()) {
   for (const a of articles) {
     if (!a || seen.has(a.id)) continue;
     seen.add(a.id);
+    if (isLawFirmSolicitation(a.headline)) continue;
     const at = new Date(a.createdAt).getTime();
     if (!isFinite(at)) continue;
     // Articles tagging many tickers (market wraps) carry less signal per name.
@@ -60,4 +75,4 @@ function attention(articles, universeSymbols, now = Date.now()) {
   return out;
 }
 
-module.exports = { attention, tagHeadline };
+module.exports = { attention, tagHeadline, isLawFirmSolicitation };

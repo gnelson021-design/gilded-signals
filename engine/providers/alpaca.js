@@ -16,14 +16,21 @@ function headers() {
   return { 'APCA-API-KEY-ID': key, 'APCA-API-SECRET-KEY': secret };
 }
 
-// Reference endpoints (assets, calendar) live on the trading host, which
-// differs for live vs paper keys. Try the configured base, then both.
+// Reference endpoints (assets, calendar, option contracts) live on the trading
+// host, which differs for live vs paper keys. The first call finds the host
+// that accepts these keys (paper keys are refused by the live host with
+// 401/403) and every later call in the run goes straight to it, so a paper
+// key costs one refused request per run instead of one per call.
+// ALPACA_TRADING_BASE, if set, skips the probe entirely.
+let resolvedBase = null;
 async function trading(path, opts) {
-  const bases = process.env.ALPACA_TRADING_BASE ? [process.env.ALPACA_TRADING_BASE] : TRADING_BASES;
+  const bases = process.env.ALPACA_TRADING_BASE ? [process.env.ALPACA_TRADING_BASE] : resolvedBase ? [resolvedBase] : TRADING_BASES;
   let lastErr;
   for (const base of bases) {
     try {
-      return await getJSON(base + path, { headers: headers(), retries: 1, ...opts });
+      const res = await getJSON(base + path, { headers: headers(), retries: 1, ...opts });
+      if (!process.env.ALPACA_TRADING_BASE) resolvedBase = base;
+      return res;
     } catch (e) {
       lastErr = e;
       if (e.status && e.status !== 401 && e.status !== 403) throw e;
@@ -31,6 +38,7 @@ async function trading(path, opts) {
   }
   throw lastErr;
 }
+function _resetTradingBase() { resolvedBase = null; }
 
 async function listAssets(opts) {
   return trading('/v2/assets?status=active&asset_class=us_equity', opts);
@@ -130,4 +138,4 @@ async function optionContracts(underlying, expLte, { maxPages = 10, fetchImpl } 
   return out;
 }
 
-module.exports = { listAssets, calendar, dailyBars, news, mostActives, optionSnapshots, optionContracts };
+module.exports = { listAssets, calendar, dailyBars, news, mostActives, optionSnapshots, optionContracts, _resetTradingBase };

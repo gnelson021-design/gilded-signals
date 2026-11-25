@@ -48,6 +48,20 @@ const NEWS = Array.from({ length: 140 }, (_, i) => {
   const h = i % 7 === 0 ? `${s} upgraded to buy at Example Securities` : i % 11 === 0 ? `${s} shares fall after analyst downgrade` : `${s} shares active in sector trading`;
   return { id: i, headline: h, created_at: new Date(NOW - (i % 20) * DAY / 2).toISOString(), symbols: [s], source: 'benzinga', url: `https://example.com/${i}` };
 });
+// Deal and legal-noise fixtures (first-run fixes):
+//   SYMS[26] confirmed target of a signed deal → excluded (ranks in the top 20 otherwise)
+//   SYMS[2] sale rumour only                  → stays eligible
+//   SYMS[3] is the ACQUIRER                   → stays eligible
+//   SYMS[4] law-firm "investigates" release   → dropped from news
+//   SYMS[5] SEC charge (substantive)          → kept
+const DEAL_NEWS = [
+  { id: 9001, headline: `Megacorp to acquire ${SYMS[26]} Corp for $5 billion in cash`, symbols: [SYMS[26]], h: 30 },
+  { id: 9002, headline: `${SYMS[2]} Corp exploring a sale, sources say`, symbols: [SYMS[2]], h: 20 },
+  { id: 9003, headline: `${SYMS[3]} Corp to acquire Tiny Biotech for $200 million`, symbols: [SYMS[3]], h: 10 },
+  { id: 9004, headline: `Ademi LLP Investigates Whether ${SYMS[4]} Corp Board Breached Duties to Shareholders`, symbols: [SYMS[4]], h: 5 },
+  { id: 9005, headline: `SEC charges ${SYMS[5]} Corp former executive over disclosures`, symbols: [SYMS[5]], h: 6 },
+].map((a) => ({ id: a.id, headline: a.headline, created_at: new Date(NOW - a.h * 3600000).toISOString(), symbols: a.symbols, source: 'benzinga', url: `https://example.com/d${a.id}` }));
+NEWS.unshift(...DEAL_NEWS);
 
 function respond(obj) { return { ok: true, status: 200, headers: { get: () => null }, json: async () => obj }; }
 function sessionsBetween(start, end) {
@@ -63,6 +77,8 @@ function sessionsBetween(start, end) {
 global.fetch = async (url, opts) => {
   const u = new URL(url);
   if (u.host.endsWith('alpaca.markets')) assert.strictEqual(opts.headers['APCA-API-KEY-ID'], process.env.ALPACA_API_KEY);
+  // Paper-account keys: the live trading host refuses them.
+  if (u.host === 'api.alpaca.markets' && process.env.MOCK_PAPER_KEYS === '1') return { ok: false, status: 403, headers: { get: () => null }, json: async () => ({ message: 'forbidden' }) };
   if (u.pathname === '/v2/assets') return respond(ASSETS);
   if (u.pathname === '/v2/calendar') return respond(sessionsBetween(u.searchParams.get('start'), u.searchParams.get('end')));
   if (u.pathname === '/v2/stocks/bars') {

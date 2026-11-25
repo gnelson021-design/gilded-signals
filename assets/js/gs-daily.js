@@ -26,6 +26,9 @@
   function etTime(iso) {
     try { return new Date(iso).toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' }) + ' ET'; } catch (e) { return ''; }
   }
+  // When readers could first see the list: its 7:30 a.m. CT release, or the
+  // actual publish time if a recovery publish came later.
+  function relAt(d) { if (!d) return null; var v = d.visibleFrom, p = d.publishedAt; if (!v) return p || null; if (!p) return v; return Date.parse(p) > Date.parse(v) ? p : v; }
   function etDateOf(iso) { try { return new Date(iso).toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); } catch (e) { return ''; } }
   function pct(v) { if (v == null || isNaN(v)) return '&mdash;'; return (v > 0 ? '+' : v < 0 ? '&minus;' : '') + Math.abs(v).toFixed(1) + '%'; }
   function num(v, dp) { return v == null || isNaN(v) ? '&mdash;' : Number(v).toFixed(dp == null ? 1 : dp); }
@@ -61,7 +64,7 @@
       + '<div class="gd-meta" style="margin-top:6px;">Prices through the ' + esc(shortDate(c.pricesThroughSession)) + ' close (' + esc(c.pricesThroughCloseEt || '') + ' ET) &middot; News through ' + esc(shortDate(etDateOf(c.newsThrough))) + ', ' + esc(etTime(c.newsThrough)) + ' &middot; Ranking fixed for the day</div>'
       + (opts ? '<div style="margin-top:12px;"><label class="gd-meta" for="gd-date">Archive&nbsp;</label><select id="gd-date" class="gd-select" onchange="GSDaily.load(this.value)">' + opts + '</select></div>' : '')
       + '<div class="gb-rule"></div>'
-      + '<div class="gd-how"><b>How the list is built.</b> Each U.S. trading day at 7:30 a.m. CT, ' + esc(d.universeSize) + ' liquid U.S. stocks are screened for bullish momentum (price above its rising 20-day average, a positive 5-day return and RSI between 50 and 85). '
+      + '<div class="gd-how"><b>How the list is built.</b> Each U.S. trading day before the open (released at 7:30 a.m. CT), ' + esc(d.universeSize) + ' liquid U.S. stocks are screened for bullish momentum (price above its rising 20-day average, a positive 5-day return and RSI between 50 and 85). '
       + esc(d.eligibleCount) + ' qualified today, and the strongest 20 are ranked on: ' + weightsLine() + '. Every stock shows what drove its rank, its dated headlines, and any confirmed catalyst &mdash; or says plainly that none was found. '
       + 'Ranks #11&ndash;20 are free. Subscribers see the full list. Methodology ' + esc(d.methodologyVersion) + '.</div>';
   }
@@ -139,12 +142,12 @@
     var top10Html = top10.map(function (e) { return e.locked ? lockedCard(e.rank) : card(e); }).join('');
     var lockedWrap = top10.length ? '<div class="gb-tier-head"><div class="gb-tier-eyebrow">Ranks 1&ndash;10</div><h2 class="gb-tier-title">The Strongest Ten</h2><p class="gb-tier-sub">The highest momentum scores of the day.' + (locked.length ? ' Available to subscribers.' : '') + '</p></div>'
       + '<div class="gb-locked-wrap' + (locked.length ? '' : ' unlocked') + '"><div class="gb-locked-inner">' + top10Html + '</div>'
-      + (locked.length ? '<div class="gb-lock-overlay"><div class="gb-lock-card"><div class="gb-lock-icon">&#128274;</div><div class="gb-lock-title">Subscribers Only</div><div class="gb-lock-sub">Unlock ranks #1&ndash;10 with full data, rank drivers, headlines and catalysts &mdash; plus the market scanner, stock comparisons and market news.</div>'
+      + (locked.length ? '<div class="gb-lock-overlay"><div class="gb-lock-card"><div class="gb-lock-icon">&#128274;</div><div class="gb-lock-title">Subscribers Only</div><div class="gb-lock-sub">Unlock ranks #1&ndash;10 with full data, rank drivers, headlines and catalysts &mdash; plus unlimited scanner comparisons.</div>'
         + '<button class="gb-lock-cta" onclick="if(typeof gsBriefUnlock===\'function\'){gsBriefUnlock();}else{showPage(\'pricing\');}">Unlock</button></div></div>' : '')
       + '</div>' : '';
     var restHtml = rest.length ? '<div class="gb-tier-head"><div class="gb-tier-eyebrow">Ranks 11&ndash;20 &middot; Free</div><h2 class="gb-tier-title">Also Showing Momentum</h2><p class="gb-tier-sub">Full data and explanations, open to everyone.</p></div>' + rest.map(card).join('') : '';
     return STYLE + header(d) + lockedWrap + restHtml
-      + '<p class="gb-scorefoot" style="font-size:.72rem;color:#7a7770;margin-top:22px;">' + esc(d.disclosure || '') + ' Published ' + esc(d.publishedAt ? shortDate(etDateOf(d.publishedAt)) + ', ' + etTime(d.publishedAt) : '') + '. Sources: ' + esc((d.sources || []).join('; ')) + '.</p>';
+      + '<p class="gb-scorefoot" style="font-size:.72rem;color:#7a7770;margin-top:22px;">' + esc(d.disclosure || '') + ' Published ' + esc(relAt(d) ? shortDate(etDateOf(relAt(d))) + ', ' + etTime(relAt(d)) : '') + '. Sources: ' + esc((d.sources || []).join('; ')) + '.</p>';
   }
 
   function homeCard(d) {

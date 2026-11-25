@@ -1,4 +1,4 @@
-# SCORING_METHODOLOGY.md — Daily Top 20 (methodology `m1-shadow`)
+# SCORING_METHODOLOGY.md — Daily Top 20 (methodology `m2-shadow`)
 
 Every number is produced by versioned, deterministic code in `engine/` from verified market data. Explanations
 are generated from those same numbers. No AI writes or alters any figure. A change to any rule or weight bumps
@@ -21,6 +21,20 @@ SPACs, stocks with under 200 daily bars, and stocks that did not trade on the cu
 
 ## Bullish-momentum eligibility (all required)
 Close above the 20-day EMA · 20-day EMA above the 50-day EMA · positive 5-day return · RSI(14) between 50 and 85.
+
+**Confirmed, pending buyouts are not eligible (m2).** If a dated headline in the 21-day news window states a signed
+deal in which the company is the *target* ("X to acquire Y", "Y agrees to be acquired", "definitive agreement to
+acquire Y", "X completes acquisition of Y"), the stock is excluded — its price tracks the deal terms, not momentum —
+and the next eligible stock fills the spot. Rumours and early reports ("in talks", "exploring a sale", "reportedly",
+"weighs an offer", "proposed") never exclude; acquirers are never excluded; a later "terminated / called off /
+blocked" headline restores eligibility. Each published list names any company excluded this way, with the headline,
+date and source. Limitation: a deal announced more than 21 days earlier is outside the news window.
+
+## News hygiene (m2)
+Shareholder-solicitation press releases from plaintiff law firms ("… LLP Investigates …", "Shareholder Alert",
+class-action deadline reminders) are dropped before news is counted, tagged or shown. Substantive legal and
+regulatory news without a law-firm sponsor (SEC charges, court rulings, FTC/DOJ actions) is kept.
+Display names drop only a trailing "Common Stock" label; tickers and share classes are unchanged.
 
 ## Ranking (0–100), weights
 | Component | Weight | Measure |
