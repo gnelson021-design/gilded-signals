@@ -52,6 +52,16 @@ global.fetch = async (url, opts) => {
     assert.strictEqual(opts.headers['APCA-API-KEY-ID'], process.env.ALPACA_API_KEY);
   }
   if (u.pathname === '/v2/assets') return respond(ASSETS);
+  if (u.pathname === '/v2/calendar') {
+    // Weekdays, with Thanksgiving closed and Black Friday closing at 13:00 ET.
+    const out = [];
+    for (let t = Date.parse(u.searchParams.get('start') + 'T12:00:00Z'); t <= Date.parse(u.searchParams.get('end') + 'T12:00:00Z'); t += DAY) {
+      const d = new Date(t); const ymd = d.toISOString().slice(0, 10); const dow = d.getUTCDay();
+      if (dow === 0 || dow === 6 || ymd === '2026-11-26') continue;
+      out.push({ date: ymd, open: '09:30', close: ymd === '2026-11-27' ? '13:00' : '16:00' });
+    }
+    return respond(out);
+  }
   if (u.pathname === '/v2/stocks/bars') {
     const start = Date.parse(u.searchParams.get('start'));
     const bars = {};

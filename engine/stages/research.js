@@ -15,10 +15,14 @@ const DAY = 86400000;
 const ET_DATE = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' });
 const ET_DOW = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short' });
 
-// Monday of the NEXT trading week (ET). Sat → +2, Sun → +1, Mon–Fri → next Mon.
+// Monday of the week being researched (ET). Sat → +2, Sun → +1, Tue–Fri → next
+// Mon. Monday BEFORE the 09:30 ET open counts as that same Monday, so a
+// catch-up publish early Monday still targets the week about to open.
 function nextWeekOf(now) {
   const dow = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[ET_DOW.format(new Date(now))];
-  const add = dow === 0 ? 1 : 8 - dow;
+  const et = require('../lib/clock').parts(now, 'America/New_York');
+  let add = dow === 0 ? 1 : 8 - dow;
+  if (dow === 1 && et.minutes < 9 * 60 + 30) add = 0;
   const base = Date.parse(ET_DATE.format(new Date(now)) + 'T12:00:00Z');
   return new Date(base + add * DAY).toISOString().slice(0, 10);
 }

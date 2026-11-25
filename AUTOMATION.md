@@ -167,6 +167,10 @@ Phase status log:
 - Build 3 (2026-11-25): self-updating Briefings + Results pages, DORMANT until Build 4 writes
   `data/weeks.json`. With no manifest the site renders exactly as today (verified in a headless browser).
 
+- Build 4 (2026-11-25): weekly schedule `gs-schedule.yml` + `engine/schedule.js` (gate, publish, freeze, health,
+  alerts), official trading calendar, CT/DST dual slots, catch-ups, write-once, production approval gate.
+  See DEPLOYMENT.md (config) and RECOVERY.md (failure handling). Runs in SHADOW (publishes to automation/dev).
+
 ### Build 3 — automated pages
 | Piece | Role |
 |---|---|
