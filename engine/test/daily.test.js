@@ -128,6 +128,33 @@ test('publish refuses: after the open (unless recovery), non-trading days, stale
   assert.ok(!fs.existsSync(path.join(root, 'data/daily/2026-11-30.json')), 'nothing written by refused runs');
 });
 
+test('schedule: publishes once at 7:30 a.m. CT on trading days (both CST and CDT)', async () => {
+  const root = tmpRoot();
+  assert.strictEqual(cfg.PUBLISH.time, '07:30');
+  assert.strictEqual(cfg.PUBLISH.timeZone, 'America/Chicago');
+  // Winter (CST): 12:30 UTC = 6:30 CT → waits; 13:30 UTC = 7:30 CT → publishes.
+  const cstEarly = await daily.gate(T('2026-11-30T12:30:00Z'), { root, scheduled: true });
+  assert.strictEqual(cstEarly.run, false); assert.match(cstEarly.reason, /before the 7:30 a\.m\. CT/);
+  assert.strictEqual((await daily.gate(T('2026-11-30T13:30:00Z'), { root, scheduled: true })).run, true);
+  // A delayed winter slot still publishes before the 8:30 CT open, never after it.
+  assert.strictEqual((await daily.gate(T('2026-11-30T14:20:00Z'), { root, scheduled: true })).run, true);
+  assert.strictEqual((await daily.gate(T('2026-11-30T14:31:00Z'), { root, scheduled: true })).run, false);
+  // Summer (CDT): 12:30 UTC = 7:30 CT → publishes; 13:30 UTC = 8:30 CT = the open → refused.
+  assert.strictEqual((await daily.gate(T('2027-06-14T12:30:00Z'), { root, scheduled: true })).run, true);
+  assert.strictEqual((await daily.gate(T('2027-06-14T13:30:00Z'), { root, scheduled: true })).run, false);
+  // Scheduled runs ignore the recovery flag, and skip holidays and weekends.
+  assert.strictEqual((await daily.gate(T('2026-11-30T15:00:00Z'), { root, scheduled: true, allowLate: true })).run, false);
+  assert.strictEqual((await daily.gate(T('2026-11-26T13:30:00Z'), { root, scheduled: true })).run, false, 'Thanksgiving');
+  assert.strictEqual((await daily.gate(T('2026-11-28T13:30:00Z'), { root, scheduled: true })).run, false, 'Saturday');
+  // Early-close day (Fri after Thanksgiving) still publishes at 7:30 CT.
+  assert.strictEqual((await daily.gate(T('2026-11-27T13:30:00Z'), { root, scheduled: true })).run, true);
+  // After the 7:30 slot publishes, the other slot that day is a no-op.
+  const r = await daily.publish(runDir('2026-11-30', '2026-11-27'), T('2026-11-30T13:36:00Z'), { root, branch: 'automation/dev', scheduled: true });
+  assert.strictEqual(r.published, true);
+  const again = await daily.gate(T('2026-11-30T14:00:00Z'), { root, scheduled: true });
+  assert.strictEqual(again.run, false); assert.match(again.reason, /already published/);
+});
+
 test('trading context: early close and holidays from the official calendar', async () => {
   const fri = await daily.tradingContext(T('2026-11-27T12:00:00Z'));
   assert.strictEqual(fri.tradingDate, '2026-11-27');
@@ -147,14 +174,21 @@ test('health flags a missing list after the open', async () => {
   } finally { process.chdir(cwd); }
 });
 
-test('configuration: the retired weekly cycle cannot run', () => {
+test('configuration: the retired weekly cycle cannot run; only the 7:30 CT daily slot exists, behind an off switch', () => {
   const wf = path.join(ROOT, '.github', 'workflows');
   const files = fs.readdirSync(wf);
   assert.ok(!files.includes('gs-schedule.yml'), 'weekly schedule workflow removed');
   for (const f of files) {
     const y = fs.readFileSync(path.join(wf, f), 'utf8');
-    assert.ok(!/^\s*schedule\s*:/m.test(y) && !/^\s*-\s*cron\s*:/m.test(y), `${f}: no active cron schedule`);
     assert.ok(!/sunday-publish|sunday-validate|friday-close|saturday|engine\/schedule\.js|engine\/run\.js|backtest/i.test(y), `${f}: no weekly job`);
+    const crons = [...y.matchAll(/^\s*-\s*cron\s*:\s*"([^"]+)"/gm)].map((m) => m[1]);
+    if (f === 'gs-daily.yml') {
+      assert.deepStrictEqual(crons, ['30 12 * * 1-5', '30 13 * * 1-5'], 'only the two weekday 7:30 CT slots (CDT, CST)');
+      assert.match(y, /if: github\.event_name != 'schedule' \|\| vars\.GS_DAILY_SCHEDULE == 'on'/, 'schedule stays off until GS_DAILY_SCHEDULE = on');
+      assert.match(y, /github\.event_name == 'schedule' && '--scheduled'/, 'scheduled runs use the 7:30 CT gate');
+    } else {
+      assert.ok(!/^\s*schedule\s*:/m.test(y) && crons.length === 0, `${f}: no cron schedule`);
+    }
   }
   const toml = fs.readFileSync(path.join(ROOT, 'netlify.toml'), 'utf8');
   assert.ok(!/^\s*schedule\s*=/m.test(toml), 'no scheduled Netlify function (weekly trigger capture retired)');
@@ -163,4 +197,5 @@ test('configuration: the retired weekly cycle cannot run', () => {
   }
   const checklist = fs.readFileSync(path.join(ROOT, 'DEPLOYMENT.md'), 'utf8');
   assert.ok(!/git checkout automation\/dev -- \.github\/workflows\/gs-schedule\.yml/.test(checklist), 'checklist cannot re-activate the weekly workflow');
+  assert.match(checklist, /GS_DAILY_SCHEDULE/, 'checklist explains the daily off switch');
 });

@@ -359,7 +359,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="wbh-card" id="gs-home-daily-card">
           <div class="wbh-eyebrow">Daily Top 20</div>
           <h2 class="wbh-title">Today&rsquo;s <em>Momentum</em></h2>
-          <div class="wbh-dateline" id="gs-home-daily-date">Published each U.S. trading morning</div>
+          <div class="wbh-dateline" id="gs-home-daily-date">Published each U.S. trading day at 7:30 a.m. CT</div>
           <div class="wbh-rule"></div>
           <div class="wbh-lbl" id="gs-home-daily-label">Bullish momentum, ranked with the reasons why</div>
           <div id="gs-home-daily-list"></div>
@@ -414,7 +414,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="everything-card" onclick="showPage('scanner')"><div class="ec-icon">◎</div><div class="ec-title">Stock Scanner</div><p class="ec-desc">Search any ticker. Get RSI, volume, EMA, momentum, risk level, and signal strength in seconds.</p></div>
         <div class="everything-card" onclick="showNews('world')"><div class="ec-icon">◯</div><div class="ec-title">World News</div><p class="ec-desc">Geopolitical and macro events that move markets — filtered for relevance, not clicks.</p></div>
         <div class="everything-card" onclick="showBullishSignals()"><div class="ec-icon">▲</div><div class="ec-title">Watchlist Signals</div><p class="ec-desc">Bullish, Watch, and Neutral signal labels across tracked assets updated throughout the session.</p></div>
-        <div class="everything-card" onclick="showPage('daily')"><div class="ec-icon">✦</div><div class="ec-title">Daily Top 20</div><p class="ec-desc">Published each U.S. trading morning &mdash; the 20 strongest bullish-momentum stocks, with what drove each rank, dated headlines and confirmed catalysts. Ranks #11&ndash;20 free.</p></div>
+        <div class="everything-card" onclick="showPage('daily')"><div class="ec-icon">✦</div><div class="ec-title">Daily Top 20</div><p class="ec-desc">Published each U.S. trading day at 7:30 a.m. CT &mdash; the 20 strongest bullish-momentum stocks, with what drove each rank, dated headlines and confirmed catalysts. Ranks #11&ndash;20 free.</p></div>
         <div class="everything-card" onclick="showPage('results')"><div class="ec-icon">◆</div><div class="ec-title">Weekly Archive</div><p class="ec-desc">Every weekly briefing and graded scorecard from the retired weekly format, preserved unchanged &mdash; winning and losing weeks alike.</p></div>
         <div class="everything-card" onclick="showNews('market')"><div class="ec-icon">◫</div><div class="ec-title">Market News</div><p class="ec-desc">Stocks, earnings, Fed updates, analyst actions, and the biggest stories moving the market today.</p></div>
         <div class="everything-card" onclick="showNews('crypto')"><div class="ec-icon">₿</div><div class="ec-title">Crypto News</div><p class="ec-desc">Bitcoin, Ethereum, Solana, ETFs, regulation, and digital asset market updates.</p></div>
@@ -761,11 +761,11 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="plan-price"><sup>$</sup>0</div>
         <div class="plan-period">Forever free</div>
         <ul class="plan-features">
-          <li>5 free scanner searches</li>
-          <li>Daily market news</li>
+          <li>5 free scanner comparisons</li>
+          <li>Market-news headlines &amp; source links</li>
           <li>Daily Top 20 &mdash; ranks #11&ndash;20 with full data</li>
           <li>AI infrastructure news</li>
-          <li>World market news</li>
+          <li>World news</li>
           <li>Educational content &amp; glossary</li>
         </ul>
         <button class="btn-ghost" style="width:100%;" onclick="showPage('scanner')">Try Free</button>
@@ -776,13 +776,11 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="plan-period">per month · cancel anytime</div>
         <p style="font-size:0.72rem;color:var(--text-secondary);line-height:1.55;margin:0 0 1.5rem;">Built for investors who want deeper research, unlimited scanner access, and the full Daily Top 20 every trading morning.</p>
         <ul class="plan-features">
-          <li>Unlimited scanner searches</li>
-          <li>Full stock comparison tool</li>
+          <li>Unlimited scanner comparisons</li>
           <li>Full Daily Top 20 &mdash; ranks #1&ndash;20</li>
           <li>Rank drivers, dated headlines &amp; catalysts</li>
           <li>Weekly archive &amp; past scorecards</li>
           <li>Priority feature updates</li>
-          <li>Full news dashboard</li>
         </ul>
         <button class="btn-primary" style="width:100%;" onclick="gsGoToStripe()">Subscribe — $29.99/mo</button>
         <div class="plan-note">Stripe-powered · Secure checkout</div>
@@ -791,10 +789,9 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
     </div>
     <table class="compare-table">
       <tr><th>Feature</th><th>Free</th><th>Premium</th></tr>
-      <tr><td>Scanner Searches</td><td>5</td><td class="yes">Unlimited</td></tr>
+      <tr><td>Scanner Comparisons</td><td>5</td><td class="yes">Unlimited</td></tr>
       <tr><td>Daily Top 20</td><td>#11&ndash;20</td><td class="yes">All 20</td></tr>
-      <tr><td>Daily News</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-      <tr><td>Stock Comparison</td><td class="no">—</td><td class="yes">✓</td></tr>
+      <tr><td>Market &amp; World News Headlines</td><td class="yes">✓</td><td class="yes">✓</td></tr>
       <tr><td>Performance History</td><td class="no">—</td><td class="yes">✓</td></tr>
       <tr><td>New Features First</td><td class="no">—</td><td class="yes">✓</td></tr>
     </table>

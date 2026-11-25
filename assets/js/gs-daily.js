@@ -61,7 +61,7 @@
       + '<div class="gd-meta" style="margin-top:6px;">Prices through the ' + esc(shortDate(c.pricesThroughSession)) + ' close (' + esc(c.pricesThroughCloseEt || '') + ' ET) &middot; News through ' + esc(shortDate(etDateOf(c.newsThrough))) + ', ' + esc(etTime(c.newsThrough)) + ' &middot; Ranking fixed for the day</div>'
       + (opts ? '<div style="margin-top:12px;"><label class="gd-meta" for="gd-date">Archive&nbsp;</label><select id="gd-date" class="gd-select" onchange="GSDaily.load(this.value)">' + opts + '</select></div>' : '')
       + '<div class="gb-rule"></div>'
-      + '<div class="gd-how"><b>How the list is built.</b> Each U.S. trading morning, ' + esc(d.universeSize) + ' liquid U.S. stocks are screened for bullish momentum (price above its rising 20-day average, a positive 5-day return and RSI between 50 and 85). '
+      + '<div class="gd-how"><b>How the list is built.</b> Each U.S. trading day at 7:30 a.m. CT, ' + esc(d.universeSize) + ' liquid U.S. stocks are screened for bullish momentum (price above its rising 20-day average, a positive 5-day return and RSI between 50 and 85). '
       + esc(d.eligibleCount) + ' qualified today, and the strongest 20 are ranked on: ' + weightsLine() + '. Every stock shows what drove its rank, its dated headlines, and any confirmed catalyst &mdash; or says plainly that none was found. '
       + 'Ranks #11&ndash;20 are free. Subscribers see the full list. Methodology ' + esc(d.methodologyVersion) + '.</div>';
   }
@@ -130,7 +130,7 @@
   function render(d) {
     if (!d || !d.available) {
       return STYLE + '<div class="gb-eyebrow">Daily Top 20 &middot; Bullish Momentum Research</div><h1 class="gb-title">Today&rsquo;s <em>Momentum</em></h1>'
-        + '<div class="gb-rule"></div><p class="gb-lead">The Daily Top 20 publishes each U.S. trading morning. ' + (d && d.error ? esc(d.error) + '.' : 'No list has been published yet.') + '</p>';
+        + '<div class="gb-rule"></div><p class="gb-lead">The Daily Top 20 publishes each U.S. trading day at 7:30 a.m. CT, before the open. ' + (d && d.error ? esc(d.error) + '.' : 'No list has been published yet.') + '</p>';
     }
     var entries = d.entries || [];
     var locked = entries.filter(function (e) { return e.locked; });

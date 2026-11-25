@@ -3,7 +3,8 @@
 //
 //   node engine/daily.js build --out DIR [--max-universe N]   build today's list (writes nothing public)
 //   node engine/daily.js replay DIR                           re-rank saved inputs; hash must match
-//   node engine/daily.js gate [--allow-late]                  should a publish run now? (run=true|false)
+//   node engine/daily.js gate [--allow-late|--scheduled]      should a publish run now? (run=true|false)
+//                                                            --scheduled: only at/after 07:30 CT, never after the open
 //   node engine/daily.js publish --run DIR [--allow-late]     write-once data/daily/{date}.json + index
 //   node engine/daily.js health                               data sources + missed-list check
 //   node engine/daily.js alert "<subject>" "<text>"
@@ -186,6 +187,12 @@ async function gate(now, opts = {}) {
   if (loadIndex(opts).days.some((d) => d.tradingDate === today)) return { run: false, reason: `list for ${today} already published (fixed for the day)` };
   const openUtc = Date.parse(clock.zonedToUtc(today, s.open));
   if (now >= Date.parse(s.closeUtc)) return { run: false, reason: 'session already closed' };
+  if (opts.scheduled) {
+    const [ph, pm] = cfg.PUBLISH.time.split(':').map(Number);
+    const ct = clock.parts(now, cfg.PUBLISH.timeZone);
+    if (ct.minutes < ph * 60 + pm) return { run: false, reason: `before the ${cfg.PUBLISH.label} publication time — the later slot publishes` };
+    if (now >= openUtc) return { run: false, reason: 'market already open — a scheduled run never publishes after the open' };
+  }
   if (now >= openUtc && !opts.allowLate) return { run: false, reason: 'market already open — the morning list must publish before the open (use --allow-late for a recovery publish built from the same prior-close data)' };
   return { run: true, reason: now >= openUtc ? 'late recovery publish (prior-close data)' : 'pre-open publish window' };
 }
@@ -261,7 +268,8 @@ async function main() {
   const arg = (k) => { const i = rest.indexOf(k); return i >= 0 ? rest[i + 1] : null; };
   const now = process.env.GS_NOW ? Date.parse(process.env.GS_NOW) : Date.now();
   const branch = process.env.GS_PUBLISH_BRANCH || 'automation/dev';
-  const allowLate = rest.includes('--allow-late');
+  const scheduled = rest.includes('--scheduled');
+  const allowLate = rest.includes('--allow-late') && !scheduled;
   const runUrl = process.env.GITHUB_RUN_URL || '';
   try {
     if (cmd === 'build') {
@@ -293,11 +301,11 @@ async function main() {
       console.log(`replay hash ${h} · original ${prior.listHash} · ${h === prior.listHash ? 'MATCH' : 'MISMATCH'}`);
       process.exit(h === prior.listHash ? 0 : 2);
     } else if (cmd === 'gate') {
-      const g = await gate(now, { allowLate });
+      const g = await gate(now, { allowLate, scheduled });
       output('run', g.run ? 'true' : 'false');
       console.log(`gate: ${g.reason}`);
     } else if (cmd === 'publish') {
-      const r = await publish(arg('--run'), now, { branch, allowLate });
+      const r = await publish(arg('--run'), now, { branch, allowLate, scheduled });
       console.log(JSON.stringify(r));
       output('files', r.published ? r.files.join(' ') : '');
       output('tradingDate', r.tradingDate || '');

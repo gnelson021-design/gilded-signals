@@ -9,6 +9,12 @@ module.exports = {
   LIST_SIZE: 20,
   FREE_RANKS: [11, 20],          // shown in full to everyone; #1–10 need a subscription
 
+  // Publication time (not a ranking input — changing it does not change the methodology).
+  // GitHub cron is UTC-only, so gs-daily.yml has two weekday slots (12:30 and 13:30 UTC);
+  // the gate lets only the slot at or after 07:30 Central Time publish. The schedule only
+  // runs when the repository variable GS_DAILY_SCHEDULE = on.
+  PUBLISH: { timeZone: 'America/Chicago', time: '07:30', label: '7:30 a.m. CT' },
+
   universe: {
     exchanges: ['NYSE', 'NASDAQ', 'AMEX'],
     minPrice: 10,

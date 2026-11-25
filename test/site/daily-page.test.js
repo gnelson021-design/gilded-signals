@@ -100,3 +100,17 @@ test('index.html: daily page wired in; weekly product retired from live pages; r
   assert.strictEqual((html.match(/The weekly format was retired in November 2026/g) || []).length, 2, 'archive notes on both weekly pages');
   assert.strictEqual(html.split('<div').length - html.split('</div>').length, -1, 'div balance unchanged (pre-existing −1)');
 });
+
+test('pricing and news access copy match the access rules', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', '..', 'index.html'), 'utf8');
+  const pricing = html.slice(html.indexOf('<div class="pricing-cards">'), html.indexOf('</table>', html.indexOf('compare-table')));
+  assert.match(pricing, /5 free scanner comparisons/);
+  assert.match(pricing, /Market-news headlines &amp; source links/);
+  assert.match(pricing, /<li>World news<\/li>/);
+  assert.match(pricing, /<tr><td>Scanner Comparisons<\/td><td>5<\/td>/);
+  assert.ok(!/Full news dashboard|Stock Comparison<\/td><td class="no">/.test(pricing), 'news headlines and 5 compares are not shown as premium-only');
+  assert.match(html, /Published each U\.S\. trading day at 7:30 a\.m\. CT/);
+  assert.ok(!/Published each U\.S\. trading morning/.test(html));
+  const news = fs.readFileSync(path.join(__dirname, '..', '..', 'netlify', 'functions', 'news.js'), 'utf8');
+  assert.ok(!/access-token|COOKIE_NAME/.test(news), 'headline feed stays open to everyone');
+});

@@ -1,4 +1,4 @@
-# GS Daily Top 20 — PUBLISH (manual only; NO schedule yet).
+# GS Daily Top 20 — PUBLISH.
 #
 # Builds one list for the current U.S. trading day from the previous
 # session's completed prices plus news up to the run time, then publishes it
@@ -7,12 +7,23 @@
 # on the same day is refused. Publishing to main additionally requires the
 # repository variable GS_PRODUCTION_APPROVED = yes.
 #
-# The morning publication time is intentionally NOT set. There is no
-# `schedule:` trigger in this file, so it never runs on its own. Adding one is
-# a separate, deliberate decision (see DEPLOYMENT.md).
+# Publication time: 7:30 a.m. America/Chicago, Monday–Friday, trading days only.
+# GitHub cron is UTC-only, so there are two weekday slots:
+#   12:30 UTC = 7:30 a.m. CDT (summer)   13:30 UTC = 7:30 a.m. CST (winter)
+# The gate lets only the slot at or after 7:30 CT publish; the other slot is a
+# no-op (too early, already published, or after the open). Holidays are
+# refused by the official trading calendar.
+#
+# OFF SWITCH: scheduled runs do nothing unless the repository variable
+# GS_DAILY_SCHEDULE is set to "on". GitHub only runs schedules from the
+# default branch (main), so this schedule is inert on automation/dev, and
+# copying this file to main does NOT start it until that variable is set.
 name: GS Daily Top 20 (publish)
 
 on:
+  schedule:
+    - cron: "30 12 * * 1-5"
+    - cron: "30 13 * * 1-5"
   workflow_dispatch:
     inputs:
       job:
@@ -42,9 +53,13 @@ env:
   FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
   RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
   ALERT_TO_EMAIL: ${{ secrets.ALERT_TO_EMAIL }}
+  JOB: ${{ github.event_name == 'schedule' && 'publish' || inputs.job }}
+  GATE_FLAGS: ${{ github.event_name == 'schedule' && '--scheduled' || (inputs.allow_late && '--allow-late' || '') }}
 
 jobs:
   daily:
+    # Scheduled runs only when GS_DAILY_SCHEDULE = on; manual runs always allowed.
+    if: github.event_name != 'schedule' || vars.GS_DAILY_SCHEDULE == 'on'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -61,22 +76,22 @@ jobs:
         run: node --test engine/test/daily.test.js test/site/daily-page.test.js
 
       - name: Health check
-        if: inputs.job == 'health'
+        if: env.JOB == 'health'
         run: node engine/daily.js health
 
-      - name: Gate (trading day, before the open, not yet published)
+      - name: Gate (trading day, 7:30 CT slot when scheduled, before the open, not yet published)
         id: gate
-        if: inputs.job == 'publish'
-        run: node engine/daily.js gate ${{ inputs.allow_late && '--allow-late' || '' }}
+        if: env.JOB == 'publish'
+        run: node engine/daily.js gate $GATE_FLAGS
 
       - name: Build today's list
-        if: inputs.job == 'publish' && steps.gate.outputs.run == 'true'
+        if: env.JOB == 'publish' && steps.gate.outputs.run == 'true'
         run: node engine/daily.js build --out engine-out/daily
 
       - name: Publish (write-once, fixed for the day)
         id: publish
-        if: inputs.job == 'publish' && steps.gate.outputs.run == 'true'
-        run: node engine/daily.js publish --run engine-out/daily ${{ inputs.allow_late && '--allow-late' || '' }}
+        if: env.JOB == 'publish' && steps.gate.outputs.run == 'true'
+        run: node engine/daily.js publish --run engine-out/daily $GATE_FLAGS
 
       - name: Commit published list
         if: steps.publish.outputs.files != ''
@@ -92,7 +107,7 @@ jobs:
           echo "push failed after 3 attempts"; exit 1
 
       - name: Upload run output
-        if: always() && inputs.job == 'publish'
+        if: always() && env.JOB == 'publish'
         uses: actions/upload-artifact@v5
         with:
           name: gs-daily-${{ github.run_id }}
@@ -103,4 +118,4 @@ jobs:
       - name: Alert on failure
         if: failure()
         run: |
-          node engine/daily.js alert "Daily Top 20 workflow failed - ${{ inputs.job }}" "A step failed. Nothing was published or overwritten. ${GITHUB_RUN_URL}"
+          node engine/daily.js alert "Daily Top 20 workflow failed - ${JOB}" "A step failed. Nothing was published or overwritten. ${GITHUB_RUN_URL}"
