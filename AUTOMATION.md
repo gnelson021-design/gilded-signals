@@ -164,6 +164,22 @@ Phase status log:
   selection by Conviction + R:R band, tighter Target 1. GitHub Actions bumped to Node 24 versions (v5).
   Run #5 (11fba42): 63/64 safety checks passed; only failure was the missing ANTHROPIC_API_KEY.
 
+- Build 3 (2026-11-25): self-updating Briefings + Results pages, DORMANT until Build 4 writes
+  `data/weeks.json`. With no manifest the site renders exactly as today (verified in a headless browser).
+
+### Build 3 — automated pages
+| Piece | Role |
+|---|---|
+| `netlify/functions/auto-week.js` | `/api/auto-week?kind=brief|results` → newest automated week from `data/weeks.json`; ranks 6–15 returned only with a valid access cookie (server-side premium protection) |
+| `assets/js/gs-auto-pages.js` | Renders the newest automated week with the existing classes, makes it the visible default (replaces both manual flips), adds it to the week dropdown, refreshes the home cards, re-fetches after unlock |
+| `index.html` | 2 added lines only: `window.gsSyncHomeCards=init;` and the script tag before `</body>` |
+| `test/site/auto-pages.test.js` | Markup balance, neutral wording, escaping, premium withholding, dormancy, index.html additions, end-to-end engine → panel |
+
+Manifest contract (written by Build 4): `data/weeks.json` = `{"weeks":[{"weekOf":"YYYY-MM-DD","briefPublishedAt":ISO|null,"resultsFrozenAt":ISO|null}]}`
+with `data/picks-{week}.json`, `data/brief-{week}.json`, and `data/results-{week}.json` (frozen scorecard-v3 body).
+Hand-built historical panels are never modified or removed. Automated wording is neutral (Model Buy Plan,
+Why it qualifies, model targets) and carries the hypothetical-research disclosure.
+
 ### Safety gates (every run; brief is `ready` only if ALL pass, otherwise `held`)
 | Gate | Rule |
 |---|---|

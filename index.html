@@ -6501,8 +6501,10 @@ function gsToggleNav(){
     syncResultsCard();
     syncBriefCard();
   }
+  window.gsSyncHomeCards=init; /* used by gs-auto-pages.js after an automated week is inserted */
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
 </script>
+<script src="/assets/js/gs-auto-pages.js"></script>
 </body>
 </html>

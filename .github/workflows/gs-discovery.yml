@@ -32,8 +32,8 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Offline engine tests
-        run: node --test engine/test/engine.test.js
+      - name: Offline engine + site tests
+        run: node --test engine/test/engine.test.js test/site/auto-pages.test.js
 
       - name: Discovery run
         env:
