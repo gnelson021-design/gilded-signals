@@ -108,16 +108,17 @@ test('selection never exceeds limits, respects sector cap, never forces picks', 
   assert.ok(select(many, 'bear').picks.filter((p) => p.tier === 1).length <= 3);
 });
 
-test('s2 entry candidate spreads scores and backtest validator detects inversions', () => {
+test('s3 entry = trigger likelihood: falls with distance; validator checks order and calibration', () => {
   const scoring = require('../stages/scoring');
-  const { validate } = require('../backtest');
-  const row = (posture, rsi14) => ({ features: { posture, rsi14 } });
-  const good = scoring.entryV2(row('bull', 50), { zone1DistanceAtr: 1.8, riskReward: 1.4 }, false).score;
-  const bad = scoring.entryV2(row('bear', 78), { zone1DistanceAtr: 0.3, riskReward: 0.8 }, false).score;
-  assert.ok(good - bad >= 50, `spread ${good} vs ${bad}`);
-  const mk = (ev) => ({ setups: 500, evPerSetupPct: ev });
-  assert.strictEqual(validate([mk(0.2), mk(0.5), mk(0.9)]).verdict, 'PASS');
-  assert.strictEqual(validate([mk(0.9), mk(0.5), mk(0.2)]).verdict, 'FAIL');
+  const { validateTrigger } = require('../backtest');
+  const e = (d) => scoring.entry({ features: {} }, { zone1DistanceAtr: d, riskReward: 1.4 }, false).score;
+  assert.ok(e(0.25) > e(0.75) && e(0.75) > e(1.25));
+  assert.ok(Math.abs(e(0.25) - 75.2) < 3 && Math.abs(e(1.25) - 45.6) < 3, 'matches s1 backtest trigger rates');
+  const mk = (score, trig, n) => Array.from({ length: n }, (_, i) => ({ entryScore: score, kind: i < trig * n ? 'target' : 'no_trigger' }));
+  const good = [...mk(40, 0.42, 300), ...mk(60, 0.6, 300), ...mk(80, 0.78, 300)];
+  assert.strictEqual(validateTrigger(good, [0, 45, 55, 65, 75, 101]).verdict, 'PASS');
+  const bad = [...mk(40, 0.8, 300), ...mk(60, 0.5, 300), ...mk(80, 0.3, 300)];
+  assert.strictEqual(validateTrigger(bad, [0, 45, 55, 65, 75, 101]).verdict, 'FAIL');
 });
 
 test('narrative gates: verified numbers pass, invented numbers and personal-trade language fail', () => {

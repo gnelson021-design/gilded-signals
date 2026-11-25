@@ -6,7 +6,7 @@
 
 module.exports = {
   DISCOVERY_VERSION: 'd1-shadow',
-  SCORING_VERSION: 's1-shadow',
+  SCORING_VERSION: 's3-shadow',
 
   conviction: {
     // 0–100 each; missing parts dropped and weights re-normalised.
@@ -28,12 +28,14 @@ module.exports = {
     maxPrimary: 5,
     maxPrimaryInWeakMarket: 3, // SPY in a bearish EMA stack → fewer primary picks
     maxWatchlist: 10,
-    convictionWeight: 0.65,    // watchlist order = 0.65·Conviction + 0.35·Entry
-    // Primary picks are ordered by Conviction alone and must also have a
-    // workable entry, an acceptable R:R, and not be in the High risk class.
+    // s3: ordering = Conviction, plus a bonus for R:R inside the band the
+    // backtest favoured. Entry (trigger likelihood) is a floor, not a driver.
+    rrBand: [1.0, 1.6],
+    rrBandBonus: 5,
     primaryMinConviction: 70,
-    primaryMinEntry: 60,
-    primaryMinRR: 1.2,
+    primaryMinEntry: 40,       // ≥ ~40% estimated chance the zone is reached
+    primaryMinRR: 1.0,
+    primaryMaxRR: 2.0,
     primaryExcludeRisk: ['High'],
     // Up to 3 watchlist slots go first to the most talked-about (In Focus)
     // names that still clear a lower conviction bar.

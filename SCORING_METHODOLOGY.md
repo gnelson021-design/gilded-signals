@@ -7,7 +7,7 @@ weeks keep the version they were published under.
 | Layer | Version | Code |
 |---|---|---|
 | Discovery rank | `d1-shadow` | `engine/stages/discovery.js`, `engine/config.js` |
-| Scores and levels | `s1-shadow` | `engine/stages/levels.js`, `scoring.js`, `select.js` |
+| Scores and levels | `s3-shadow` (s1, s2 retired after failing validation) | `engine/stages/levels.js`, `scoring.js`, `select.js` |
 | Grading (unchanged, locked) | `v3-target-invalidation` (v3.1 SIP) | `netlify/functions/scorecard-v3.js` |
 
 "shadow" means the version is not yet approved for publishing.
@@ -44,33 +44,35 @@ Weights: structure (trend) 25, relative strength 20, analysts 20, news (0.6 × a
 momentum 15. Requires at least 60% of the weight to have real data. Penalty: −3 per negative
 headline tag (downgrade, guidance cut, estimate miss, offering, legal), capped at −12.
 
-## 4. Entry Score (0–100): how attractive the current price is
-Base: 100 − 30 × (distance from price to buy zone 1 in ATR − 0.25). Adjustments: RSI > 75 −15,
-RSI > 70 −8, RSI 40–55 +5. Bearish EMA stack −10. R:R < 1 −15, R:R ≥ 1.5 +5.
-**Earnings inside the publish week −10, applied to every such name** (earned-entry discount).
-Conviction and Entry are independent: high conviction never means "buy now".
-
-### 4b. Entry Score s2 — CANDIDATE (not used for selection until it validates)
-Built from the s1 backtest, which showed s1 rewarding zones that hug the price and those setups underperforming.
-Base 50. Distance to zone 1: under 0.5 ATR −15, 0.5–1 ATR 0, 1–1.5 ATR +10, 1.5–2.5 ATR +15, over 2.5 ATR +5.
-RSI over 70 −15, RSI 40–60 +10, RSI under 30 −10. Bullish stack +10, bearish −10. R:R under 1 −15, 1–1.6 +10, over 2 −5.
-Earnings in the week −10. The backtest scores s1 and s2 on the same setups.
-**Validation rule:** expected return per published setup must rise from bucket to bucket (no inversions in
-buckets with at least 200 setups), and the top bucket must beat the bottom one. Only a version that passes may drive selection.
+## 4. Entry Score (s3): estimated % chance buy zone 1 is reached this week
+s1 (distance + RSI + R:R mix) and s2 (pullback-depth weighting) both **failed** the backtest: expected return
+per setup did not rise with the score. What the data does support is trigger likelihood. In the s1 backtest
+(20,263 setups), zone 1 was reached 75% of the time when it sat 0–0.5 ATR below the last close, 59% at
+0.5–1 ATR, and 46% at 1–1.5 ATR.
+- **Formula:** Entry = 82.6 − 29.6 × (distance from last close to zone 1 in ATR), clamped to 5–95.
+- **Earnings inside the publish week −10, applied to every such name** (earned-entry rule).
+- **Validation:** in the backtest, the actual trigger rate must rise with the score (no inversions in buckets
+  with at least 200 setups), and each bucket's actual rate must be within 15 points of its predicted mean.
+- Entry is a floor for Primary picks (≥ 40), not a ranking driver. Conviction and Entry stay independent.
 
 ## 5. Risk class
 High: ATR above 4% of price, or a bearish stack. Elevated: ATR above 2.75%, or lean-bear. Moderate:
 ATR above 1.75%, or not bullish. Low: everything else. Earnings in the publish week raises the class one step.
 
 ## 6. Weekly selection (preview until approved)
-- **Primary Picks (up to 5; up to 3 when SPY's EMA stack is bearish):** ordered by Conviction. Each
-  needs Conviction ≥ 70, Entry ≥ 60, R:R ≥ 1.2, and a risk class other than High. At most 2 per sector.
-- **Secondary Watchlist (up to 10):** up to 3 slots go first to In Focus names with Conviction ≥ 55
-  and R:R ≥ 1.0. The rest are ordered by 0.65 × Conviction + 0.35 × Entry, with Conviction ≥ 60 and R:R ≥ 1.0. At most 3 per sector in total.
+- **Ordering:** Conviction, plus 5 points when R:R is inside 1.0–1.6 (the band the backtest favored:
+  48% target-hit rate and the best expected return).
+- **Primary Picks (up to 5; up to 3 when SPY's EMA stack is bearish):** each needs Conviction ≥ 70, Entry ≥ 40,
+  R:R between 1.0 and 2.0, and a risk class other than High. At most 2 per sector.
+- **Secondary Watchlist (up to 10):** up to 3 slots go first to In Focus names with Conviction ≥ 55 and
+  R:R ≥ 1.0. The rest need Conviction ≥ 60 and R:R ≥ 1.0. At most 3 per sector in total.
 - Any name whose 63-day daily-return correlation with an already-selected name is above 0.85 is skipped.
 - Slots are never filled with names that miss the bar.
-- Output uses the existing `data/picks-YYYY-MM-DD.json` schema, so scorecard-v3 grades it unchanged.
-  `actionStatus` is always `monitoring`, because this is model research, never a personal trade posture.
+- Output uses the existing picks schema; `actionStatus` is always `monitoring`.
+
+### Target 1 (s3 change)
+Target 1 now defaults to P + 1.25A (was 1.5A) and is capped at P + 1.75A (was 2.5A). On run #4 data, the
+median R:R moved from 1.79 to 1.59, and the share of setups inside 1.0–1.6 rose from 33% to 52%.
 
 ## 7. Validation
 - `node --test engine/test/engine.test.js`: offline tests of the end-to-end run, level ordering and

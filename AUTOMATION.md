@@ -160,6 +160,10 @@ Phase status log:
   write-ups need GitHub secret `ANTHROPIC_API_KEY` (model: `GS_NARRATIVE_MODEL`, default `claude-sonnet-5-5`).
   Without the key the brief is HELD by design.
 
+- Scoring s3 (2026-11-25): Entry Score redefined as trigger likelihood (s1/s2 failed validation),
+  selection by Conviction + R:R band, tighter Target 1. GitHub Actions bumped to Node 24 versions (v5).
+  Run #5 (11fba42): 63/64 safety checks passed; only failure was the missing ANTHROPIC_API_KEY.
+
 ### Safety gates (every run; brief is `ready` only if ALL pass, otherwise `held`)
 | Gate | Rule |
 |---|---|

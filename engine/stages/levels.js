@@ -37,9 +37,11 @@ function compute(f) {
 
   // First target: the 20-day high if it is a meaningful level above price,
   // otherwise price + 1.5 ATR; clamped to [0.75, 2.5] ATR above price.
-  const res = f.resistance20 != null && f.resistance20 >= p + 0.5 * a ? f.resistance20 : p + 1.5 * a;
+  // s3: tighter first target — the s1 backtest showed R:R 1–1.5 setups hit
+  // target 48% of the time vs 18% for R:R > 2, with the best expected return.
+  const res = f.resistance20 != null && f.resistance20 >= p + 0.5 * a ? f.resistance20 : p + 1.25 * a;
   // Weekly horizon: never more than +12% for target 1, +25% for target 2.
-  let t1 = Math.min(Math.max(res, p + 0.75 * a), p + 2.5 * a, p * 1.12);
+  let t1 = Math.min(Math.max(res, p + 0.75 * a), p + 1.75 * a, p * 1.12);
   // Second target: 52-week high if beyond target 1, else +1.5 ATR; clamped.
   const hi = f.high52 != null && f.high52 >= t1 + 0.5 * a ? f.high52 : t1 + 1.5 * a;
   let t2 = Math.min(Math.max(hi, t1 + 1.0 * a), p + 5 * a, p * 1.25);

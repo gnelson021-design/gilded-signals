@@ -126,6 +126,24 @@ function validate(buckets) {
   return { verdict: inversions === 0 && spread > 0 ? 'PASS' : 'FAIL', inversions, topMinusBottomEvPct: spread, buckets: b.length };
 }
 
+// s3 Entry Score is a trigger likelihood: actual trigger rate must rise with
+// the score, and each bucket's actual rate should sit near its predicted mean.
+function validateTrigger(rows, edges) {
+  const out = [];
+  for (let i = 0; i < edges.length - 1; i++) {
+    const b = rows.filter((r) => r.entryScore >= edges[i] && r.entryScore < edges[i + 1]);
+    if (b.length < 200) continue;
+    const predicted = b.reduce((s, r) => s + r.entryScore, 0) / b.length;
+    const actual = (b.filter((r) => r.kind !== 'no_trigger').length / b.length) * 100;
+    out.push({ range: `${edges[i]}–${edges[i + 1]}`, setups: b.length, predictedPct: Math.round(predicted * 10) / 10, actualTriggerPct: Math.round(actual * 10) / 10 });
+  }
+  if (out.length < 2) return { verdict: 'insufficient_data', buckets: out };
+  let inversions = 0;
+  for (let i = 1; i < out.length; i++) if (out[i].actualTriggerPct < out[i - 1].actualTriggerPct) inversions++;
+  const maxGap = Math.max(...out.map((b) => Math.abs(b.predictedPct - b.actualTriggerPct)));
+  return { verdict: inversions === 0 && maxGap <= 15 ? 'PASS' : 'FAIL', inversions, maxCalibrationGapPts: Math.round(maxGap * 10) / 10, buckets: out };
+}
+
 function lastBarOfWeekIdx(bars) {
   const out = [];
   for (let i = 0; i < bars.length - 1; i++) {
@@ -162,10 +180,9 @@ async function main() {
       const lv = levels.compute(f);
       if (lv.reject) continue;
       const e = scoring.entry({ features: f }, lv, false);
-      const e2 = scoring.entryV2({ features: f }, lv, false);
       const sim = simulate(lv, fwd);
       rows.push({
-        symbol: s, week: bars[i].t.slice(0, 10), entryScore: e.score, entryScoreV2: e2.score,
+        symbol: s, week: bars[i].t.slice(0, 10), entryScore: e.score,
         techConviction: techConviction(f), rr: lv.riskReward, posture: f.posture,
         distAtr: lv.zone1DistanceAtr, rsi: f.rsi14, atrPct: f.atrPct, ret21: f.ret21, fromHigh52: f.pctFromHigh52,
         ...sim,
@@ -184,8 +201,7 @@ async function main() {
     generatedAt: new Date().toISOString(),
     scope: { symbols: syms.length, weeks: o.weeks, triggerSessions: TRIGGER_SESSIONS, holdSessions: HOLD_SESSIONS },
     overall: stats(rows),
-    byEntryScore: bucket(rows, 'entryScore', [0, 40, 60, 80, 101]),
-    byEntryScoreV2: bucket(rows, 'entryScoreV2', [0, 40, 55, 70, 85, 101]),
+    byEntryScore: bucket(rows, 'entryScore', [0, 45, 55, 65, 75, 101]),
     entryScoreValidation: null,
     calibration: {
       zoneDistanceAtr: bucket(rows, 'distAtr', [0, 0.5, 1, 1.5, 2, 2.5, 99]),
@@ -205,7 +221,7 @@ async function main() {
       'Hypothetical model results, not brokerage returns.',
     ],
   };
-  report.entryScoreValidation = { s1: validate(report.byEntryScore), s2: validate(report.byEntryScoreV2) };
+  report.entryScoreValidation = { s3TriggerLikelihood: validateTrigger(rows, [0, 45, 55, 65, 75, 101]), evByEntry: validate(report.byEntryScore) };
   fs.mkdirSync(o.out, { recursive: true });
   fs.writeFileSync(path.join(o.out, 'backtest.json'), JSON.stringify(report, null, 1));
   fs.writeFileSync(path.join(o.out, 'backtest.md'), markdown(report));
@@ -213,14 +229,18 @@ async function main() {
 }
 
 function markdown(r) {
-  const L = [`# Backtest — scoring s1 levels (${r.scope.symbols} stocks × ${r.scope.weeks} weeks)`, ''];
+  const L = [`# Backtest — scoring s3 levels (${r.scope.symbols} stocks × ${r.scope.weeks} weeks)`, ''];
   const row = (label, s) => `| ${label} | ${s.setups} | ${s.triggerRatePct ?? '—'}% | ${s.targetHitPct ?? '—'}% | ${s.invalidatedPct ?? '—'}% | ${s.stillOpenPct ?? '—'}% | ${s.winRatePct ?? '—'}% | ${s.avgReturnPct ?? '—'}% | ${s.evPerSetupPct ?? '—'}% |`;
   const head = '| Group | Setups | Triggered | Target hit | Invalidated | Open at +15d | Win rate | Avg return (triggered) | EV per setup |\n|---|---|---|---|---|---|---|---|---|';
   L.push(head, row('All', r.overall), '');
   const v = r.entryScoreValidation;
-  if (v) L.push(`**Entry Score validation** (EV per setup must rise with the score): s1 **${v.s1.verdict}** (inversions ${v.s1.inversions ?? '—'}, top − bottom ${v.s1.topMinusBottomEvPct ?? '—'}%) · s2 candidate **${v.s2.verdict}** (inversions ${v.s2.inversions ?? '—'}, top − bottom ${v.s2.topMinusBottomEvPct ?? '—'}%)`, '');
+  if (v) {
+    const t = v.s3TriggerLikelihood;
+    L.push(`**Entry Score s3 validation** (actual trigger rate must rise with the score and sit within 15 pts of the prediction): **${t.verdict}** (inversions ${t.inversions ?? '—'}, max gap ${t.maxCalibrationGapPts ?? '—'} pts)`, '');
+    L.push('| Entry Score | Setups | Predicted chance zone reached | Actual |', '|---|---|---|---|', ...(t.buckets || []).map((b) => `| ${b.range} | ${b.setups} | ${b.predictedPct}% | ${b.actualTriggerPct}% |`), '');
+    L.push(`For reference, EV per setup by Entry Score (not the s3 pass criterion): ${v.evByEntry.verdict}.`, '');
+  }
   L.push('### By Entry Score', head, ...r.byEntryScore.map((b) => row(b.range, b)), '');
-  L.push('### By Entry Score — s2 candidate', head, ...r.byEntryScoreV2.map((b) => row(b.range, b)), '');
   for (const [k, v] of Object.entries(r.calibration)) L.push(`### Calibration — ${k}`, head, ...v.map((b) => row(b.range, b)), '');
   L.push('### By technical Conviction', head, ...r.byTechConviction.map((b) => row(b.range, b)), '');
   L.push('### By risk-to-reward', head, ...r.byRiskReward.map((b) => row(b.range, b)), '');
@@ -232,4 +252,4 @@ function markdown(r) {
 
 if (require.main === module) main().catch((e) => { console.error('BACKTEST FAILED:', e.message); process.exit(1); });
 
-module.exports = { simulate, stats, techConviction, validate };
+module.exports = { simulate, stats, techConviction, validate, validateTrigger };

@@ -29,7 +29,7 @@ function select(cands, marketPosture) {
   const maxPrimary = marketPosture === 'bear' ? S.maxPrimaryInWeakMarket : S.maxPrimary;
   const pool = cands
     .filter((c) => c.conviction != null && c.entry != null && c.levels)
-    .map((c) => ({ ...c, _rank: S.convictionWeight * c.conviction + (1 - S.convictionWeight) * c.entry, _ret: returns(c.closes63) }))
+    .map((c) => ({ ...c, _rank: c.conviction + (c.levels.riskReward >= S.rrBand[0] && c.levels.riskReward <= S.rrBand[1] ? S.rrBandBonus : 0), _ret: returns(c.closes63) }))
     .sort((a, b) => b._rank - a._rank || a.symbol.localeCompare(b.symbol));
 
   const chosen = [];
@@ -45,10 +45,9 @@ function select(cands, marketPosture) {
     return true;
   };
 
-  const byConviction = pool.slice().sort((a, b) => b.conviction - a.conviction || a.symbol.localeCompare(b.symbol));
-  for (const c of byConviction) {
+  for (const c of pool) {
     if (chosen.filter((x) => x.tier === 1).length >= maxPrimary) break;
-    if (c.conviction >= S.primaryMinConviction && c.entry >= S.primaryMinEntry && c.levels.riskReward >= S.primaryMinRR && !S.primaryExcludeRisk.includes(c.riskClass)) {
+    if (c.conviction >= S.primaryMinConviction && c.entry >= S.primaryMinEntry && c.levels.riskReward >= S.primaryMinRR && c.levels.riskReward <= S.primaryMaxRR && !S.primaryExcludeRisk.includes(c.riskClass)) {
       tryAdd(c, 1, S.primarySectorCap);
     }
   }
