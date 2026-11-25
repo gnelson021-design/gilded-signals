@@ -1,0 +1,128 @@
+# GS Daily Top 20 — PUBLISH.
+#
+# Builds one list for the current U.S. trading day from the previous
+# session's completed prices plus news up to the run time, then publishes it
+# ONCE (write-once) to GS_PUBLISH_BRANCH (default automation/dev = branch
+# preview only). The list stays fixed for the rest of the day — a second run
+# on the same day is refused. Publishing to main additionally requires the
+# repository variable GS_PRODUCTION_APPROVED = yes.
+#
+# Readers see the list at 7:30 a.m. America/Chicago, Monday–Friday, trading
+# days only (early-close days included). The list is built and deployed ahead
+# of that and /api/daily-top20 hides it until 7:30 CT, so build time and
+# GitHub's cron delays don't change when readers see it.
+# GitHub cron is UTC-only, so there are three weekday slots:
+#   11:45 UTC = 6:45 a.m. CDT (summer build)  | 5:45 a.m. CST (too early, no-op)
+#   12:45 UTC = 7:45 a.m. CDT (backup, no-op) | 6:45 a.m. CST (winter build)
+#   13:15 UTC = 8:15 a.m. CDT (backup, no-op) | 7:15 a.m. CST (backup, no-op)
+# The gate lets a slot run only from 6:45 CT until the 8:30 CT open; once a
+# list is published every later slot that day is a no-op (write-once), so
+# there is never a duplicate publish. Holidays are refused by the official
+# trading calendar.
+#
+# OFF SWITCH: scheduled runs do nothing unless the repository variable
+# GS_DAILY_SCHEDULE is set to "on". GitHub only runs schedules from the
+# default branch (main), so this schedule is inert on automation/dev, and
+# copying this file to main does NOT start it until that variable is set.
+name: GS Daily Top 20 (publish)
+
+on:
+  schedule:
+    - cron: "45 11 * * 1-5"
+    - cron: "45 12 * * 1-5"
+    - cron: "15 13 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Job"
+        required: true
+        type: choice
+        options: [publish, health]
+      allow_late:
+        description: "Recovery: allow publishing after the open (same prior-close data)"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: gs-daily-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  GS_PUBLISH_BRANCH: ${{ vars.GS_PUBLISH_BRANCH || 'automation/dev' }}
+  GS_PRODUCTION_APPROVED: ${{ vars.GS_PRODUCTION_APPROVED }}
+  GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+  ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+  ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+  FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  ALERT_TO_EMAIL: ${{ secrets.ALERT_TO_EMAIL }}
+  JOB: ${{ github.event_name == 'schedule' && 'publish' || inputs.job }}
+  GATE_FLAGS: ${{ github.event_name == 'schedule' && '--scheduled' || (inputs.allow_late && '--allow-late' || '') }}
+
+jobs:
+  daily:
+    # Scheduled runs only when GS_DAILY_SCHEDULE = on; manual runs always allowed.
+    if: github.event_name != 'schedule' || vars.GS_DAILY_SCHEDULE == 'on'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ env.GS_PUBLISH_BRANCH }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Tests
+        run: node --test engine/test/daily.test.js test/site/daily-page.test.js
+
+      - name: Health check
+        if: env.JOB == 'health'
+        run: node engine/daily.js health
+
+      - name: Gate (trading day, from 6:45 CT when scheduled, before the open, not yet published)
+        id: gate
+        if: env.JOB == 'publish'
+        run: node engine/daily.js gate $GATE_FLAGS
+
+      - name: Build today's list
+        if: env.JOB == 'publish' && steps.gate.outputs.run == 'true'
+        run: node engine/daily.js build --out engine-out/daily
+
+      - name: Publish (write-once, fixed for the day)
+        id: publish
+        if: env.JOB == 'publish' && steps.gate.outputs.run == 'true'
+        run: node engine/daily.js publish --run engine-out/daily $GATE_FLAGS
+
+      - name: Commit published list
+        if: steps.publish.outputs.files != ''
+        run: |
+          git config user.name "gs-automation[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ${{ steps.publish.outputs.files }}
+          git commit -m "daily: Top 20 for ${{ steps.publish.outputs.tradingDate }}"
+          for i in 1 2 3; do
+            if git push origin "HEAD:${GS_PUBLISH_BRANCH}"; then exit 0; fi
+            git pull --rebase origin "${GS_PUBLISH_BRANCH}"; sleep 5
+          done
+          echo "push failed after 3 attempts"; exit 1
+
+      - name: Upload run output
+        if: always() && env.JOB == 'publish'
+        uses: actions/upload-artifact@v5
+        with:
+          name: gs-daily-${{ github.run_id }}
+          path: engine-out/
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Alert on failure
+        if: failure()
+        run: |
+          node engine/daily.js alert "Daily Top 20 workflow failed - ${JOB}" "A step failed. Nothing was published or overwritten. ${GITHUB_RUN_URL}"
