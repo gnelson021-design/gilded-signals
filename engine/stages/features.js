@@ -51,6 +51,7 @@ function computeOne(bars, spyCloses, now = Date.now()) {
     macdHist: r(mac.hist, 3),
     atr14: r(atr14),
     atrPct: r(atr14 && price ? (atr14 / price) * 100 : null),
+    ret1: r(ind.pctChangeOverN(closes, 1)),
     ret5: r(ind.pctChangeOverN(closes, 5)),
     ret21: r(ind.pctChangeOverN(closes, 21)),
     ret63: r(ret63),

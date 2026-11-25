@@ -1,7 +1,12 @@
 # GILDED SIGNALS — SESSION NOTES
 # Save this file and paste into any new Claude chat to restore context.
 
-## LATEST — 2026-11-24 (automation upgrade)
+## LATEST — 2026-11-25 (product change: Daily Top 20)
+- The weekly picks product is retired and replaced by the Daily Top 20. Read AUTOMATION.md first.
+- Built on automation/dev only: daily engine, access-controlled API, daily page, tests. No schedule, no merge, no deploy.
+- Morning publication time intentionally unset. Do not restore gs-schedule.yml or the trigger-capture schedule.
+
+## 2026-11-24 (automation upgrade — weekly, now retired)
 - Full-automation work started. Read CLAUDE.md (rules) and AUTOMATION.md (audit, plan, status) first.
 - Branch: automation/dev. Rollback tag: backup-pre-automation-20261124 (= 6940463, last production commit).
 - Phase 1 built: engine/ discovery run (shadow only), offline tests passing, manual GitHub workflow.

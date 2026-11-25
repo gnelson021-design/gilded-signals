@@ -1,0 +1,50 @@
+# GS Daily Top 20 — DRY RUN (never publishes).
+# Runs on every push to automation/dev and on demand: tests, builds the list
+# exactly as the morning job would, re-ranks the saved inputs to prove the
+# ranking is reproducible, and uploads the result as a short-lived artifact.
+name: GS Daily Top 20 (dry run)
+
+on:
+  push:
+    branches: [automation/dev]
+  workflow_dispatch:
+
+concurrency:
+  group: gs-daily-dryrun
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  dryrun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Offline tests (engine + site + configuration)
+        run: node --test engine/test/daily.test.js test/site/daily-page.test.js
+
+      - name: Build today's list (no publish)
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+        run: node engine/daily.js build --out engine-out/daily
+
+      - name: Replay check (ranking must reproduce exactly)
+        run: node engine/daily.js replay engine-out/daily
+
+      - name: Upload list
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: gs-daily-dryrun-${{ github.run_id }}
+          path: engine-out/
+          retention-days: 7
+          if-no-files-found: ignore

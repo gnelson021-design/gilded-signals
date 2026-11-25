@@ -97,4 +97,37 @@ async function mostActives({ by = 'volume', top = 100, fetchImpl } = {}) {
   return { list: res.most_actives || [], lastUpdated: res.last_updated || null };
 }
 
-module.exports = { listAssets, calendar, dailyBars, news, mostActives };
+// Option snapshots for one underlying (indicative feed unless configured).
+// Returns { CONTRACT_SYMBOL: { dailyBar, prevDailyBar, ... } }.
+async function optionSnapshots(underlying, { feed = process.env.GS_OPTIONS_FEED || 'indicative', maxPages = 10, fetchImpl } = {}) {
+  const out = {};
+  let token = null;
+  let pages = 0;
+  do {
+    const qs = new URLSearchParams({ feed, limit: '1000' });
+    if (token) qs.set('page_token', token);
+    const res = await getJSON(`${DATA}/v1beta1/options/snapshots/${encodeURIComponent(underlying)}?${qs}`, { headers: headers(), fetchImpl, retries: 1 });
+    Object.assign(out, res.snapshots || {});
+    token = res.next_page_token || null;
+    pages++;
+  } while (token && pages < maxPages);
+  return out;
+}
+
+// Active option contracts (with open interest) expiring on or before expLte.
+async function optionContracts(underlying, expLte, { maxPages = 10, fetchImpl } = {}) {
+  const out = [];
+  let token = null;
+  let pages = 0;
+  do {
+    const qs = new URLSearchParams({ underlying_symbols: underlying, status: 'active', expiration_date_lte: expLte, limit: '10000' });
+    if (token) qs.set('page_token', token);
+    const res = await trading(`/v2/options/contracts?${qs}`, { fetchImpl });
+    out.push(...(res.option_contracts || []));
+    token = res.next_page_token || null;
+    pages++;
+  } while (token && pages < maxPages);
+  return out;
+}
+
+module.exports = { listAssets, calendar, dailyBars, news, mostActives, optionSnapshots, optionContracts };

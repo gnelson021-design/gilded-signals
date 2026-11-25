@@ -17,7 +17,7 @@
   to     = "/index.html"
   status = 200
 
-# Official weekly-briefing trigger capture — every 15 minutes, weekdays,
-# spanning US regular market hours in UTC across both EDT and EST.
-[functions."trigger-capture"]
-  schedule = "*/15 13-21 * * 1-5"
+# Weekly trigger capture (trigger-capture.js) was RETIRED with the weekly
+# format in Nov 2026 — its schedule is intentionally removed. The function and
+# the gs-trigger-ledger store remain so archived weekly records still resolve.
+# The Daily Top 20 has no scheduled Netlify function.

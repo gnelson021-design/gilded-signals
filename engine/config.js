@@ -1,52 +1,13 @@
 // engine/config.js
-// All thresholds and weights in one versioned place. Any change to a value
-// here that affects ranking MUST bump DISCOVERY_VERSION.
+// Daily Top 20 configuration. Every threshold and weight lives here; any change
+// that affects ranking MUST bump METHODOLOGY_VERSION (published with each list).
 
 'use strict';
 
 module.exports = {
-  DISCOVERY_VERSION: 'd1-shadow',
-  SCORING_VERSION: 's3-shadow',
-
-  conviction: {
-    // 0–100 each; missing parts dropped and weights re-normalised.
-    weights: { structure: 25, relStrength: 20, analysts: 20, news: 20, momentum: 15 },
-    minCoverage: 60, // need at least 60% of the weight to have real data
-  },
-
-  gates: {
-    maxDataAgeDays: 4,   // newest completed bar must be this recent at publish
-    maxPriceDiffPct: 2.5, // Alpaca close vs Finnhub second source
-  },
-
-  narrative: {
-    maxCharsPerField: 320,
-    strongConviction: 85, // 'Strong Buy' label threshold (existing brief vocabulary)
-  },
-
-  selection: {
-    maxPrimary: 5,
-    maxPrimaryInWeakMarket: 3, // SPY in a bearish EMA stack → fewer primary picks
-    maxWatchlist: 10,
-    // s3: ordering = Conviction, plus a bonus for R:R inside the band the
-    // backtest favoured. Entry (trigger likelihood) is a floor, not a driver.
-    rrBand: [1.0, 1.6],
-    rrBandBonus: 5,
-    primaryMinConviction: 70,
-    primaryMinEntry: 40,       // ≥ ~40% estimated chance the zone is reached
-    primaryMinRR: 1.0,
-    primaryMaxRR: 2.0,
-    primaryExcludeRisk: ['High'],
-    // Up to 3 watchlist slots go first to the most talked-about (In Focus)
-    // names that still clear a lower conviction bar.
-    inFocusWatchSlots: 3,
-    inFocusMinConviction: 55,
-    watchMinConviction: 60,
-    watchMinRR: 1.0,
-    primarySectorCap: 2,
-    totalSectorCap: 3,
-    maxCorrelation: 0.85,      // 63-day daily-return correlation
-  },
+  METHODOLOGY_VERSION: 'm1-shadow',
+  LIST_SIZE: 20,
+  FREE_RANKS: [11, 20],          // shown in full to everyone; #1–10 need a subscription
 
   universe: {
     exchanges: ['NYSE', 'NASDAQ', 'AMEX'],
@@ -54,38 +15,43 @@ module.exports = {
     minAvgDollarVolume: 25e6, // 20-day average close × volume
     maxSymbols: 1500,         // top N by dollar volume after filters
     minHistoryBars: 200,
-    maxStaleDays: 6,          // last bar older than this (calendar days) → reject
-    // Non-common-stock instruments excluded by name.
+    maxStaleDays: 6,
     excludeName: /\b(ETF|ETN|ETNs|Fund|iShares|SPDR|ProShares|Direxion|Leveraged|Ultra(Pro|Short)?|Daily [23]X|Warrants?|Rights?|Units?|Preferred|Notes? due|Acquisition Corp)\b/i,
     symbolPattern: /^[A-Z]{1,5}(\.[A-Z])?$/,
   },
 
-  news: {
-    windowDays: 21,   // recent 7 days vs prior 14-day baseline
-    recentDays: 7,
-    maxPages: 1200,   // 50 articles/page
-    keepHeadlines: 8, // per candidate, for the Phase 3 AI read
+  // Bullish-momentum eligibility (all must hold at the last completed close).
+  eligibility: {
+    aboveEma20: true,
+    ema20AboveEma50: true,
+    minRet5: 0,       // 5-day return must be positive
+    minRsi: 50,
+    maxRsi: 85,
   },
 
-  // Finnhub calls: strongest pre-ranked names PLUS the most-covered names,
-  // so heavily discussed stocks in a pullback still get analyst data.
-  analysts: { topK: 150, topAttention: 100 },
-  earnings: { lookaheadDays: 21 },
+  news: {
+    windowDays: 21,   // baseline window
+    recentDays: 3,    // "why it is getting attention" window
+    maxPages: 1200,   // 50 articles/page
+    keepHeadlines: 8,
+    showHeadlines: 3, // dated headlines shown per stock
+  },
 
-  // Two lanes: 'leaders' = best overall d1 score; 'inFocus' = the most
-  // talked-about names not already listed, whatever their trend. Pullbacks in
-  // heavily covered names are prime buy-zone candidates for Phase 2 scoring.
-  board: { leaders: 25, inFocus: 15 },
+  earnings: { lookaheadDays: 14 },
+  analysts: { topK: 60 },   // Finnhub calls for the strongest ranked names
+  options: { topK: 40, minTotalVolume: 2000, unusualRatio: 2.0 },
 
-  // Component weights for the d0 discovery rank (sum = 100). Missing
-  // components are dropped and the rest re-normalised; coverage is reported.
+  // Component weights (sum = 100). Missing components (e.g. options data not
+  // available) are dropped and the remaining weights re-normalised.
   weights: {
-    attention: 30,   // news volume + news surge + most-active presence
-    catalysts: 15,   // headline catalyst tags + upcoming earnings
-    trend: 15,       // EMA stack posture + weekly confirmation
-    momentum: 10,    // RSI regime + MACD histogram
-    relStrength: 15, // 63-day return vs SPY (percentile)
-    analysts: 15,    // consensus level + 3-month drift
+    priceMomentum: 25, // 5- and 21-day return (percentile among eligible)
+    relVolume: 15,     // last session volume ÷ 20-day average (percentile)
+    attention: 15,     // recent news volume vs baseline + most-active lists
+    relStrength: 10,   // 63-day return vs SPY (percentile)
+    rsi: 10,           // RSI regime (healthy momentum best, extended penalised)
+    trend: 10,         // EMA 20/50/200 stack + weekly confirmation
+    catalysts: 10,     // catalyst-type headlines + upcoming earnings, minus negative headlines
+    options: 5,        // prior-session call vs put volume, if verified data is available
   },
 
   // Headline catalyst tags. Matched case-insensitively on headline text.

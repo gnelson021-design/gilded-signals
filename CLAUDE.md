@@ -50,7 +50,15 @@ Automation design, status and phase plan live in `AUTOMATION.md`.
 - Do not delete untracked `.bak` files — they are forensic backups.
 - End every session at a clean stopping point and update `SESSION_NOTES.md`.
 
-## Grading methodology (v3-target-invalidation, v3.1 SIP — locked 2026-08-13)
+## Product (since 2026-11-25): Daily Top 20
+- One bullish-momentum ranking per U.S. trading morning, built from prior-session data, published once, fixed for the day.
+- Factual research only: no buy/sell or pick language, no personal-portfolio comparisons. Show the trading date, data
+  cutoff, rank drivers, dated headlines, and confirmed catalysts, or say "no verified catalyst".
+- Ranks #11–20 free; #1–10 only through the subscription cookie, enforced server-side in `daily-top20.js`.
+- The weekly cycle is retired: never restore `gs-schedule.yml`, the `trigger-capture` schedule, or weekly publish/grading jobs.
+- Weekly archive records (pages, `data/picks-*`, `data/brief-*`, scorecards) are preserved unchanged.
+
+## Archived weekly grading methodology (v3-target-invalidation, v3.1 SIP — retired with the weekly format)
 - Alpaca historical SIP 5-minute bars, regular session 09:30–16:00 ET only; end clamped to now − 16 min.
 - Buy 1 / Buy 2 trigger independently; first touch is permanent; premarket/after-hours never count.
 - Same-bar target + invalidation tie → invalidation wins. Targets before entry never count.

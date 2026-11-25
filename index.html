@@ -287,8 +287,8 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
     <li><a id="nav-ai" onclick="showNews('ai')">AI Infrastructure</a></li>
     <li><a id="nav-world" onclick="showNews('world')">World News</a></li>
     <li><a id="nav-scanner" onclick="showPage('scanner')">Scanner</a></li>
-    <li><a id="nav-brief" onclick="showPage('brief')">Briefings</a></li>
-    <li><a id="nav-results" onclick="showPage('results')">Results</a></li>
+    <li><a id="nav-daily" onclick="showPage('daily')">Daily Top 20</a></li>
+    <li><a id="nav-results" onclick="showPage('results')">Weekly Archive</a></li>
     <li><a id="nav-pricing" onclick="showPage('pricing')">Pricing</a></li>
   </ul>
   <div class="nav-right">
@@ -356,19 +356,17 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         .wrh-link{font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);}
         </style>
         <div class="hero-right-stack">
-        <div class="wbh-card" id="gs-home-brief-card">
-          <div class="wbh-eyebrow">Weekly Briefing</div>
-          <h2 class="wbh-title">The Week <em>Ahead</em></h2>
-          <div class="wbh-dateline" id="gs-home-brief-dateline">For the week of <b>August 10, 2026</b></div>
+        <div class="wbh-card" id="gs-home-daily-card">
+          <div class="wbh-eyebrow">Daily Top 20</div>
+          <h2 class="wbh-title">Today&rsquo;s <em>Momentum</em></h2>
+          <div class="wbh-dateline" id="gs-home-daily-date">Published each U.S. trading morning</div>
           <div class="wbh-rule"></div>
-          <div class="wbh-lbl">Five of Fifteen on My Screen</div>
-          <div id="gs-home-brief-picks">
-          <div class="wbh-pick" onclick="gsPickAndScan('CBRS')"><div class="wbh-rank">01</div><div class="wbh-name"><span class="wbh-ticker">CBRS</span><span class="wbh-company">Cerebras Systems</span></div><span class="wbh-tag">Strong Buy</span></div>
-          </div>
-          <button class="wbh-cta" onclick="showPage('brief')">Read Full Brief</button>
+          <div class="wbh-lbl" id="gs-home-daily-label">Bullish momentum, ranked with the reasons why</div>
+          <div id="gs-home-daily-list"></div>
+          <button class="wbh-cta" onclick="showPage('daily')">View Today&rsquo;s Top 20</button>
         </div>
         <div class="wrh-card" id="gs-home-results-card">
-          <div class="wrh-eyebrow">Weekly Results</div>
+          <div class="wrh-eyebrow">Weekly Archive &middot; Retired Format</div>
           <h3 class="wrh-title" id="gs-home-results-title">Week Ending <em>August 7</em></h3>
           <div class="wrh-stats">
             <div><div class="wrh-stat-num up" id="gs-home-results-avg">+9.47%</div><div class="wrh-stat-lbl" id="gs-home-results-avg-lbl">Avg Open Return</div></div>
@@ -416,8 +414,8 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="everything-card" onclick="showPage('scanner')"><div class="ec-icon">◎</div><div class="ec-title">Stock Scanner</div><p class="ec-desc">Search any ticker. Get RSI, volume, EMA, momentum, risk level, and signal strength in seconds.</p></div>
         <div class="everything-card" onclick="showNews('world')"><div class="ec-icon">◯</div><div class="ec-title">World News</div><p class="ec-desc">Geopolitical and macro events that move markets — filtered for relevance, not clicks.</p></div>
         <div class="everything-card" onclick="showBullishSignals()"><div class="ec-icon">▲</div><div class="ec-title">Watchlist Signals</div><p class="ec-desc">Bullish, Watch, and Neutral signal labels across tracked assets updated throughout the session.</p></div>
-        <div class="everything-card" onclick="showPage('brief')"><div class="ec-icon">✦</div><div class="ec-title">Weekly Briefings</div><p class="ec-desc">Published Sundays &mdash; primary picks, watchlist names, catalysts, and the setups worth watching this week.</p></div>
-        <div class="everything-card" onclick="showPage('results')"><div class="ec-icon">◆</div><div class="ec-title">Weekly Results</div><p class="ec-desc">Published Fridays &mdash; the completed week graded in full, with every pick's entry, close, and outcome on record.</p></div>
+        <div class="everything-card" onclick="showPage('daily')"><div class="ec-icon">✦</div><div class="ec-title">Daily Top 20</div><p class="ec-desc">Published each U.S. trading morning &mdash; the 20 strongest bullish-momentum stocks, with what drove each rank, dated headlines and confirmed catalysts. Ranks #11&ndash;20 free.</p></div>
+        <div class="everything-card" onclick="showPage('results')"><div class="ec-icon">◆</div><div class="ec-title">Weekly Archive</div><p class="ec-desc">Every weekly briefing and graded scorecard from the retired weekly format, preserved unchanged &mdash; winning and losing weeks alike.</p></div>
         <div class="everything-card" onclick="showNews('market')"><div class="ec-icon">◫</div><div class="ec-title">Market News</div><p class="ec-desc">Stocks, earnings, Fed updates, analyst actions, and the biggest stories moving the market today.</p></div>
         <div class="everything-card" onclick="showNews('crypto')"><div class="ec-icon">₿</div><div class="ec-title">Crypto News</div><p class="ec-desc">Bitcoin, Ethereum, Solana, ETFs, regulation, and digital asset market updates.</p></div>
       </div>
@@ -434,10 +432,10 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   </section>
   <section id="home-newsletter" style="padding:5rem 0;background:var(--charcoal-2);border-top:1px solid var(--border);"><!-- gs-newsletter-fix -->
     <div class="section-inner" style="text-align:center;">
-      <div class="section-label" style="justify-content:center;">Free Weekly Brief</div>
+      <div class="section-label" style="justify-content:center;">Free Newsletter</div>
       <h2 class="section-title">The Edge Is Already<br><em>Moving.</em></h2>
-      <p class="section-desc" style="margin:0.75rem auto 2rem;max-width:400px;text-align:center;">Market intelligence delivered weekly. No spam, no noise, no hype.</p>
-      <p style="font-size:0.65rem;color:var(--text-muted);margin:-0.5rem auto 1.5rem;max-width:420px;text-align:center;line-height:1.6;">Weekly market intelligence. No spam. No copied articles. Source-linked headlines only — we never republish full articles.</p>
+      <p class="section-desc" style="margin:0.75rem auto 2rem;max-width:400px;text-align:center;">Market intelligence in your inbox. No spam, no noise, no hype.</p>
+      <p style="font-size:0.65rem;color:var(--text-muted);margin:-0.5rem auto 1.5rem;max-width:420px;text-align:center;line-height:1.6;">Market intelligence. No spam. No copied articles. Source-linked headlines only — we never republish full articles.</p>
       <form name="newsletter" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit="return gsNewsletterSubmit(event)" style="max-width:420px;margin:0 auto;">
         <input type="hidden" name="form-name" value="newsletter"/>
         <p style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:-1px;padding:0;border:0;"><label>Leave blank if you are human: <input name="bot-field" tabindex="-1" autocomplete="off"/></label></p>
@@ -765,7 +763,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <ul class="plan-features">
           <li>5 free scanner searches</li>
           <li>Daily market news</li>
-          <li>Weekly market brief</li>
+          <li>Daily Top 20 &mdash; ranks #11&ndash;20 with full data</li>
           <li>AI infrastructure news</li>
           <li>World market news</li>
           <li>Educational content &amp; glossary</li>
@@ -776,13 +774,13 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
         <div class="plan-name">Gilded Signals Premium</div>
         <div class="plan-price"><sup>$</sup>29.99</div>
         <div class="plan-period">per month · cancel anytime</div>
-        <p style="font-size:0.72rem;color:var(--text-secondary);line-height:1.55;margin:0 0 1.5rem;">Built for investors who want deeper research, unlimited scanner access, and transparent weekly scorecards.</p>
+        <p style="font-size:0.72rem;color:var(--text-secondary);line-height:1.55;margin:0 0 1.5rem;">Built for investors who want deeper research, unlimited scanner access, and the full Daily Top 20 every trading morning.</p>
         <ul class="plan-features">
           <li>Unlimited scanner searches</li>
           <li>Full stock comparison tool</li>
-          <li>Buy zone &amp; trigger signals</li>
-          <li>Weekly premium briefings</li>
-          <li>Performance scorecards</li>
+          <li>Full Daily Top 20 &mdash; ranks #1&ndash;20</li>
+          <li>Rank drivers, dated headlines &amp; catalysts</li>
+          <li>Weekly archive &amp; past scorecards</li>
           <li>Priority feature updates</li>
           <li>Full news dashboard</li>
         </ul>
@@ -794,10 +792,9 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
     <table class="compare-table">
       <tr><th>Feature</th><th>Free</th><th>Premium</th></tr>
       <tr><td>Scanner Searches</td><td>5</td><td class="yes">Unlimited</td></tr>
-      <tr><td>Weekly Brief</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      <tr><td>Daily Top 20</td><td>#11&ndash;20</td><td class="yes">All 20</td></tr>
       <tr><td>Daily News</td><td class="yes">✓</td><td class="yes">✓</td></tr>
       <tr><td>Stock Comparison</td><td class="no">—</td><td class="yes">✓</td></tr>
-      <tr><td>Buy Zone Signals</td><td class="no">—</td><td class="yes">✓</td></tr>
       <tr><td>Performance History</td><td class="no">—</td><td class="yes">✓</td></tr>
       <tr><td>New Features First</td><td class="no">—</td><td class="yes">✓</td></tr>
     </table>
@@ -832,7 +829,12 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
   </div>
 </div>
 
-<!-- WEEKLY BRIEF -->
+<!-- DAILY TOP 20 (rendered by assets/js/gs-daily.js from /api/daily-top20) -->
+<div id="page-daily" class="page">
+<div class="gb-wrap" id="gs-daily-root"><p class="gb-lead">Loading the Daily Top 20&hellip;</p></div>
+</div>
+
+<!-- WEEKLY BRIEF (archive) -->
 <div id="page-brief" class="page">
 <style>
 .gb-wrap{max-width:780px;margin:0 auto;padding:50px 24px 90px;}
@@ -1010,6 +1012,7 @@ nav.nav-open .nav-links li a{line-height:2.8;padding:0 2.5rem;}
 .gb-lock-cta{display:inline-block;padding:11px 26px;background:var(--gold);color:#0c0c0c;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:5px;cursor:pointer;}
 </style>
 <div class="gb-wrap">
+<div class="gd-archive-note" style="font-size:.78rem;line-height:1.55;color:var(--text-secondary);padding:12px 16px;border:1px solid rgba(212,175,55,.3);border-radius:8px;background:rgba(212,175,55,.05);margin:0 0 22px;"><b style="color:var(--gold);">Archive.</b> The weekly format was retired in November 2026 and replaced by the <a onclick="showPage('daily')" style="color:var(--gold);cursor:pointer;">Daily Top 20</a>. These weekly records are preserved exactly as published.</div>
   <div class="gb-eyebrow">Weekly Intelligence Brief</div>
   <h1 class="gb-title">The Week <em>Ahead</em></h1>
   <div class="gb-archive-bar">
@@ -5607,6 +5610,7 @@ function gsBriefUnlock(){
 @media(max-width:700px){.gb-trust-grid{grid-template-columns:1fr;}}
 </style>
 <div class="gb-wrap">
+<div class="gd-archive-note" style="font-size:.78rem;line-height:1.55;color:var(--text-secondary);padding:12px 16px;border:1px solid rgba(212,175,55,.3);border-radius:8px;background:rgba(212,175,55,.05);margin:0 0 22px;"><b style="color:var(--gold);">Archive.</b> The weekly format was retired in November 2026 and replaced by the <a onclick="showPage('daily')" style="color:var(--gold);cursor:pointer;">Daily Top 20</a>. These weekly records are preserved exactly as published.</div>
   <div class="gb-eyebrow">Weekly Results</div>
   <h1 class="gb-title">The Week <em>Graded</em></h1>
   <div class="gb-archive-bar">
@@ -6129,17 +6133,17 @@ function gsGoToBriefing(id){
     <h2 class="section-title">About <em>Gilded Signals</em></h2>
     <p class="section-desc" style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;line-height:1.5;color:var(--text-primary);margin-bottom:1.5rem;">Trust is not claimed. It is earned through consistency and transparency.</p>
     <div style="font-size:0.86rem;line-height:1.8;color:var(--text-secondary);">
-      <p style="margin-bottom:1rem;">Markets do not reward hype &mdash; they reward discipline. That is why I created Gilded Signals. Every week, I publish what I am watching, why I am watching it, and how those ideas actually performed.</p>
-      <p style="margin-bottom:1rem;">Gilded Signals is an independent market research platform that brings together curated financial news, transparent research, weekly watchlists, and stock and crypto analysis in one refined workspace. My goal is not to make investment decisions for anyone. It is to clearly show my research process, explain the reasoning behind each idea, and help investors make more informed decisions for themselves.</p>
-      <p style="margin-bottom:1rem;">Every Weekly Brief includes my market outlook, the reasoning behind each watchlist, and a public scorecard tracking both winning and losing ideas so readers can evaluate my research over time.</p>
+      <p style="margin-bottom:1rem;">Markets do not reward hype &mdash; they reward discipline. That is why I created Gilded Signals. Every trading morning, Gilded Signals publishes which stocks are showing bullish momentum and the verified data and news behind each one.</p>
+      <p style="margin-bottom:1rem;">Gilded Signals is an independent market research platform that brings together curated financial news, transparent research, a Daily Top 20 momentum ranking, and stock and crypto analysis in one refined workspace. The goal is not to make investment decisions for anyone. It is to show clearly what the data says, explain why each stock ranks where it does, and help investors make more informed decisions for themselves.</p>
+      <p style="margin-bottom:1rem;">Every Daily Top 20 shows its trading date and data cutoff, what drove each rank, the dated headlines behind the attention, and any confirmed catalyst &mdash; or says plainly when there is none. The earlier weekly briefings and scorecards remain in the archive, unchanged.</p>
       <p style="margin-bottom:1.75rem;">There are no deleted losing picks, cherry-picked results, hindsight edits, or synthetic data presented as real. Good weeks and red weeks are both shown because honest results matter more than perfect-looking results.</p>
       <div style="margin-bottom:1.75rem;padding:1.75rem 2rem;background:var(--charcoal-2);border:1px solid var(--border);border-radius:4px;">
         <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--gold);margin:0 0 1.1rem 0;">What You Can Expect</h3>
         <ul style="list-style:none;margin:0;padding:0;">
-          <li style="position:relative;padding-left:1.3rem;margin-bottom:0.65rem;"><span style="position:absolute;left:0;color:var(--gold);">&mdash;</span>Transparent weekly market research</li>
-          <li style="position:relative;padding-left:1.3rem;margin-bottom:0.65rem;"><span style="position:absolute;left:0;color:var(--gold);">&mdash;</span>Public scorecards showing good weeks and bad weeks</li>
+          <li style="position:relative;padding-left:1.3rem;margin-bottom:0.65rem;"><span style="position:absolute;left:0;color:var(--gold);">&mdash;</span>A transparent Daily Top 20 every trading morning</li>
+          <li style="position:relative;padding-left:1.3rem;margin-bottom:0.65rem;"><span style="position:absolute;left:0;color:var(--gold);">&mdash;</span>Dated data cutoffs and sources on every ranking</li>
           <li style="position:relative;padding-left:1.3rem;margin-bottom:0.65rem;"><span style="position:absolute;left:0;color:var(--gold);">&mdash;</span>Curated financial news with full source attribution</li>
-          <li style="position:relative;padding-left:1.3rem;margin-bottom:0.65rem;"><span style="position:absolute;left:0;color:var(--gold);">&mdash;</span>Stock and crypto watchlists with clear reasoning</li>
+          <li style="position:relative;padding-left:1.3rem;margin-bottom:0.65rem;"><span style="position:absolute;left:0;color:var(--gold);">&mdash;</span>Clear reasons behind every rank, including when no catalyst exists</li>
           <li style="position:relative;padding-left:1.3rem;margin-bottom:0;"><span style="position:absolute;left:0;color:var(--gold);">&mdash;</span>No hype, fake performance, or hindsight edits</li>
         </ul>
       </div>
@@ -6152,7 +6156,7 @@ function gsGoToBriefing(id){
 <footer>
   <div class="footer-inner">
     <div class="footer-brand"><div class="brand">Gilded Signals</div><p>Market intelligence for disciplined investors. Real signals, no noise.</p></div>
-    <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showNews('market')">Market News</a></li><li><a onclick="showNews('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('brief')">Weekly Briefings</a></li><li><a onclick="showPage('results')">Weekly Results</a></li><li><a onclick="showPage('performance')">Performance History</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
+    <div class="footer-col"><h4>Platform</h4><ul><li><a onclick="showNews('market')">Market News</a></li><li><a onclick="showNews('ai')">AI Infrastructure</a></li><li><a onclick="showPage('scanner')">Market Scanner</a></li><li><a onclick="showPage('daily')">Daily Top 20</a></li><li><a onclick="showPage('results')">Weekly Archive</a></li><li><a onclick="showPage('performance')">Performance History</a></li><li><a onclick="showPage('pricing')">Pricing</a></li></ul></div>
     <div class="footer-col"><h4>Company</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('home');setTimeout(function(){var el=document.getElementById('home-newsletter');if(el){el.scrollIntoView({behavior:'smooth'});}},60)">Newsletter</a></li><li><a href="mailto:gildedsignals.support@gmail.com">Contact</a></li></ul></div>
     <div class="footer-col"><h4>Legal</h4><ul><li><a href="legal.html#terms">Terms of Service</a></li><li><a href="legal.html#privacy">Privacy Policy</a></li><li><a href="legal.html#disclaimer">Disclaimer</a></li></ul></div>
   </div>
@@ -6466,45 +6470,12 @@ function gsToggleNav(){
       lwLink.onclick=function(){gsGoToResults(week);};
     }
   }
-  function syncBriefCard(){
-    var live=document.querySelector('.gb-week-panel[data-live="true"]');
-    if(!live){return;}
-    var dateline=live.querySelector('.gb-dateline');
-    var dlEl=document.getElementById('gs-home-brief-dateline');
-    if(dlEl && dateline){
-      var m=dateline.textContent.match(/([A-Z][a-z]+ \d+)/);
-      var yr=(live.getAttribute('data-week')||'').slice(0,4);
-      dlEl.innerHTML='For the week of <b>'+(m?m[1]:dateline.textContent.trim())+(yr?', '+yr:'')+'</b>';
-    }
-    var tierHead=live.querySelector('.gb-tier-head');
-    if(!tierHead){return;}
-    var picks=[];
-    var node=tierHead.nextElementSibling;
-    while(node && picks.length<5){
-      if(node.classList && node.classList.contains('gb-tier-head')){break;}
-      if(node.classList && node.classList.contains('gb-pick')){
-        var t=node.querySelector('.gb-ticker'),c=node.querySelector('.gb-company'),cv=node.querySelector('.gb-conviction');
-        if(t && c){picks.push({ticker:t.textContent.trim(),company:c.textContent.trim(),tag:cv?cv.textContent.trim():'Strong Buy'});}
-      }
-      node=node.nextElementSibling;
-    }
-    if(!picks.length){return;}
-    var html='';
-    picks.forEach(function(p,i){
-      var rank=(i+1<10?'0':'')+(i+1);
-      html+='<div class="wbh-pick" onclick="gsPickAndScan(\''+p.ticker+'\')"><div class="wbh-rank">'+rank+'</div><div class="wbh-name"><span class="wbh-ticker">'+p.ticker+'</span><span class="wbh-company">'+p.company+'</span></div><span class="wbh-tag">'+p.tag+'</span></div>';
-    });
-    var container=document.getElementById('gs-home-brief-picks');
-    if(container){container.innerHTML=html;}
-  }
   function init(){
-    syncResultsCard();
-    syncBriefCard();
+    syncResultsCard(); /* archive card: latest graded weekly record */
   }
-  window.gsSyncHomeCards=init; /* used by gs-auto-pages.js after an automated week is inserted */
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
 </script>
-<script src="/assets/js/gs-auto-pages.js"></script>
+<script src="/assets/js/gs-daily.js"></script>
 </body>
 </html>

@@ -1,4 +1,32 @@
-# AUTOMATION.md — GS Research Engine and full-automation plan
+# AUTOMATION.md — Gilded Signals Daily Top 20
+
+**PRODUCT CHANGE (2026-11-25):** the weekly picks product (Sunday briefing, Friday grading, buy zones) is
+**retired** and replaced by the **Daily Top 20**: one bullish-momentum ranking per U.S. trading morning,
+fixed for the day, with what drove each rank, dated headlines, confirmed catalysts (or an explicit "none"),
+and the data cutoff. Ranks #11–20 are free; subscribers see #1–20. Weekly records stay in the archive unchanged.
+
+**Status:** built and tested on `automation/dev` only. No schedule is active, nothing is merged to main, and nothing is deployed.
+
+| Piece | File |
+|---|---|
+| Daily engine (build, replay, gate, publish, health) | `engine/daily.js` |
+| Ranking, drivers, catalysts | `engine/stages/daily-rank.js` |
+| Options activity | `engine/stages/options.js`, `engine/providers/alpaca.js` |
+| Kept from the weekly build | universe, features, news, indicators, http, runlog, calendar, clock, alert, providers |
+| Access-controlled API | `netlify/functions/daily-top20.js` (`/api/daily-top20[?date=]`) |
+| Page + home card | `assets/js/gs-daily.js`, `#page-daily` in `index.html` |
+| Workflows | `.github/workflows/gs-daily-dryrun.yml` (push), `gs-daily.yml` (manual, no schedule) |
+| Tests | `engine/test/daily.test.js`, `test/site/daily-page.test.js` |
+| Methodology / settings / failures | `SCORING_METHODOLOGY.md`, `DEPLOYMENT.md`, `RECOVERY.md` |
+
+Open questions for Graham (not built): the morning publication time; whether free readers should keep the
+5 free scanner compares and free market news (today they do; subscribers already have full access).
+
+---
+
+## History — retired weekly build (kept for the record)
+
+### (retired) GS Research Engine — weekly plan
 
 **Status: NOT OPERATIONAL.** This document is the audit and the build plan. Nothing here is live
 until a phase is marked "Verified" below with a dated end-to-end test.

@@ -18,7 +18,7 @@ function tagHeadline(text) {
 }
 
 // articles: [{headline, createdAt, symbols[], source, url}]
-// Returns { SYM: { news7, newsPrior, surge, tagsPos, tagsNeg, headlines[] } }
+// Returns (recent = last cfg.news.recentDays days) { SYM: { recentCount, newsPrior, surge, tagsPos, tagsNeg, headlines[] } }
 function attention(articles, universeSymbols, now = Date.now()) {
   const uni = new Set(universeSymbols);
   const recentCut = now - cfg.news.recentDays * DAY;
@@ -36,14 +36,14 @@ function attention(articles, universeSymbols, now = Date.now()) {
     const w = 1 / Math.sqrt(Math.max(1, (a.symbols || []).length));
     const tags = at >= recentCut ? tagHeadline(a.headline || '') : null;
     for (const s of syms) {
-      const row = out[s] || (out[s] = { news7: 0, newsPrior: 0, weighted7: 0, tagsPos: {}, tagsNeg: {}, headlines: [] });
+      const row = out[s] || (out[s] = { recentCount: 0, newsPrior: 0, recentWeighted: 0, tagsPos: {}, tagsNeg: {}, headlines: [] });
       if (at >= recentCut) {
-        row.news7++;
-        row.weighted7 += w;
+        row.recentCount++;
+        row.recentWeighted += w;
         for (const t of tags.pos) row.tagsPos[t] = (row.tagsPos[t] || 0) + 1;
         for (const t of tags.neg) row.tagsNeg[t] = (row.tagsNeg[t] || 0) + 1;
         if (row.headlines.length < cfg.news.keepHeadlines) {
-          row.headlines.push({ headline: a.headline, source: a.source, url: a.url, createdAt: a.createdAt });
+          row.headlines.push({ headline: a.headline, source: a.source, url: a.url, createdAt: a.createdAt, tagsPos: tags.pos, tagsNeg: tags.neg });
         }
       } else {
         row.newsPrior++;
@@ -51,11 +51,11 @@ function attention(articles, universeSymbols, now = Date.now()) {
     }
   }
   for (const row of Object.values(out)) {
-    const baselinePerWeek = (row.newsPrior / priorDays) * 7;
-    // Surge: recent week vs prior-weeks average, smoothed so 1 → 3 articles
+    const baselinePerWindow = (row.newsPrior / priorDays) * cfg.news.recentDays; // baseline scaled to the recent window
+    // Surge: recent window vs the prior baseline pace, smoothed so 1 → 3 articles
     // doesn't read like a 300% event.
-    row.surge = Math.round(((row.news7 + 2) / (baselinePerWeek + 2)) * 100) / 100;
-    row.weighted7 = Math.round(row.weighted7 * 100) / 100;
+    row.surge = Math.round(((row.recentCount + 2) / (baselinePerWindow + 2)) * 100) / 100;
+    row.recentWeighted = Math.round(row.recentWeighted * 100) / 100;
   }
   return out;
 }
