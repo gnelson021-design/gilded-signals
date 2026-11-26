@@ -77,8 +77,9 @@ function sessionsBetween(start, end) {
 global.fetch = async (url, opts) => {
   const u = new URL(url);
   if (u.host.endsWith('alpaca.markets')) assert.strictEqual(opts.headers['APCA-API-KEY-ID'], process.env.ALPACA_API_KEY);
-  // Paper-account keys: the live trading host refuses them.
-  if (u.host === 'api.alpaca.markets' && process.env.MOCK_PAPER_KEYS === '1') return { ok: false, status: 403, headers: { get: () => null }, json: async () => ({ message: 'forbidden' }) };
+  // Paper-account keys (as seen in production): the live trading host still
+  // answers /v2/calendar but refuses account-scoped endpoints with 401.
+  if (u.host === 'api.alpaca.markets' && process.env.MOCK_PAPER_KEYS === '1' && u.pathname !== '/v2/calendar') return { ok: false, status: 401, headers: { get: () => null }, json: async () => ({ message: 'unauthorized' }) };
   if (u.pathname === '/v2/assets') return respond(ASSETS);
   if (u.pathname === '/v2/calendar') return respond(sessionsBetween(u.searchParams.get('start'), u.searchParams.get('end')));
   if (u.pathname === '/v2/stocks/bars') {

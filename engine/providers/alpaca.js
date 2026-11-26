@@ -17,14 +17,17 @@ function headers() {
 }
 
 // Reference endpoints (assets, calendar, option contracts) live on the trading
-// host, which differs for live vs paper keys. The first call finds the host
-// that accepts these keys (paper keys are refused by the live host with
-// 401/403) and every later call in the run goes straight to it, so a paper
-// key costs one refused request per run instead of one per call.
-// ALPACA_TRADING_BASE, if set, skips the probe entirely.
+// host, which differs for live vs paper keys. The host that last accepted these
+// keys is tried first, the other only if it refuses (401/403). Paper keys:
+// the live host answers some public-ish endpoints (calendar) but refuses
+// account-scoped ones (assets, contracts), so the run switches to the paper
+// host on the first refusal and stays there — one refused request per run
+// instead of one per call. ALPACA_TRADING_BASE, if set, skips the probe.
 let resolvedBase = null;
 async function trading(path, opts) {
-  const bases = process.env.ALPACA_TRADING_BASE ? [process.env.ALPACA_TRADING_BASE] : resolvedBase ? [resolvedBase] : TRADING_BASES;
+  const bases = process.env.ALPACA_TRADING_BASE
+    ? [process.env.ALPACA_TRADING_BASE]
+    : resolvedBase ? [resolvedBase, ...TRADING_BASES.filter((b) => b !== resolvedBase)] : TRADING_BASES;
   let lastErr;
   for (const base of bases) {
     try {

@@ -205,22 +205,30 @@ test('first-run fixes: confirmed buyout excluded and replaced; rumours and acqui
   assert.strictEqual(doc.methodologyVersion, 'm2-shadow');
 });
 
-test('paper-account keys: the refused live trading host is tried once per run, not once per call', async () => {
+test('paper-account keys: calendar works on the live host, assets do not — the run switches to paper once and stays', async () => {
   const alpaca = require('../providers/alpaca');
   const httpLib = require('../lib/http');
   process.env.MOCK_PAPER_KEYS = '1';
   alpaca._resetTradingBase();
-  const before = { ...(httpLib.stats.byHost) };
+  const count = (h) => httpLib.stats.byHost[h] || 0;
+  const live0 = count('api.alpaca.markets'), paper0 = count('paper-api.alpaca.markets');
   try {
-    await alpaca.listAssets();
+    // Same order as a real build: calendar (trading context) first, then assets, then option contracts.
     await alpaca.calendar('2026-11-30', '2026-11-30');
+    const assets = await alpaca.listAssets();
+    assert.ok(Array.isArray(assets) && assets.length > 0, 'stock list received from the paper host');
     for (let i = 0; i < 10; i++) await alpaca.optionContracts('TEST', '2027-01-15');
-    const live = (httpLib.stats.byHost['api.alpaca.markets'] || 0) - (before['api.alpaca.markets'] || 0);
-    const paper = (httpLib.stats.byHost['paper-api.alpaca.markets'] || 0) - (before['paper-api.alpaca.markets'] || 0);
-    assert.strictEqual(live, 1, 'one refused request, then straight to the paper host');
-    assert.strictEqual(paper, 12);
-    const bars = await alpaca.dailyBars(['AAAA'], { start: '2026-11-01', end: '2026-11-20' });
-    assert.ok(Array.isArray(bars.AAAA) || Object.keys(bars).length >= 0, 'market data host unaffected');
+    await alpaca.calendar('2026-12-01', '2026-12-01');
+    const live = count('api.alpaca.markets') - live0, paper = count('paper-api.alpaca.markets') - paper0;
+    assert.strictEqual(live, 2, 'live host: the calendar call plus exactly one refused request');
+    assert.strictEqual(paper, 12, 'everything after the first refusal goes straight to paper');
+  } finally { delete process.env.MOCK_PAPER_KEYS; alpaca._resetTradingBase(); }
+  // And a full build with paper keys completes (this is what failed in dry run #3).
+  process.env.MOCK_PAPER_KEYS = '1';
+  try {
+    const { RunLog } = require('../lib/runlog');
+    const r = await daily.build({}, new RunLog('paper'));
+    assert.strictEqual(r.top.length, 20);
   } finally { delete process.env.MOCK_PAPER_KEYS; alpaca._resetTradingBase(); }
 });
 
