@@ -15,10 +15,18 @@
 
 const DEAL_VERB = '(?:acquire|buy|purchase|take\\s+private)';
 const DEFINITIVE_LEAD = '(?:to|will|agrees?\\s+to|agreed\\s+to|signs?\\s+(?:a\\s+)?(?:definitive\\s+)?(?:merger\\s+)?agreement\\s+to|enters?\\s+(?:into\\s+)?(?:a\\s+)?definitive\\s+(?:merger\\s+)?agreement\\s+to|completes?|completed)';
-const RUMOR = /\b(reportedly|reports?|reported|rumou?rs?|rumou?red|talks?|nears?|exploring|explores?|considers?|considering|weighs?|weighing|mulls?|mulling|approach(?:ed|es)?|sources|could|may|might|possible|potential|said\s+to|seeks?|seeking|eyes?|eyeing|interest\s+in|unsolicited|propos(?:al|es|ed)|bid\s+for|makes?\s+(?:an?\s+)?offer|investigat\w*|\?)/i;
+const RUMOR = /\b(intent|intends?|plans?\s+to|non-binding|letter\s+of\s+intent|reportedly|reports?|reported|rumou?rs?|rumou?red|talks?|nears?|exploring|explores?|considers?|considering|weighs?|weighing|mulls?|mulling|approach(?:ed|es)?|sources|could|may|might|possible|potential|said\s+to|seeks?|seeking|eyes?|eyeing|interest\s+in|unsolicited|propos(?:al|es|ed)|bid\s+for|makes?\s+(?:an?\s+)?offer|investigat\w*|\?)/i;
 const TERMINATED = /\b(terminat\w*|call(?:s|ed)?\s+off|abandon\w*|walks?\s+away|walked\s+away|scrap(?:s|ped)?|collaps\w*|block(?:s|ed)?|ends?\s+(?:merger|deal|agreement)|no\s+longer)\b/i;
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// After the target's name, a whole-company deal reads "…acquire Insmed for $41B",
+// "…acquire Zscaler in a $43.9B deal", "…acquire Insmed Incorporated", or ends.
+// "…acquire MetLife's UK business", "…acquire Lantheus' CDMO unit" (a division)
+// and "…acquire six Boeing CH-47 helicopters" (products) do not.
+const NOT_POSSESSIVE = "(?![’'])";
+const CORP_SUFFIX = '(?:,?\\s+(?:Inc\\.?|Incorporated|Corp\\.?|Corporation|Holdings|Ltd\\.?|Limited|plc|Co\\.|N\\.V\\.|S\\.A\\.))?';
+const OBJECT_END = `${NOT_POSSESSIVE}${CORP_SUFFIX}(?=\\s*$|\\s*[,.;:!?(—–]|\\s+-\\s|\\s+(?:for|in|at|from|with|and|to|via|after|amid|as|by|on|under|valued|worth|including)\\b)`;
 
 // "Insmed Incorporated Common Stock" → "Insmed"; keeps multi-word names ("Dollar Tree").
 function shortName(name) {
@@ -42,11 +50,11 @@ function confirmsTarget(headline, symbol, name) {
   const X = aliasPattern(symbol, name);
   const tests = [
     // "<Acquirer> to acquire / agrees to buy / completes acquisition of <Target>"
-    new RegExp(`\\b${DEFINITIVE_LEAD}\\s+(?:its\\s+)?(?:${DEAL_VERB}|acquisition\\s+of)\\s+(?:\\S+\\s+){0,2}?${X}(?![\\w-])`, 'i'),
+    new RegExp(`\\b${DEFINITIVE_LEAD}\\s+(?:its\\s+)?(?:${DEAL_VERB}|acquisition\\s+of)\\s+(?:\\S+\\s+){0,2}?${X}(?![\\w-])${OBJECT_END}`, 'i'),
     // "definitive agreement to acquire <Target>" / "merger agreement with <Target>"
-    new RegExp(`\\bdefinitive\\s+(?:merger\\s+)?agreement\\s+(?:to\\s+${DEAL_VERB}|with)\\s+(?:\\S+\\s+){0,2}?${X}(?![\\w-])`, 'i'),
+    new RegExp(`\\bdefinitive\\s+(?:merger\\s+)?agreement\\s+(?:to\\s+${DEAL_VERB}|with)\\s+(?:\\S+\\s+){0,2}?${X}(?![\\w-])${OBJECT_END}`, 'i'),
     // "<Target> to be acquired by / agrees to be acquired / agrees to sale to"
-    new RegExp(`(?<![\\w-])${X}\\b[^.;:]{0,60}?\\b(?:to\\s+be\\s+(?:acquired|bought|taken\\s+private)|agrees?\\s+to\\s+be\\s+(?:acquired|bought|taken\\s+private)|agreed\\s+to\\s+be\\s+(?:acquired|bought)|(?:agrees?|agreed)\\s+to\\s+(?:an?\\s+)?(?:\\$[\\d.,]+\\s*(?:billion|bln|bn|million|mln|m)?\\s+)?(?:sale|buyout|takeover))\\b`, 'i'),
+    new RegExp(`(?<![\\w-])${X}${NOT_POSSESSIVE}\\b[^.;:]{0,60}?\\b(?:to\\s+be\\s+(?:acquired|bought|taken\\s+private)|agrees?\\s+to\\s+be\\s+(?:acquired|bought|taken\\s+private)|agreed\\s+to\\s+be\\s+(?:acquired|bought)|(?:agrees?|agreed)\\s+to\\s+(?:an?\\s+)?(?:\\$[\\d.,]+\\s*(?:billion|bln|bn|million|mln|m)?\\s+)?(?:sale|buyout|takeover)(?!\\s+of\\b))\\b`, 'i'),
   ];
   if (!tests.some((re) => re.test(h))) return false;
   // Matching is case-insensitive for the deal wording; the company itself must

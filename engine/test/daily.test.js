@@ -205,6 +205,60 @@ test('first-run fixes: confirmed buyout excluded and replaced; rumours and acqui
   assert.strictEqual(doc.methodologyVersion, 'm2-shadow');
 });
 
+test('buyouts and law-firm filter: real headlines from dry run #4 (Nov 25, 2026) and known patterns', () => {
+  const deals = require('../stages/deals');
+  const news = require('../stages/news');
+  const yes = [
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi to Acquire Insmed for $41 Billion'],
+    ['ZS', 'Zscaler, Inc. Common Stock', 'CrowdStrike to Acquire Zscaler in $43.9 Billion All-Stock Deal'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi agrees to buy Insmed in $41 bln cash deal'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Insmed agrees to be acquired by Sanofi'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi Enters Into Definitive Agreement to Acquire Insmed'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi signs definitive agreement to acquire Insmed Incorporated'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Insmed agrees to $41 billion sale to Sanofi'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi to buy INSM for $41B'],
+    ['TGT', 'Target Corporation Common Stock', 'Walmart to acquire Target in $50 billion deal'],
+  ];
+  const no = [
+    // the four wrong exclusions in dry run #4
+    ['BA', 'Boeing Company', 'Philippines Expresses Intent to Acquire Six Boeing CH-47 Chinook Helicopters'],
+    ['COP', 'ConocoPhillips', 'ConocoPhillips Agrees to $4.43 Billion Sale of Norwegian Assets to Vår Energi'],
+    ['MET', 'MetLife, Inc.', "Chesnara to Acquire MetLife's Closed-Book UK Life Insurance Business"],
+    ['LNTH', 'Lantheus Holdings, Inc. Common Stock', "PharmaLogic to Acquire Lantheus' CDMO Business and Springfield Manufacturing Facility"],
+    // rumours, acquirers, units, products
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi in talks to acquire Insmed'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi reportedly nears deal to buy Insmed'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Insmed to acquire Foo Therapeutics'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi weighs offer for Insmed'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi plans to acquire Insmed'],
+    ['INSM', 'Insmed Incorporated Common Stock', 'Sanofi terminates agreement to acquire Insmed'],
+    ['TGT', 'Target Corporation Common Stock', 'Walmart to acquire target stores in Ohio'],
+    ['BA', 'Boeing Company', 'Delta to buy 50 Boeing 787 jets'],
+    ['SNY', 'Sanofi ADS', 'Sanofi to Acquire Insmed for $41 Billion'],
+    ['CRWD', 'CrowdStrike Holdings, Inc. Class A Common Stock', 'CrowdStrike to Acquire Zscaler in $43.9 Billion All-Stock Deal'],
+  ];
+  for (const [sym, name, h] of yes) assert.ok(deals.confirmsTarget(h, sym, name), `should exclude ${sym}: ${h}`);
+  for (const [sym, name, h] of no) assert.ok(!deals.confirmsTarget(h, sym, name), `should NOT exclude ${sym}: ${h}`);
+  const drop = [
+    'Law Firms Investigate Fairness of Zscaler Acquisition by CrowdStrike',
+    'Law Firms Investigate BILL Holdings Acquisition by TPG Capital',
+    'Advantage Energy Ltd. Subject of Investigation Regarding Acquisition by Canadian Natural Resources Limited',
+    'Ademi LLP Investigates Proposed Acquisition of Insmed',
+    'SHAREHOLDER ALERT: Rosen Law Firm Reminds Investors of Class Action Deadline for ZS',
+  ];
+  const keep = [
+    'EU Launches Antitrust Investigation into Coca-Cola Europacific Partners',
+    'Chevron Faces Regulatory Probe Following Methane Emissions at Gorgon LNG Plant',
+    'Court Rules Against Amazon in Consumer Product Safety Act Litigation',
+    'Malaysia Regulator Files Lawsuits Against Google Seeking $145.8 Million',
+    'FTC Modifies 2018 Order Regarding Northrop Grumman\'s Acquisition of Orbital ATK',
+    'Gallagher & Hagopian Secures $711,068 Jury Verdict Against Progressive Insurance',
+    'Class Action Lawsuit Filed Against Uber Regarding October 2026 Data Breach',
+  ];
+  for (const h of drop) assert.ok(news.isLawFirmSolicitation(h), `should drop: ${h}`);
+  for (const h of keep) assert.ok(!news.isLawFirmSolicitation(h), `should keep: ${h}`);
+});
+
 test('paper-account keys: calendar works on the live host, assets do not — the run switches to paper once and stays', async () => {
   const alpaca = require('../providers/alpaca');
   const httpLib = require('../lib/http');

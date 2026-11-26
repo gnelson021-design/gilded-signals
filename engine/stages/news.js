@@ -25,10 +25,14 @@ function tagHeadline(text) {
 // ruling, an FTC suit, a DOJ probe) has no law-firm sponsor and is kept.
 const LAW_FIRM = /\b(LLP|L\.L\.P\.|P\.C\.|PLLC|Law Firm|Law Offices?|Law Group|Attorneys? at Law|Rosen Law|Pomerantz|Levi & Korsinsky|Bragar Eagel|Kahn Swick|Halper Sadeh|Ademi|Bronstein, Gewirtz|Faruqi|Glancy Prongay|Robbins Geller|Schall Law|Gross Law|Kirby McInerney|Johnson Fistel|Monteverde|Rigrodsky|Wohl & Fruchter|Block & Leviton|Bernstein Liebhard|Kessler Topaz|Portnoy Law|Howard G\. Smith|Frank R\. Cruz|Holzer & Holzer|Hagens Berman|Brodsky & Smith|Rowley Law|Lowey Dannenberg|Edelson Lechtzin|Scott\+Scott|Bernstein Litowitz|Labaton|Saxena White|Weiss Law|Zhang Investor Law|DJS Law|Lieff Cabraser|Pomerantz Law)\b/i;
 const SOLICIT = /\b(investigat\w*|class action|lead plaintiff|deadline|reminds?|encourag\w*|urg\w*|alert|on behalf of|have you (lost|suffered)|losses|shareholders? (rights|of)|investors? (who|in|of))\b/i;
+// Rewritten summaries of the same solicitations, without the firm's name:
+// "Law Firms Investigate Fairness of Zscaler Acquisition by CrowdStrike",
+// "Advantage Energy Ltd. Subject of Investigation Regarding Acquisition by …".
+const REWRITTEN = /\blaw\s+firms?\b[^.]*\binvestigat\w*|\bsubject\s+of\s+(?:an?\s+)?investigation\s+regarding\s+(?:the\s+)?(?:proposed\s+)?(?:acquisition|merger|sale|buyout|takeover)|\binvestigat\w*\s+(?:the\s+)?fairness\s+of\b/i;
 const ALWAYS = /\b(shareholder|investor|stockholder)s?\s+alert\b|\blead[- ]plaintiff deadline\b|\bclass action (lawsuit )?(filed|reminder)\b.*\b(investors|shareholders)\b/i;
 function isLawFirmSolicitation(headline) {
   const h = String(headline || '');
-  return ALWAYS.test(h) || (LAW_FIRM.test(h) && SOLICIT.test(h));
+  return ALWAYS.test(h) || REWRITTEN.test(h) || (LAW_FIRM.test(h) && SOLICIT.test(h));
 }
 
 // articles: [{headline, createdAt, symbols[], source, url}]
